@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: "Pretendard", sans-serif;
+  }
+
+  * {
+    font-family: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  button.disabled {
+    cursor: default;
+  }
+}
