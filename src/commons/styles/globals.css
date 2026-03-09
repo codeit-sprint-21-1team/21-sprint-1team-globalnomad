@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+:root {
+  --font-pretendard: var(--font-pretendard);
+}
+
+@layer base {
+  body {
+    font-family: var(--font-pretendard), sans-serif;
+  }
+
+  * {
+    font-family: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  button.disabled {
+    cursor: default;
+  }
+}
