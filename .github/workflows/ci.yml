@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -31,32 +31,44 @@ jobs:
       - name: Build
         run: npm run build
 
-      # 성공 알림 (n8n 웹훅)
-      - name: Notify n8n (success)
+      # 성공 시 Discord 알림
+      - name: Discord Notify (Success)
         if: success()
         run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
+          curl -H "Content-Type: application/json" \
             -d '{
-              "status": "success",
-              "pr_title": "${{ github.event.pull_request.title }}",
-              "pr_author": "${{ github.event.pull_request.user.login }}",
-              "pr_number": "${{ github.event.number }}",
-              "pr_url": "${{ github.event.pull_request.html_url }}"
+              "embeds": [{
+                "title": "✅ CI 성공",
+                "description": "*{{ github.event.pull_request.title }}*",
+                "fields": [
+                  {"name": "👤 작성자", "value": "{{ github.event.pull_request.user.login }}", "inline": true},
+                  {"name": "📋 PR 번호", "value": "#{{ github.event.number }}", "inline": true},
+                  {"name": "📂 Repo", "value": "{{ github.repository }}", "inline": true}
+                ],
+                "url": "{{ github.event.pull_request.html_url }}",
+                "color": 65280,
+                "timestamp": "{{ now }}"
+              }]
             }' \
-            "${{ secrets.N8N_WEBHOOK_URL }}"
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
 
-      # 실패 알림 (n8n 웹훅)
-      - name: Notify n8n (failure)
+      # 실패 시 Discord 알림
+      - name: Discord Notify (Failure)
         if: failure()
         run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
+          curl -H "Content-Type: application/json" \
             -d '{
-              "status": "failure",
-              "pr_title": "${{ github.event.pull_request.title }}",
-              "pr_author": "${{ github.event.pull_request.user.login }}",
-              "pr_number": "${{ github.event.number }}",
-              "pr_url": "${{ github.event.pull_request.html_url }}"
+              "embeds": [{
+                "title": "❌ CI 실패",
+                "description": "*{{ github.event.pull_request.title }}*",
+                "fields": [
+                  {"name": "👤 작성자", "value": "{{ github.event.pull_request.user.login }}", "inline": true},
+                  {"name": "📋 PR 번호", "value": "#{{ github.event.number }}", "inline": true},
+                  {"name": "📂 Repo", "value": "{{ github.repository }}", "inline": true}
+                ],
+                "url": "{{ github.event.pull_request.html_url }}",
+                "color": 16711680,
+                "timestamp": "{{ now }}"
+              }]
             }' \
-            "${{ secrets.N8N_WEBHOOK_URL }}"
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
