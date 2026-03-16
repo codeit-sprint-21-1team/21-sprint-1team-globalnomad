@@ -2,8 +2,66 @@ import * as React from "react";
 import { cn } from "@/commons/utils/cn";
 import { PaginationButton } from "@/components/ui/Pagination/Button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
+interface PaginationProps {
+  totalPage: number;
+}
+
+export function Pagination({ totalPage }: PaginationProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
+  const currentGroup = Math.ceil(currentPage / 5);
+  const startPage = (currentGroup - 1) * 5 + 1;
+  const endPage = Math.min(startPage + 4, totalPage);
+
+  const pages = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i,
+  );
+
+  const handlePageChange = (pageNumber: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", pageNumber.toString());
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  return (
+    <PaginationRoot>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            onClick={() => handlePageChange(Math.max(1, startPage - 1))}
+            disabled={currentPage === 1}
+          />
+        </PaginationItem>
+
+        {pages.map((num) => (
+          <PaginationItem key={num}>
+            <PaginationLink
+              onClick={() => handlePageChange(num)}
+              isActive={currentPage === num}
+            >
+              {num}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
+        <PaginationItem>
+          <PaginationNext
+            onClick={() => handlePageChange(Math.min(totalPage, endPage + 1))}
+            disabled={currentPage === totalPage}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </PaginationRoot>
+  );
+}
+
+function PaginationRoot({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       role="navigation"
@@ -107,12 +165,3 @@ function PaginationNext({
     </PaginationLink>
   );
 }
-
-export {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-};
