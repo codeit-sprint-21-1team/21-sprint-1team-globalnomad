@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 interface ModalRendererProps {
@@ -8,12 +8,7 @@ interface ModalRendererProps {
 }
 
 export function ModalRenderer({ content, onClose }: ModalRendererProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
   if (!mounted) return null;
 
