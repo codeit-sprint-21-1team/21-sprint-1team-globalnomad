@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useSyncExternalStore } from "react";
+import { ReactNode, useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 interface ModalRendererProps {
@@ -8,12 +8,32 @@ interface ModalRendererProps {
 }
 
 export function ModalRenderer({ content, onClose }: ModalRendererProps) {
-  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const previous = document.activeElement as HTMLElement;
+    const inertEls = Array.from(document.body.children).filter(
+      (el) => el !== containerRef.current,
+    );
+    inertEls.forEach((el) => el.setAttribute("inert", ""));
+    containerRef.current?.querySelector<HTMLElement>("button")?.focus();
+
+    return () => {
+      inertEls.forEach((el) => el.removeAttribute("inert"));
+      previous?.focus();
+    };
+  }, []);
 
   if (!mounted) return null;
 
   return createPortal(
     <div
+      ref={containerRef}
       role="dialog"
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
