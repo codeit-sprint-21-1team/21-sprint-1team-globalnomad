@@ -27,11 +27,15 @@ const buttonVariants = cva(
           "bg-white text-[#707177] border-[#C6C8CF]",
           "disabled:text-[#C6C8CF] [&.disabled]:text-[#C6C8CF]",
         ),
+        outline:
+          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
       },
       size: {
         sm: "rounded-[12px] py-[9.5px] text-[14px] [&_svg]:size-[16px]",
         md: "rounded-[14px] py-[11.5px] text-[16px] [&_svg]:size-[18px]",
         lg: "rounded-[16px] py-[14.5px] text-[16px] [&_svg]:size-[24px]",
+        "icon-sm":
+          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
       },
     },
     defaultVariants: {
