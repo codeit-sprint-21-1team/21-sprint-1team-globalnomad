@@ -1,6 +1,6 @@
 "use client";
 
-import { useDialog } from "@/components/ui/Dialog";
+import { useDialog } from "@/components/ui/dialog";
 
 function DialogTestButtons() {
   const { showDialog } = useDialog();
