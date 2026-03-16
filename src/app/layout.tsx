@@ -1,6 +1,6 @@
 import localFont from "next/font/local";
 import "@/commons/styles/globals.css";
-import { DialogProvider } from "@/components/ui/dialog";
+import { DialogProvider } from "@/components/ui/Dialog";
 
 const pretendard = localFont({
   src: [
