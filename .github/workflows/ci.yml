@@ -36,39 +36,12 @@ jobs:
         if: success()
         run: |
           curl -H "Content-Type: application/json" \
-            -d '{
-              "embeds": [{
-                "title": "✅ CI 성공",
-                "description": "*{{ github.event.pull_request.title }}*",
-                "fields": [
-                  {"name": "👤 작성자", "value": "{{ github.event.pull_request.user.login }}", "inline": true},
-                  {"name": "📋 PR 번호", "value": "#{{ github.event.number }}", "inline": true},
-                  {"name": "📂 Repo", "value": "{{ github.repository }}", "inline": true}
-                ],
-                "url": "{{ github.event.pull_request.html_url }}",
-                "color": 65280,
-                "timestamp": "{{ now }}"
-              }]
-            }' \
+            -d "{\"content\": \"✅ CI 성공 - PR #${{ github.event.number }}: ${{ github.event.pull_request.title }}\"}" \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
 
-      # 실패 시 Discord 알림
       - name: Discord Notify (Failure)
         if: failure()
         run: |
           curl -H "Content-Type: application/json" \
-            -d '{
-              "embeds": [{
-                "title": "❌ CI 실패",
-                "description": "*{{ github.event.pull_request.title }}*",
-                "fields": [
-                  {"name": "👤 작성자", "value": "{{ github.event.pull_request.user.login }}", "inline": true},
-                  {"name": "📋 PR 번호", "value": "#{{ github.event.number }}", "inline": true},
-                  {"name": "📂 Repo", "value": "{{ github.repository }}", "inline": true}
-                ],
-                "url": "{{ github.event.pull_request.html_url }}",
-                "color": 16711680,
-                "timestamp": "{{ now }}"
-              }]
-            }' \
+            -d "{\"content\": \"❌ CI 실패 - PR #${{ github.event.number }}: ${{ github.event.pull_request.title }}\"}" \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
