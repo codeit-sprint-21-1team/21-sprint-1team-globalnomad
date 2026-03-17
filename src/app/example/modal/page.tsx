@@ -1,6 +1,6 @@
 "use client";
 
-import { useModal } from "@/components/ui/modal";
+import { useModal } from "@/components/ui/Modal";
 
 export default function TestForModal() {
   const { showModal } = useModal();
