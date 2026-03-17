@@ -23,10 +23,16 @@ export const useViewport = () => {
   const init = useViewportStore((state) => state.init);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    setIsMounted(true);
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 0);
+
     const unsubscribe = init();
-    return () => unsubscribe();
+
+    return () => {
+      clearTimeout(timer);
+      unsubscribe();
+    };
   }, [init]);
 
   return isMounted ? viewport : DEFAULT_VIEWPORT;
