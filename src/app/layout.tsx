@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import "@/commons/styles/globals.css";
-import { ModalProvider } from "@/components/ui/modal";
-import FooterWrapper from "@/components/ui/Footer/FooterWrapper";
+import { DialogProvider } from "@/components/ui/Dialog";
+import { ModalProvider } from "@/components/ui/Modal";
 
 const pretendard = localFont({
   src: [
@@ -25,8 +25,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className={pretendard.variable}>
       <body className={pretendard.className}>
-        <ModalProvider>{children}</ModalProvider>
-        <FooterWrapper />
+        <DialogProvider>
+          <ModalProvider>{children}</ModalProvider>
+        </DialogProvider>
       </body>
     </html>
   );

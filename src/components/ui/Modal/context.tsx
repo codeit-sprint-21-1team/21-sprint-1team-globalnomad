@@ -48,7 +48,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
 
   return (
     <ModalContext.Provider value={{ showModal, onClose }}>
-      {children}
+      <div inert={modal ? true : undefined}>{children}</div>
       {modal && <ModalRenderer content={modal.content} onClose={onClose} />}
     </ModalContext.Provider>
   );
