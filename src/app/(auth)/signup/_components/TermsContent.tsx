@@ -1,7 +1,7 @@
 export function TersmContent() {
   return (
-    <div className="w-[273px] h-[425px] md:w-[329px] md:h-[465px] text-black font-medium break-all overflow-y-auto">
-      <h2 className="font-[14px] md:font-[16px] font-bold mb-[20px]">
+    <div className="w-[273px] h-[425px] md:w-[329px] md:h-[465px] text-[14px] md:text-[16px] font-medium text-black break-all overflow-y-auto">
+      <h2 className="text-[16px] md:text-[18px] font-bold mb-[20px]">
         글로벌 노마드 서비스 이용약관
       </h2>
       <div>
