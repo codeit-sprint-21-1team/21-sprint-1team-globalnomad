@@ -6,7 +6,14 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import { DialogOptions, DialogRenderer } from "./ui";
+import { AlertDialog } from "./variants/AlertDialog";
+import { ConfirmDialog } from "./variants/ConfirmDialog";
+
+export interface DialogOptions {
+  content: ReactNode;
+  type: "confirm" | "alert";
+  onConfirm?: () => void;
+}
 
 interface DialogContextValue {
   showDialog: (options: DialogOptions) => void;
@@ -34,9 +41,12 @@ export function DialogProvider({ children }: { children: ReactNode }) {
   return (
     <DialogContext.Provider value={{ showDialog, onClose }}>
       <div inert={dialog ? true : undefined}>{children}</div>
-      {dialog && (
-        <DialogRenderer
-          dialog={dialog}
+      {dialog?.type === "alert" && (
+        <AlertDialog content={dialog.content} onClose={onClose} />
+      )}
+      {dialog?.type === "confirm" && (
+        <ConfirmDialog
+          content={dialog.content}
           onClose={onClose}
           onConfirm={handleConfirm}
         />
