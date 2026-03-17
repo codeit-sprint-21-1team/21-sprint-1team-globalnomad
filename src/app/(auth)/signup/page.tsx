@@ -6,9 +6,16 @@ import { Checkbox } from "@/components/ui/Checkbox/Checkbox";
 import { Button } from "@/components/ui/Buttons/Button";
 import Link from "next/link";
 import Image from "next/image";
+import { useModal } from "@/components/ui/Modal";
+import { TersmContent } from "./_components/TermsContent";
 
 export default function SignupPage() {
   const { register, control, errors, isValid, onFormSubmit } = useSignup();
+
+  const { showModal } = useModal();
+  const handleModalClick = () => {
+    showModal(<TersmContent />);
+  };
 
   return (
     <div>
@@ -81,7 +88,9 @@ export default function SignupPage() {
                   onBlur={field.onBlur}
                 />
                 <label htmlFor="terms">(필수) 이용약관 동의</label>
-                <button type="button">보기</button>
+                <button type="button" onClick={handleModalClick}>
+                  보기
+                </button>
                 {errors.terms?.message && (
                   <div className="active">{errors.terms?.message}</div>
                 )}
