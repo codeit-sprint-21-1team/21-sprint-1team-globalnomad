@@ -13,10 +13,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: "npm"
 
       - name: Install dependencies
@@ -30,3 +30,78 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # 성공 시 Discord 알림
+      - name: Discord Notify (Success)
+        if: success()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          cat << 'EOF' > payload.json
+          {
+            "embeds": [{
+              "title": "✅ CI 성공",
+              "description": "*${{ github.event.pull_request.title }}*",
+              "url": "${{ github.event.pull_request.html_url }}",
+              "color": 65280,
+              "fields": [
+                {
+                  "name": "👤 작성자",
+                  "value": "${{ github.event.pull_request.user.login }}",
+                  "inline": true
+                },
+                {
+                  "name": "📋 PR 번호",
+                  "value": "#${{ github.event.number }}",
+                  "inline": true
+                },
+                {
+                  "name": "📂 Repo",
+                  "value": "${{ github.repository }}",
+                  "inline": true
+                }
+              ]
+            }]
+          }
+          EOF
+
+          curl -H "Content-Type: application/json" \
+            -d @payload.json \
+            "$DISCORD_WEBHOOK_URL"
+
+      - name: Discord Notify (Failure)
+        if: failure()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          cat << 'EOF' > payload.json
+          {
+            "embeds": [{
+              "title": "❌ CI 실패",
+              "description": "*${{ github.event.pull_request.title }}*",
+              "url": "${{ github.event.pull_request.html_url }}",
+              "color": 16711680,
+              "fields": [
+                {
+                  "name": "👤 작성자",
+                  "value": "${{ github.event.pull_request.user.login }}",
+                  "inline": true
+                },
+                {
+                  "name": "📋 PR 번호",
+                  "value": "#${{ github.event.number }}",
+                  "inline": true
+                },
+                {
+                  "name": "📂 Repo",
+                  "value": "${{ github.repository }}",
+                  "inline": true
+                }
+              ]
+            }]
+          }
+          EOF
+
+          curl -H "Content-Type: application/json" \
+            -d @payload.json \
+            "$DISCORD_WEBHOOK_URL"
