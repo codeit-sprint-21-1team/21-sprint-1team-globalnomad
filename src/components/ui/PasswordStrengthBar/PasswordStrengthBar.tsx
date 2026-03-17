@@ -12,13 +12,13 @@ export const PasswordStrengthBar = ({ score }: PasswordStrengthBarProps) => {
   const getLevelColor = (level: number) => {
     switch (level) {
       case 1:
-        return "bg-[#BBDDFF]/40";
+        return "bg-chart-1";
       case 2:
-        return "bg-[#BBDDFF]/70";
+        return "bg-chart-2";
       case 3:
-        return "bg-[#BBDDFF]";
+        return "bg-chart-3";
       case 4:
-        return "bg-[#88BBFF]";
+        return "bg-chart-4";
       default:
         return "bg-muted";
     }

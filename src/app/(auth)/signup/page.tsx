@@ -101,7 +101,7 @@ export default function SignupPage() {
             )}
           />
 
-          <Button type="submit" className={isValid ? "" : "disabled"}>
+          <Button type="submit" disabled={!isValid}>
             회원가입하기
           </Button>
         </form>
