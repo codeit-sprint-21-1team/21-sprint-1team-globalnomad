@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { cn } from "@/commons/utils/cn";
 import { PaginationButton } from "@/components/ui/Pagination/Button";
