@@ -16,12 +16,7 @@ export async function handleAuthPost(request: NextRequest, apiPath: string) {
 
   const data = await res.json();
   if (!res.ok) {
-    const errorResponse = NextResponse.json(data, { status: res.status });
-
-    errorResponse.cookies.delete("access_token");
-    errorResponse.cookies.delete("refresh_token");
-
-    return errorResponse;
+    return NextResponse.json(data, { status: res.status });
   }
 
   const response = NextResponse.json({ data });
@@ -33,7 +28,7 @@ export async function handleAuthPost(request: NextRequest, apiPath: string) {
     });
     response.cookies.set("refresh_token", data.refreshToken, {
       ...cookieOptions,
-      maxAge: 60 * 60 * 24 * 7, // 7일
+      maxAge: 60 * 60 * 24 * 14, // 14일
     });
   }
 
