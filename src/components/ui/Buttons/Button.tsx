@@ -21,11 +21,11 @@ const buttonVariants = cva(
       variant: {
         default: cn(
           "bg-[#3D9EF2] text-white border-[#3D9EF2]",
-          "disabled:bg-[#C6C8CF] disabled:border-[#C6C8CF] [&.disabled]:bg-[#C6C8CF] [&.disabled]:border-[#C6C8CF]",
+          "disabled:bg-[#C6C8CF] disabled:border-[#C6C8CF]",
         ),
         secondary: cn(
           "bg-white text-[#707177] border-[#C6C8CF]",
-          "disabled:text-[#C6C8CF] [&.disabled]:text-[#C6C8CF]",
+          "disabled:text-[#C6C8CF]",
         ),
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",

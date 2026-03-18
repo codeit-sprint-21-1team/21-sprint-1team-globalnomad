@@ -4,9 +4,12 @@ import { useLogin } from "./_libs/useLogin";
 import { Button } from "@/components/ui/Buttons/Button";
 import Image from "next/image";
 import Link from "next/link";
+import { Controller } from "react-hook-form";
+import { Checkbox } from "@/components/ui/Checkbox/Checkbox";
 
 export default function LoginPage() {
-  const { register, errors, isValid, touchedFields, onFormSubmit } = useLogin();
+  const { register, control, errors, isValid, touchedFields, onFormSubmit } =
+    useLogin();
 
   return (
     <div>
@@ -39,7 +42,23 @@ export default function LoginPage() {
             )}
           </>
 
-          <Button type="submit" className={isValid ? "" : "disabled"}>
+          <Controller
+            name="rememberEmail"
+            control={control}
+            render={({ field }) => (
+              <>
+                <Checkbox
+                  id="rememberEmail"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+                <label htmlFor="rememberEmail">이메일 기억하기</label>
+              </>
+            )}
+          />
+
+          <Button type="submit" disabled={!isValid}>
             로그인하기
           </Button>
         </form>
