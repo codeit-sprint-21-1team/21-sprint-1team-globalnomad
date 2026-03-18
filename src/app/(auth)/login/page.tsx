@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { Checkbox } from "@/components/ui/Checkbox/Checkbox";
+import { Input } from "@/components/ui/Input/Input";
 
 export default function LoginPage() {
   const { register, control, errors, isValid, touchedFields, onFormSubmit } =
@@ -16,37 +17,29 @@ export default function LoginPage() {
       <div className="container">
         <Link href="/">auth 로고 이미지 추가 예정</Link>
         <form onSubmit={onFormSubmit}>
-          <>
-            <label htmlFor="email">이메일</label>
-            <input
-              {...register("email")}
-              type="text"
-              id="email"
-              placeholder="이메일을 입력해주세요"
-            />
-            {touchedFields.email && errors.email?.message && (
-              <div className="active">{errors.email?.message}</div>
-            )}
-          </>
+          <Input
+            {...register("email")}
+            labelTxt="이메일"
+            id="email"
+            type="email"
+            placeholder="이메일을 입력해주세요"
+            errorTxt={errors.email?.message}
+          />
 
-          <>
-            <label htmlFor="password">비밀번호</label>
-            <input
-              {...register("password")}
-              type="password"
-              id="password"
-              placeholder="8자 이상 입력해 주세요"
-            />
-            {touchedFields.password && errors.password?.message && (
-              <div className="active">{errors.password?.message}</div>
-            )}
-          </>
+          <Input
+            {...register("password")}
+            labelTxt="비밀번호"
+            id="password"
+            type="password"
+            placeholder="8자 이상 입력해 주세요"
+            errorTxt={errors.password?.message}
+          />
 
           <Controller
             name="rememberEmail"
             control={control}
             render={({ field }) => (
-              <>
+              <div>
                 <Checkbox
                   id="rememberEmail"
                   checked={field.value}
@@ -54,7 +47,7 @@ export default function LoginPage() {
                   onBlur={field.onBlur}
                 />
                 <label htmlFor="rememberEmail">이메일 기억하기</label>
-              </>
+              </div>
             )}
           />
 
