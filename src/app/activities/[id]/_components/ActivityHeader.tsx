@@ -20,7 +20,7 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
         {activity.title}
       </h1>
 
-      <div className="mt-3 flex flex-col gap-1 flex-wrap text-[14px] text-gray-700 font-medium">
+      <div className="mt-3 flex flex-col gap-1 flex-wrap text-[14px] text-gray-600 font-medium">
         <div className="flex items-center gap-1 justify-start">
           <Star size={16} className="fill-yellow-500 text-yellow-500" />
           <span>{activity.rating}</span>
@@ -28,8 +28,8 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
         </div>
 
         <div className="flex items-center gap-1 justify-start">
-          <MapPin size={16} className="text-[#707177]" />
-          <span className="text-[#707177]">{activity.address}</span>
+          <MapPin size={16} />
+          <span>{activity.address}</span>
         </div>
       </div>
     </div>
