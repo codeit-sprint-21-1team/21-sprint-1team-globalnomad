@@ -1,5 +1,6 @@
 import { cn } from "@/commons/utils/cn";
 import { ReservationTabs } from "./_components/ReservationTabs";
+import { Suspense } from "react";
 
 const TAB_ITEMS = [
   { action: "pending", label: "예약 신청" },
@@ -31,7 +32,9 @@ export default function ReservationPage() {
         >
           예약내역 변경 및 취소할 수 있습니다.
         </div>
-        <ReservationTabs items={TAB_ITEMS} />
+        <Suspense fallback={<div>로딩 중...</div>}>
+          <ReservationTabs items={TAB_ITEMS} />
+        </Suspense>
       </header>
 
       <section className="mt-[13px] md:mt-[30px] xl:mt-[30px]">
