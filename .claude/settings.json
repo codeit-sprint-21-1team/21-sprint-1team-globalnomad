@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find 'c:\\\\Users\\\\j\\\\Desktop\\\\코드잇\\\\상급 팀프로젝트\\\\21-sprint-1team-globalnomad\\\\src\\\\app\\\\activities\\\\[id]' -type f -name *.tsx -o -name *.ts -o -name *.json)",
-      "Bash(find 'c:\\\\Users\\\\j\\\\Desktop\\\\코드잇\\\\상급 팀프로젝트\\\\21-sprint-1team-globalnomad\\\\src\\\\commons' -type f -name *.ts -o -name *.tsx)",
-      "Bash(grep -r \"kakao\\\\|map\\\\|Map\\\\|KAKAO\" 'c:\\\\Users\\\\j\\\\Desktop\\\\코드잇\\\\상급 팀프로젝트\\\\21-sprint-1team-globalnomad\\\\src' --include=*.ts --include=*.tsx -n)"
-    ]
-  }
-}
