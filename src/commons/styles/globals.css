@@ -139,3 +139,12 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
+
+@theme {
+  --background-image-hero-gradient: linear-gradient(
+    180deg,
+    #bbddff -6.85%,
+    #f7fbff 22.43%,
+    #ffffff 100%
+  );
+}
