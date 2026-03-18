@@ -41,7 +41,7 @@ export function DateInputPicker({
   const maxDate = addMonths(new Date(), 1);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, "").slice(0, 6);
+    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
 
     let formattedValue = "";
     if (value.length <= 2) {
