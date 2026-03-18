@@ -30,3 +30,8 @@ export const signUpFormSchema = z
   });
 
 export type SignUpValues = z.infer<typeof signUpFormSchema>;
+
+export type SignUpRequest = Omit<
+  SignUpValues,
+  "terms" | "passwordConfirmation" | "passwordScore"
+>;

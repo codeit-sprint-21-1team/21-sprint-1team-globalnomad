@@ -1,10 +1,18 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpFormSchema, SignUpValues } from "./signup.schema";
+import { signUpFormSchema, SignUpRequest, SignUpValues } from "./signup.schema";
 import { usePasswordStrength } from "@/components/ui/PasswordStrengthBar";
 import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { handleApiError } from "@/commons/utils/handleApiError";
+import { postSignup } from "@/apis/auth.api";
+import { useDialog } from "@/components/ui/Dialog";
+import { useRouter } from "next/navigation";
 
 export function useSignup() {
+  const { showDialog } = useDialog();
+  const router = useRouter();
+
   const {
     register,
     control,
@@ -37,8 +45,29 @@ export function useSignup() {
     }
   }, [passwordScore, trigger]);
 
+  const { mutate: signupMutation } = useMutation({
+    mutationFn: (signUpData: SignUpRequest) => postSignup(signUpData),
+    onSuccess: () => {
+      showDialog({
+        type: "alert",
+        content: "가입이 완료되었습니다.",
+        onConfirm: () => {
+          router.push("/login");
+        },
+      });
+    },
+    onError: (error) => {
+      const errorMessage = handleApiError(error);
+      showDialog({
+        type: "alert",
+        content: errorMessage,
+      });
+    },
+  });
+
   const onSubmit = (data: SignUpValues) => {
-    console.log(data);
+    const { terms, passwordConfirmation, passwordScore, ...signUpData } = data;
+    signupMutation(signUpData);
   };
 
   return {

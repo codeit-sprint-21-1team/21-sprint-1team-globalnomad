@@ -1,9 +1,11 @@
+import { ActivityHeader } from "./_components/ActivityHeader";
 import { BannerImages } from "./_components/BannerImages";
 import { Description } from "./_components/Description";
+import type { Activity, Reviews } from "@/types/activities";
 
 export default function ActivityDetailPage() {
   return (
-    <div className=" px-4 md:px-5 xl:px-0 xl:w-[1100px]  mx-auto grid grid-cols-1 xl:grid-rows-[400px] xl:grid-cols-[670px_410px] xl:gap-x-5">
+    <div className="mt-6 md:mt-10 xl:mt-15 px-4 md:px-5 xl:px-0 xl:w-[1120px]  mx-auto grid grid-cols-1 xl:grid-rows-[400px] xl:grid-cols-[670px_410px] xl:gap-x-10">
       <div className="xl:col-start-1">
         <BannerImages
           mainImageUrl={MOCK_ACTIVITY.bannerImageUrl}
@@ -12,7 +14,8 @@ export default function ActivityDetailPage() {
       </div>
 
       <div className="xl:col-start-2 xl:row-span-2 flex items-center justify-center flex flex-col">
-        <div className="h-30 flex items-center">타이틀란</div>
+        <ActivityHeader activity={MOCK_ACTIVITY} />
+
         <div className="h-200 flex items-center hidden xl:block">캘린더란</div>
       </div>
 
@@ -23,7 +26,7 @@ export default function ActivityDetailPage() {
   );
 }
 
-const MOCK_ACTIVITY = {
+const MOCK_ACTIVITY: Activity = {
   id: 7,
   userId: 21,
   title: "함께 배우면 즐거운 스트릿댄스",
@@ -59,7 +62,7 @@ const MOCK_ACTIVITY = {
   updatedAt: "2023-12-31T21:28:50.589Z",
 };
 
-const MOCK_REVIEWS = {
+const MOCK_REVIEWS: Reviews = {
   averageRating: 4.7,
   totalCount: 1200,
   reviews: [

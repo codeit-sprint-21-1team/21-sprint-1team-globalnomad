@@ -2,11 +2,12 @@
 
 import { Controller } from "react-hook-form";
 import { useSignup } from "./_libs/useSignUp";
-import { TersmContent } from "./_components/TermsContent";
+import { Input } from "@/components/ui/Input/Input";
 import { Checkbox } from "@/components/ui/Checkbox/Checkbox";
+import { PasswordStrengthBar } from "@/components/ui/PasswordStrengthBar/PasswordStrengthBar";
 import { Button } from "@/components/ui/Buttons/Button";
 import { useModal } from "@/components/ui/Modal";
-import { PasswordStrengthBar } from "@/components/ui/PasswordStrengthBar/PasswordStrengthBar";
+import { TersmContent } from "./_components/TermsContent";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -24,80 +25,62 @@ export default function SignupPage() {
       <div className="container">
         <Link href="/">auth 로고 이미지 추가 예정</Link>
         <form onSubmit={onFormSubmit}>
-          <>
-            <label htmlFor="email">이메일</label>
-            <input
-              {...register("email")}
-              type="text"
-              id="email"
-              placeholder="이메일을 입력해주세요"
-            />
-            {errors.email?.message && (
-              <div className="active">{errors.email?.message}</div>
-            )}
-          </>
+          <Input
+            {...register("email")}
+            labelTxt="이메일"
+            id="email"
+            type="email"
+            placeholder="이메일을 입력해주세요"
+            errorTxt={errors.email?.message}
+          />
 
-          <>
-            <label htmlFor="nickname">닉네임</label>
-            <input
-              {...register("nickname")}
-              type="text"
-              id="nickname"
-              placeholder="닉네임을 입력해주세요"
-            />
-            {errors.nickname?.message && (
-              <div className="active">{errors.nickname?.message}</div>
-            )}
-          </>
+          <Input
+            {...register("nickname")}
+            labelTxt="닉네임"
+            id="nickname"
+            type="text"
+            placeholder="닉네임을 입력해주세요"
+            errorTxt={errors.nickname?.message}
+          />
 
-          <>
-            <label htmlFor="password">비밀번호</label>
-            <input
-              {...register("password")}
-              type="password"
-              id="password"
-              placeholder="8자 이상 입력해 주세요"
-            />
-            {<PasswordStrengthBar score={passwordScore} />}
-            {errors.password?.message && (
-              <div className="active">{errors.password?.message}</div>
-            )}
-          </>
+          <Input
+            {...register("password")}
+            labelTxt="비밀번호"
+            id="password"
+            type="password"
+            placeholder="8자 이상 입력해 주세요"
+            errorTxt={errors.password?.message}
+          />
+          {<PasswordStrengthBar score={passwordScore} />}
 
-          <>
-            <label htmlFor="passwordConfirmation">비밀번호 확인</label>
-            <input
-              {...register("passwordConfirmation")}
-              type="password"
-              id="passwordConfirmation"
-              placeholder="비밀번호를 한 번 더 입력해 주세요"
-            />
-            {errors.passwordConfirmation?.message && (
-              <div className="active">
-                {errors.passwordConfirmation?.message}
-              </div>
-            )}
-          </>
+          <Input
+            {...register("passwordConfirmation")}
+            labelTxt="비밀번호 확인"
+            id="passwordConfirmation"
+            type="password"
+            placeholder="비밀번호를 한 번 더 입력해 주세요"
+            errorTxt={errors.passwordConfirmation?.message}
+          />
 
           <Controller
             name="terms"
             control={control}
             render={({ field }) => (
-              <>
-                <Checkbox
-                  id="terms"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  onBlur={field.onBlur}
-                />
-                <label htmlFor="terms">(필수) 이용약관 동의</label>
-                <button type="button" onClick={handleModalClick}>
-                  보기
-                </button>
-                {errors.terms?.message && (
-                  <div className="active">{errors.terms?.message}</div>
-                )}
-              </>
+              <div>
+                <div>
+                  <Checkbox
+                    id="terms"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                  <label htmlFor="terms">(필수) 이용약관 동의</label>
+                  <button type="button" onClick={handleModalClick}>
+                    보기
+                  </button>
+                </div>
+                {errors.terms?.message && <p>{errors.terms.message}</p>}
+              </div>
             )}
           />
 

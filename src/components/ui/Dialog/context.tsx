@@ -42,7 +42,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     <DialogContext.Provider value={{ showDialog, onClose }}>
       <div inert={dialog ? true : undefined}>{children}</div>
       {dialog?.type === "alert" && (
-        <AlertDialog content={dialog.content} onClose={onClose} />
+        <AlertDialog content={dialog.content} onClose={handleConfirm} />
       )}
       {dialog?.type === "confirm" && (
         <ConfirmDialog
