@@ -7,6 +7,7 @@ import { MapPin } from "lucide-react";
 
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kakao: any;
   }
 }
@@ -26,6 +27,7 @@ export default function KakaoMap({ address, title }: KakaoMapProps) {
       if (!container || container.childElementCount > 0) return;
 
       const geocoder = new window.kakao.maps.services.Geocoder();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       geocoder.addressSearch(address, (result: any[], status: string) => {
         if (status === window.kakao.maps.services.Status.OK) {
           const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
