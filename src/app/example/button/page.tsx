@@ -54,7 +54,7 @@ export default function ButtonPage() {
         <li>
           <p>버튼 안에 이미지 - lg 사이즈</p>
           <Button asChild variant="secondary" size="lg">
-            <Link href="/login">
+            <Link href="/auth/login">
               <Image
                 width={24}
                 height={24}
@@ -68,7 +68,7 @@ export default function ButtonPage() {
         <li>
           <p>버튼 안에 링크 - lg 사이즈</p>
           <Button asChild variant="secondary" size="lg">
-            <Link href="/login">로그인하러 가기</Link>
+            <Link href="/auth/login">로그인하러 가기</Link>
           </Button>
         </li>
         <li>

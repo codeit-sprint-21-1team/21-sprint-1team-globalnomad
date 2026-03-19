@@ -1,11 +1,9 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { cookieOptions } from "./auth.server";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
 export async function handleAuthPost(request: NextRequest, apiPath: string) {
-  const cookieStore = await cookies();
   const body = await request.json();
 
   const res = await fetch(`${API_BASE}/${apiPath}`, {

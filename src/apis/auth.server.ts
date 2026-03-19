@@ -16,38 +16,43 @@ export function clearAuthCookies(res: NextResponse) {
 }
 
 export async function tryRefresh(
-  cookieStore: Awaited<ReturnType<typeof cookies>>,
+  res: NextResponse,
+  refreshToken: string | undefined,
 ): Promise<string | null> {
-  const refreshToken = cookieStore.get("refresh_token")?.value;
-
   if (!refreshToken) return null;
 
-  const res = await fetch(`${API_BASE}/auth/tokens`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken }),
-  });
+  try {
+    const response = await fetch(`${API_BASE}/auth/tokens`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
 
-  if (!res.ok) return null;
+    if (!response.ok) return null;
 
-  const { accessToken } = await res.json();
-  cookieStore.set("access_token", accessToken, {
-    ...cookieOptions,
-    maxAge: 60 * 30,
-  });
-  return accessToken;
+    const { accessToken } = await response.json();
+
+    res.cookies.set("access_token", accessToken, {
+      ...cookieOptions,
+      maxAge: 60 * 30,
+    });
+
+    return accessToken;
+  } catch (error) {
+    return null;
+  }
 }
 
-export async function setAuthCookies(
-  cookieStore: Awaited<ReturnType<typeof cookies>>,
+export function setAuthCookies(
+  res: NextResponse,
   tokens: { accessToken: string; refreshToken: string },
-): Promise<void> {
-  cookieStore.set("access_token", tokens.accessToken, {
+): void {
+  res.cookies.set("access_token", tokens.accessToken, {
     ...cookieOptions,
     maxAge: 60 * 30,
   });
 
-  cookieStore.set("refresh_token", tokens.refreshToken, {
+  res.cookies.set("refresh_token", tokens.refreshToken, {
     ...cookieOptions,
     maxAge: 60 * 60 * 24 * 14,
   });
