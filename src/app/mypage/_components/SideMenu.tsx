@@ -1,0 +1,83 @@
+import { cn } from "@/commons/utils/cn";
+import { ChangeEvent, useRef, useState, memo, useCallback } from "react";
+import { ProfileSection } from "./ProfileSection";
+import { MenuItem } from "./MenuItem";
+
+const MENU_ITEMS = [
+  { href: "/mypage/user-info", label: "내 정보", iconName: "user" },
+  { href: "/mypage/reservation", label: "예약내역", iconName: "reservation" },
+  { href: "/mypage/activity", label: "내 체험 관리", iconName: "activity" },
+  {
+    href: "/mypage/reservation-status",
+    label: "예약 현황",
+    iconName: "status",
+  },
+];
+
+export const SideMenu = memo(
+  ({
+    isRootMyPage,
+    currentPath,
+  }: {
+    isRootMyPage: boolean;
+    currentPath: string;
+  }) => {
+    const isUserInfo = currentPath === "/mypage/user-info";
+
+    const [imageSrc, setImageSrc] = useState<string>(
+      "/images/blank_profile.png",
+    );
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleImageClick = useCallback(() => {
+      fileInputRef.current?.click();
+    }, []);
+
+    const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const previewUrl = URL.createObjectURL(file);
+        setImageSrc(previewUrl);
+
+        // TODO: 이미지 등록 api 실행 로직 구현 (ara 님 구현 부분(내정보 담당자))
+      }
+    }, []);
+
+    return (
+      <aside
+        className={cn(
+          isRootMyPage ? "block" : "hidden",
+          "w-[327px] mx-auto",
+          "md:block md:w-[178px] md:h-auto",
+          "xl:w-[290px] xl:h-auto",
+          "bg-white shadow-[0px_4px_24px_0px_#9CB4CA33]",
+          "border border-solid rounded-xl",
+          "py-6 px-[14px]",
+          "border-gray-50",
+        )}
+      >
+        <ProfileSection
+          imageSrc={imageSrc}
+          isUserInfo={isUserInfo}
+          onImageClick={handleImageClick}
+          onFileChange={handleFileChange}
+          fileInputRef={fileInputRef}
+        />
+        <nav>
+          <ul className="flex flex-col items-center md:gap-[12px] xl:gap-[14px] mt-[24px]">
+            {MENU_ITEMS.map((item) => (
+              <MenuItem
+                key={item.href}
+                href={item.href}
+                label={item.label}
+                iconName={item.iconName}
+                isActive={currentPath === item.href}
+              />
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    );
+  },
+);
+SideMenu.displayName = "SideMenu";

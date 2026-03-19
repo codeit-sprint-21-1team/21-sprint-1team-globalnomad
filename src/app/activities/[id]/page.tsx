@@ -2,6 +2,8 @@ import { ActivityHeader } from "./_components/ActivityHeader";
 import { BannerImages } from "./_components/BannerImages";
 import { Description } from "./_components/Description";
 import type { Activity, Reviews } from "@/types/activities";
+import KakaoMap from "./_components/KakaoMap";
+import { ReviewCardList } from "./_components/ReviewCardList";
 
 export default function ActivityDetailPage() {
   return (
@@ -19,8 +21,12 @@ export default function ActivityDetailPage() {
         <div className="h-200 flex items-center hidden xl:block">캘린더란</div>
       </div>
 
-      <div className="xl:col-start-1 flex justify-center self-start">
+      <div className="xl:col-start-1 flex flex-col self-start">
         <Description content={MOCK_ACTIVITY.description} />
+
+        <KakaoMap address={MOCK_ACTIVITY.address} title={MOCK_ACTIVITY.title} />
+
+        <ReviewCardList reviews={MOCK_REVIEWS} />
       </div>
     </div>
   );
@@ -77,8 +83,8 @@ const MOCK_REVIEWS: Reviews = {
       rating: 5,
       content:
         "스트릿 댄스 강습이 정말 즐거웠습니다! 강사님이 친절하게 알려주셔서 처음인데도 어렵지 않았어요. 기초부터 차근차근 배울 수 있어서 좋았고 다음에도 꼭 다시 오고 싶습니다. 강추합니다!",
-      createdAt: "2024-11-04T00:00:00.000Z",
-      updatedAt: "2024-11-04T00:00:00.000Z",
+      createdAt: "2026-03-18T00:00:00.000Z",
+      updatedAt: "2024-03-18T00:00:00.000Z",
     },
     {
       id: 2,
