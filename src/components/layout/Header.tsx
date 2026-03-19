@@ -1,5 +1,7 @@
-import { cn } from "@/commons/utils/cn";
+"use client";
 
+import { useAuth } from "@/commons/contexts/AuthContext";
+import { cn } from "@/commons/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,6 +10,8 @@ interface HeaderProps {
 }
 
 export default function Header({ className }: HeaderProps) {
+  const { user, logout } = useAuth();
+
   return (
     <header
       className={cn(
@@ -38,7 +42,16 @@ export default function Header({ className }: HeaderProps) {
             />
           </div>
         </Link>
-        <Link href="/login">로그인</Link>
+        {user ? (
+          <>
+            {user.nickname}
+            <button type="button" onClick={logout}>
+              로그아웃
+            </button>
+          </>
+        ) : (
+          <Link href="/login">로그인</Link>
+        )}
       </div>
     </header>
   );
