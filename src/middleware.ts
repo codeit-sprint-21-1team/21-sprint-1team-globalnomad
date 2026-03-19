@@ -14,16 +14,12 @@ export function middleware(request: NextRequest) {
   const refreshToken = request.cookies.get("refresh_token")?.value;
   const hasValidSession = accessToken || refreshToken;
 
-  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
-    pathname.startsWith(route),
-  );
-
+  const isProtectedRoute = pathname.startsWith("/mypage");
   if (isProtectedRoute && !hasValidSession) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
-
+  const isAuthRoute = pathname.startsWith("/auth");
   if (isAuthRoute && hasValidSession) {
     return NextResponse.redirect(new URL("/", request.url));
   }
