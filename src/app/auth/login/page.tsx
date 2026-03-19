@@ -63,7 +63,7 @@ export default function LoginPage() {
           </Button>
         </div>
         <div className="go-to-login">
-          회원이 아니신가요?<Link href="/signup">회원가입하기</Link>
+          회원이 아니신가요?<Link href="/auth/signup">회원가입하기</Link>
         </div>
       </div>
     </div>

@@ -18,6 +18,7 @@ async function proxy(req: NextRequest, path: string[], method: HttpMethod) {
 
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
+  const refreshToken = cookieStore.get("refresh_token")?.value;
 
   const targetUrl = `${API_BASE}/${path.join("/")}${new URL(req.url).search}`;
   const contentType = req.headers.get("content-type") ?? "";
@@ -30,42 +31,54 @@ async function proxy(req: NextRequest, path: string[], method: HttpMethod) {
 
   let body: BodyInit | undefined;
   try {
-    let body: BodyInit | undefined;
     if (method !== "GET") {
       body = isMultipart
         ? await req.blob()
         : JSON.stringify(await req.json().catch(() => ({})));
     }
 
-    let res = await fetch(targetUrl.toString(), { method, headers, body });
+    const res = await fetch(targetUrl.toString(), { method, headers, body });
 
     if (res.status === 401) {
-      const newToken = await tryRefresh(cookieStore);
+      const errorData = await res.json().catch(() => ({}));
+      const unauthorizedResponse = NextResponse.json(errorData, {
+        status: 401,
+      });
+
+      const newToken = await tryRefresh(unauthorizedResponse, refreshToken);
+
       if (newToken) {
         headers["Authorization"] = `Bearer ${newToken}`;
-        res = await fetch(targetUrl, { method, headers, body });
+        const retryRes = await fetch(targetUrl, { method, headers, body });
+        const retryData = await retryRes.json().catch(() => ({}));
+        const finalResponse = NextResponse.json(retryData, {
+          status: retryRes.status,
+        });
+
+        finalResponse.cookies.set("access_token", newToken, {
+          httpOnly: true,
+          path: "/",
+          maxAge: 60 * 30,
+        });
       } else {
-        const data = await res.json().catch(() => ({}));
-        const response = NextResponse.json(data, { status: 401 });
-        clearAuthCookies(response);
-        return response;
+        clearAuthCookies(unauthorizedResponse);
+        return unauthorizedResponse;
       }
     }
 
     const data = await res.json().catch(() => ({}));
+    const response = NextResponse.json(data, { status: res.status });
 
     if (res.ok && path.includes("sign-in") && path.includes("kakao")) {
-      const cookieStore = await cookies();
-
       if (data.accessToken && data.refreshToken) {
-        await setAuthCookies(cookieStore, {
+        setAuthCookies(response, {
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
         });
       }
     }
 
-    return NextResponse.json(data, { status: res.status });
+    return response;
   } catch (err) {
     return NextResponse.json(
       { message: "Internal Server Error" },

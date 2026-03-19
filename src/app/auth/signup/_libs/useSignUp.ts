@@ -52,7 +52,7 @@ export function useSignup() {
         type: "alert",
         content: "가입이 완료되었습니다.",
         onConfirm: () => {
-          router.push("/login");
+          router.push("/auth/login");
         },
       });
     },
