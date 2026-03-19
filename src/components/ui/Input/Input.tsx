@@ -32,93 +32,90 @@ export interface InputProps
     VariantProps<typeof inputVariants> {
   labelTxt?: string;
   errorTxt?: string;
+  ref?: React.Ref<HTMLInputElement>;
 }
 /**
  * className?, type?, id?, labelTxt?, errorTxt?, disabled(boolean)
  */
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      className,
-      variant,
-      type = "text",
-      id,
-      labelTxt,
-      errorTxt,
-      disabled,
-      ...props
-    },
-    ref,
-  ) => {
-    const generatedId = React.useId();
-    const inputId = id || generatedId;
-    const [showPassword, setShowPassword] = React.useState(false);
+const Input = ({
+  className,
+  variant,
+  type = "text",
+  id,
+  labelTxt,
+  errorTxt,
+  disabled,
+  ref,
+  ...props
+}: InputProps) => {
+  const generatedId = React.useId();
+  const inputId = id || generatedId;
+  const [showPassword, setShowPassword] = React.useState(false);
 
-    const isPasswordType = type === "password";
-    const currentType = isPasswordType
-      ? showPassword
-        ? "text"
-        : "password"
-      : type;
+  const isPasswordType = type === "password";
+  const currentType = isPasswordType
+    ? showPassword
+      ? "text"
+      : "password"
+    : type;
 
-    return (
-      <div className="w-full">
-        {labelTxt && (
-          <label
-            htmlFor={inputId}
+  return (
+    <div className="w-full">
+      {labelTxt && (
+        <label
+          htmlFor={inputId}
+          className={cn(
+            "w-full inline-flex",
+            "text-[16px] font-bold leading-[100%] tracking-[-0.025em] text-gray-900",
+            "mb-[10px]",
+          )}
+        >
+          {labelTxt}
+        </label>
+      )}
+      <div className="relative flex items-center">
+        <input
+          id={inputId}
+          type={currentType}
+          className={cn(
+            inputVariants({
+              variant: errorTxt ? "error" : variant,
+              className,
+            }),
+            isPasswordType && "pr-12",
+          )}
+          ref={ref}
+          disabled={disabled}
+          {...props}
+        />
+        {isPasswordType && (
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            disabled={disabled}
             className={cn(
-              "w-full inline-flex",
-              "text-[16px] font-bold leading-[100%] tracking-[-0.025em] text-gray-900",
-              "mb-[10px]",
+              "absolute right-4 flex items-center justify-center",
+              " text-gray-500 ",
+              "focus:outline-none",
+              disabled
+                ? "text-gray-300 cursor-not-allowed"
+                : "text-gray-500 hover:text-gray-700 cursor-pointer",
             )}
           >
-            {labelTxt}
-          </label>
-        )}
-        <div className="relative flex items-center">
-          <input
-            id={inputId}
-            type={currentType}
-            className={cn(
-              inputVariants({
-                variant: errorTxt ? "error" : variant,
-                className,
-              }),
-              isPasswordType && "pr-12",
+            {showPassword ? (
+              <Eye className="size-4.5" />
+            ) : (
+              <EyeOff className="size-4.5" />
             )}
-            ref={ref}
-            disabled={disabled}
-            {...props}
-          />
-          {isPasswordType && (
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              disabled={disabled}
-              className={cn(
-                "absolute right-4 flex items-center justify-center",
-                " text-gray-500 ",
-                "focus:outline-none",
-                disabled
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-500 hover:text-gray-700 cursor-pointer",
-              )}
-            >
-              {showPassword ? (
-                <Eye className="size-4.5" />
-              ) : (
-                <EyeOff className="size-4.5" />
-              )}
-            </button>
-          )}
-        </div>
-        {errorTxt && (
-          <p className="mt-2 text-sm text-red-500 leading-tight">{errorTxt}</p>
+          </button>
         )}
       </div>
-    );
-  },
-);
+      {errorTxt && (
+        <p className="mt-2 text-sm text-red-500 leading-tight">{errorTxt}</p>
+      )}
+    </div>
+  );
+};
 
 Input.displayName = "Input";
 
