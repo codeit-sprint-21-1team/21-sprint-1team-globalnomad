@@ -50,7 +50,7 @@ export default function Header({ className }: HeaderProps) {
             </button>
           </>
         ) : (
-          <Link href="/login">로그인</Link>
+          <Link href="/auth/login">로그인</Link>
         )}
       </div>
     </header>

@@ -20,8 +20,8 @@ export const signUpFormSchema = z
     }),
     passwordScore: z.number(),
   })
-  .refine((data) => data.passwordScore >= 4, {
-    message: "비밀번호 보안 강도를 높여주세요.",
+  .refine((data) => data.passwordScore >= 3, {
+    message: "8~16자의 영문 소문자, 숫자, 특수문자를 조합하여 설정해 주세요.",
     path: ["password"],
   })
   .refine((data) => data.password === data.passwordConfirmation, {

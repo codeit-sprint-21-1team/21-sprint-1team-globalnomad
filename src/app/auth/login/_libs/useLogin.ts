@@ -2,13 +2,14 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDialog } from "@/components/ui/Dialog";
 import { signInFormSchema, signInValues } from "./login.schema";
 import { handleApiError } from "@/commons/utils/handleApiError";
 import { postSignIn } from "@/apis/auth.api";
 
 export function useLogin() {
+  const queryClient = useQueryClient();
   const { showDialog } = useDialog();
   const router = useRouter();
   const {
@@ -29,8 +30,11 @@ export function useLogin() {
   const { mutate: signinMutation } = useMutation({
     mutationFn: (signinData: Omit<signInValues, "rememberEmail">) =>
       postSignIn(signinData),
-    onSuccess: () => {
-      router.push("/");
+    onSuccess: (userData) => {
+      const user = userData?.data?.data?.user;
+      queryClient.setQueryData(["user"], user);
+      router.replace("/");
+      router.refresh();
     },
     onError: (error) => {
       const errorMessage = handleApiError(error);
