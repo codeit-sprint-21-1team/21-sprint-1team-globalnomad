@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/commons/contexts/AuthContext";
 import { cn } from "@/commons/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,8 +11,6 @@ interface HeaderProps {
 }
 
 export default function Header({ className }: HeaderProps) {
-  const { user, logout } = useAuth();
-
   return (
     <header
       className={cn(
