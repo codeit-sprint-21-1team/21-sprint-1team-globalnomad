@@ -84,7 +84,22 @@ export function useKakaoOAuth() {
         try {
           await processSignup(signupData);
         } catch (error) {
-          showErrorAndRedirect(error);
+          if (
+            axios.isAxiosError(error) &&
+            error.response?.status === 400 &&
+            error.response?.data?.message?.includes("이미 등록된 사용자")
+          ) {
+            showDialog({
+              type: "alert",
+              content:
+                "이미 가입된 계정입니다.\n안전한 서비스 이용을 위해 카카오 인증을 한 번 더 진행해 주세요.",
+              onConfirm: () => {
+                redirectToKakao("login");
+              },
+            });
+          } else {
+            showErrorAndRedirect(error);
+          }
         }
       } else {
         const loginData = {

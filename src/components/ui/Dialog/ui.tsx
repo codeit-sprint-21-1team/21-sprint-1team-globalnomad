@@ -28,7 +28,7 @@ export function DialogRenderer({
         )}
       >
         {icon}
-        <p className="whitespace-pre-line text-center text-base font-bold text-gray-800 mb-3 md:mb-5">
+        <p className="whitespace-pre-line text-center text-base font-bold text-gray-800 mb-3 md:mb-5 break-keep">
           {content}
         </p>
         {actions}
