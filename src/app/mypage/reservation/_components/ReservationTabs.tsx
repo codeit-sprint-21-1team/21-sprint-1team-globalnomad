@@ -11,7 +11,7 @@ export function ReservationTabs({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const activeTab = searchParams.get("status") || "pending";
+  const activeTab = searchParams.get("status") || "all";
 
   const handleTabClick = (action: string) => {
     router.push(`?status=${action}`, { scroll: false });

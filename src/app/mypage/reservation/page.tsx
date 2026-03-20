@@ -1,14 +1,18 @@
 import { cn } from "@/commons/utils/cn";
 import { ReservationTabs } from "./_components/ReservationTabs";
 import { Suspense } from "react";
+import axios from "@/apis/axios";
 
 const TAB_ITEMS = [
+  { action: "all", label: "전체" },
   { action: "pending", label: "예약 신청" },
   { action: "canceled", label: "예약 취소" },
   { action: "confirmed", label: "예약 승인" },
   { action: "declined", label: "예약 거절" },
   { action: "completed", label: "체험 완료" },
 ];
+
+// async function ReservationList() {}
 
 export default function ReservationPage() {
   return (
@@ -41,6 +45,7 @@ export default function ReservationPage() {
         <article>
           {/* TODO: reservation list 구현 */}
           {/* <ReservationList data={data} /> */}
+          {/* <ReservationList /> */}
         </article>
       </section>
     </main>

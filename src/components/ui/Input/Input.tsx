@@ -103,9 +103,9 @@ const Input = ({
             )}
           >
             {showPassword ? (
-              <Eye className="size-4.5" />
+              <Eye className="size-5" />
             ) : (
-              <EyeOff className="size-4.5" />
+              <EyeOff className="size-5" />
             )}
           </button>
         )}

@@ -1,5 +1,5 @@
 import { cn } from "@/commons/utils/cn";
-import { ChangeEvent, useRef, useState, memo, useCallback } from "react";
+import { useState, memo } from "react";
 import { ProfileSection } from "./ProfileSection";
 import { MenuItem } from "./MenuItem";
 
@@ -22,26 +22,9 @@ export const SideMenu = memo(
     isRootMyPage: boolean;
     currentPath: string;
   }) => {
-    const isUserInfo = currentPath === "/mypage/user-info";
-
     const [imageSrc, setImageSrc] = useState<string>(
       "/images/blank_profile.png",
     );
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleImageClick = useCallback(() => {
-      fileInputRef.current?.click();
-    }, []);
-
-    const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const previewUrl = URL.createObjectURL(file);
-        setImageSrc(previewUrl);
-
-        // TODO: 이미지 등록 api 실행 로직 구현 (ara 님 구현 부분(내정보 담당자))
-      }
-    }, []);
 
     return (
       <aside
@@ -56,13 +39,7 @@ export const SideMenu = memo(
           "border-gray-50",
         )}
       >
-        <ProfileSection
-          imageSrc={imageSrc}
-          isUserInfo={isUserInfo}
-          onImageClick={handleImageClick}
-          onFileChange={handleFileChange}
-          fileInputRef={fileInputRef}
-        />
+        <ProfileSection imageSrc={imageSrc} />
         <nav>
           <ul className="flex flex-col items-center md:gap-[12px] xl:gap-[14px] mt-[24px]">
             {MENU_ITEMS.map((item) => (

@@ -33,7 +33,7 @@ export const MenuItem = memo(
   }) => {
     const Icon = ICONS[iconName];
     return (
-      <li className="w-full w-[299px] h-[54px] md:w-[150px] md:h-[48px] xl:w-full hover:bg-sky-50 hover:rounded-xl">
+      <li className="w-full w-[299px] h-[41px] mb-[17px] md:w-[150px] md:h-[48px] md:mb-0 xl:w-full hover:bg-sky-50 md:hover:rounded-xl">
         <MypageButton active={isActive} asChild>
           <Link href={href}>
             {Icon && (
