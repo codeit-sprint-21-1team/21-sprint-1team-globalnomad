@@ -11,7 +11,7 @@ import axios from "axios";
 export function useKakaoOAuth() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
-  const mode = searchParams.get("mode");
+  const mode = searchParams.get("state");
   const isProcessing = useRef<boolean>(false);
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -24,7 +24,7 @@ export function useKakaoOAuth() {
     const redirectToKakao = (targetMode: "login" | "signup") => {
       const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
       const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
-      const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login&mode=${targetMode}`;
+      const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login&state=${targetMode}`;
 
       window.location.href = KAKAO_AUTH_URL;
     };
@@ -38,7 +38,7 @@ export function useKakaoOAuth() {
       showDialog({
         type: "alert",
         content:
-          "회원가입이 완료되었습니다! 안전한 서비스 이용을 위해 카카오 인증을 한 번 더 진행해 주세요.",
+          "회원가입이 완료되었습니다!\n안전한 서비스 이용을 위해 카카오 인증을 한 번 더 진행해 주세요.",
         onConfirm: () => {
           redirectToKakao("login");
         },
@@ -101,7 +101,7 @@ export function useKakaoOAuth() {
             showDialog({
               type: "alert",
               content:
-                "가입되지 않은 계정입니다. 안전한 계정 생성을 위해 다시 한번 카카오 인증을 진행해 주세요.",
+                "가입되지 않은 계정입니다.\n안전한 계정 생성을 위해 다시 한번 카카오 인증을 진행해 주세요.",
               onConfirm: () => {
                 redirectToKakao("signup");
               },

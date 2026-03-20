@@ -10,7 +10,7 @@ export function KaKaoButton({ mode }: KaKaoButtonType) {
     const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
     const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
 
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login&mode=${mode}`;
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login&state=${mode}`;
     window.location.href = KAKAO_AUTH_URL;
   };
 
