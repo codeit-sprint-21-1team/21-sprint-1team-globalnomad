@@ -36,7 +36,7 @@ export default function Footer() {
 
         <div className="flex items-center justify-between md:contents">
           <span className="text-sm text-gray-400 font-medium md:order-1">
-            ©codeit - 2023
+            ©codeit - 2026
           </span>
 
           <div className="flex items-center gap-4 md:order-3">
