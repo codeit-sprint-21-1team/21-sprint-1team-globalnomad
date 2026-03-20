@@ -5,6 +5,8 @@ import { cn } from "@/commons/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
 
+import AuthButton from "../ui/Auth/AuthButton";
+
 interface HeaderProps {
   className?: string;
 }
@@ -42,16 +44,7 @@ export default function Header({ className }: HeaderProps) {
             />
           </div>
         </Link>
-        {user ? (
-          <>
-            {user.nickname}
-            <button type="button" onClick={logout}>
-              로그아웃
-            </button>
-          </>
-        ) : (
-          <Link href="/auth/login">로그인</Link>
-        )}
+        <AuthButton />
       </div>
     </header>
   );
