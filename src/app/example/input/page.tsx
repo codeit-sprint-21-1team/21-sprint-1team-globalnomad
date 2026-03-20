@@ -1,3 +1,4 @@
+import { DateInputPicker } from "@/components/ui/DateInputPicker/DateInputPicker";
 import { Input } from "@/components/ui/Input/Input";
 
 export default function Page() {
@@ -35,6 +36,10 @@ export default function Page() {
           placeholder="비밀번호를 입력하세요"
           disabled
         />
+      </div>
+
+      <div className="p-5 w-[400px]">
+        <DateInputPicker labelTxt="예약 날짜" />
       </div>
     </>
   );

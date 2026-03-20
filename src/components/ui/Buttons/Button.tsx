@@ -8,9 +8,10 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   cn(
     "w-full inline-flex shrink-0 items-center justify-center gap-[4px]",
     "font-medium tracking-[-2.5%] px-[5px] border whitespace-nowrap transition-all outline-none",
@@ -29,6 +30,8 @@ const buttonVariants = cva(
         ),
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+        ghost:
+          "bg-transparent border-transparent hover:bg-gray-100 text-gray-700",
       },
       size: {
         sm: "rounded-[12px] py-[9.5px] text-[14px] [&_svg]:size-[16px]",
@@ -36,6 +39,7 @@ const buttonVariants = cva(
         lg: "rounded-[16px] py-[14.5px] text-[16px] [&_svg]:size-[24px]",
         "icon-sm":
           "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
+        icon: "size-10 rounded-[12px] p-0 shrink-0",
       },
     },
     defaultVariants: {
@@ -51,6 +55,7 @@ export function Button({
   size = "lg",
   disabled,
   asChild = false,
+  ref,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button";
@@ -62,6 +67,7 @@ export function Button({
       data-size={size}
       disabled={disabled}
       className={cn(buttonVariants({ variant, size, className }))}
+      ref={ref}
       {...props}
     />
   );
