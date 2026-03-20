@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
@@ -38,7 +37,7 @@ export async function tryRefresh(
     });
 
     return accessToken;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
