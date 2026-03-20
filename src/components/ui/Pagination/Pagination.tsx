@@ -28,7 +28,7 @@ export function Pagination({ totalPage }: PaginationProps) {
   const handlePageChange = (pageNumber: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", pageNumber.toString());
-    router.replace(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (

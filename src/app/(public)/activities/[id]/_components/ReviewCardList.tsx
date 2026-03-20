@@ -1,6 +1,13 @@
-import type { Reviews } from "@/types/activities";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { getActivityReviews } from "@/apis/activities.api";
+import { Pagination } from "@/components/ui/Pagination/Pagination";
 import { Star } from "lucide-react";
 import { ReviewCard } from "./ReviewCard";
+
+const SIZE = 3;
 
 function getRatingLabel(rating: number): string {
   if (rating >= 4) return "매우 만족";
@@ -11,12 +18,24 @@ function getRatingLabel(rating: number): string {
 }
 
 interface ReviewCardListProps {
-  reviews: Reviews;
+  activityId: number;
 }
 
-export function ReviewCardList({ reviews }: ReviewCardListProps) {
+export function ReviewCardList({ activityId }: ReviewCardListProps) {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+
+  const { data: reviews } = useQuery({
+    queryKey: ["activity-reviews", activityId, page],
+    queryFn: () => getActivityReviews(activityId, page, SIZE),
+  });
+
+  if (!reviews) return null;
+
+  const totalPage = Math.ceil(reviews.totalCount / SIZE);
+
   return (
-    <section>
+    <section className="mb-20 md:mb-30">
       <div className="flex items-center gap-2 mb-3 md:mb-5 mt-4 md:mt-8">
         <h2 className="text-[16px] md:text-[18px] font-bold text-gray-950">
           체험 후기
@@ -39,13 +58,15 @@ export function ReviewCardList({ reviews }: ReviewCardListProps) {
         </div>
       </div>
 
-      <ul className="flex flex-col gap-8 md:gap-5 ">
+      <ul className="flex flex-col gap-8 md:gap-5 mb-7 ">
         {reviews.reviews.map((review) => (
           <li key={review.id}>
             <ReviewCard review={review} />
           </li>
         ))}
       </ul>
+
+      <Pagination totalPage={totalPage} />
     </section>
   );
 }
