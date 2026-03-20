@@ -2,15 +2,14 @@
 
 import { useLogin } from "./_libs/useLogin";
 import { Button } from "@/components/ui/Buttons/Button";
-import Image from "next/image";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { Checkbox } from "@/components/ui/Checkbox/Checkbox";
 import { Input } from "@/components/ui/Input/Input";
+import { KaKaoButton } from "../_components/KakaoButton";
 
 export default function LoginPage() {
-  const { register, control, errors, isValid, touchedFields, onFormSubmit } =
-    useLogin();
+  const { register, control, errors, isValid, onFormSubmit } = useLogin();
 
   return (
     <div>
@@ -57,10 +56,7 @@ export default function LoginPage() {
         </form>
         <div className="kakao-signin">
           <p>SNS 계정으로 로그인하기</p>
-          <Button variant="secondary" size="lg">
-            <Image width={24} height={24} src="/icons/kakao.svg" alt="" />
-            카카오 로그인하기
-          </Button>
+          <KaKaoButton />
         </div>
         <div className="go-to-login">
           회원이 아니신가요?<Link href="/auth/signup">회원가입하기</Link>

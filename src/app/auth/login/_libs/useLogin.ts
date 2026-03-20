@@ -17,7 +17,7 @@ export function useLogin() {
     control,
     setValue,
     handleSubmit,
-    formState: { errors, isValid, touchedFields },
+    formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(signInFormSchema),
     mode: "onTouched",
@@ -65,7 +65,6 @@ export function useLogin() {
     control,
     errors,
     isValid,
-    touchedFields,
     onFormSubmit: handleSubmit(onSubmit),
   };
 }

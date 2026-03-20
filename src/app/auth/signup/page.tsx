@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/Buttons/Button";
 import { useModal } from "@/components/ui/Modal";
 import { TersmContent } from "./_components/TermsContent";
 import Link from "next/link";
-import Image from "next/image";
+import { KaKaoButton } from "../_components/KakaoButton";
 
 export default function SignupPage() {
   const { register, control, errors, isValid, onFormSubmit, passwordScore } =
@@ -90,10 +90,7 @@ export default function SignupPage() {
         </form>
         <div className="kakao-signup">
           <p>SNS 계정으로 회원가입하기</p>
-          <Button variant="secondary" size="lg">
-            <Image width={24} height={24} src="/icons/kakao.svg" alt="" />
-            카카오 회원가입
-          </Button>
+          <KaKaoButton />
         </div>
         <div className="go-to-login">
           회원이신가요?<Link href="/auth/login">로그인하기</Link>
