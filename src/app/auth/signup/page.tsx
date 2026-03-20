@@ -90,7 +90,7 @@ export default function SignupPage() {
         </form>
         <div className="kakao-signup">
           <p>SNS 계정으로 회원가입하기</p>
-          <KaKaoButton />
+          <KaKaoButton mode={"signup"} />
         </div>
         <div className="go-to-login">
           회원이신가요?<Link href="/auth/login">로그인하기</Link>
