@@ -4,7 +4,7 @@ import * as React from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 
 import { cn } from "@/commons/utils/cn";
-import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import Image from "next/image";
 import { cva } from "class-variance-authority";
 
@@ -220,8 +220,6 @@ export function LabeledSelect({
   maxHeight,
   ...props
 }: CustomSelectProps) {
-  const generatedId = React.useId();
-
   return (
     <div className={cn("w-full flex flex-col gap-[10px]", className)}>
       {labelTxt && (
