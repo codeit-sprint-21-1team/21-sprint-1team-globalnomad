@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
+import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useAuth } from "@/commons/contexts/AuthContext";
+import { useEffect, useState, useRef, ChangeEvent } from "react";
 import { usePasswordStrength } from "@/components/ui/PasswordStrengthBar";
 import {
   userProfileFormSchema,
@@ -9,19 +10,20 @@ import {
   userPasswordValues,
   userProfileValues,
 } from "./userInfo.schema";
-import { useAuth } from "@/commons/contexts/AuthContext";
-import z from "zod";
 
 export function useUserInfo() {
   const { user } = useAuth();
-  useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>(
+    user?.profileImageUrl || "",
+  );
 
   const userProfileForm = useForm<z.infer<typeof userProfileFormSchema>>({
     resolver: zodResolver(userProfileFormSchema),
     mode: "onTouched",
     defaultValues: {
       email: "",
-      profileImageUrl: "",
+      imageFile: null,
       nickname: "",
     },
   });
@@ -37,13 +39,12 @@ export function useUserInfo() {
   });
 
   const {
+    setValue,
     reset: resetProfile,
-    watch: watchProfile,
     handleSubmit: handleSubmitProfile,
   } = userProfileForm;
 
   const {
-    reset: resetPassword,
     watch: watchPassword,
     setValue: setPasswordValue,
     trigger: triggerPassword,
@@ -54,21 +55,37 @@ export function useUserInfo() {
     if (user) {
       resetProfile({
         email: user.email ?? "",
-        profileImageUrl: user.profileImageUrl ?? "",
         nickname: user.nickname ?? "",
       });
-
-      resetPassword({
-        newPassword: "",
-        passwordConfirmation: "",
-        passwordScore: 0,
-      });
     }
-  }, [user, resetProfile, resetPassword]);
+  }, [user, resetProfile]);
+
+  const handleImageButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+
+    if (previewUrl && previewUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
+    const blobUrl = URL.createObjectURL(selectedFile);
+    setPreviewUrl(blobUrl);
+    setValue("imageFile", selectedFile, { shouldDirty: true });
+  };
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   // eslint-disable-next-line -- React Hook Form의 watch API와 리액트 컴파일러 간의 호환성 이슈로 인한 예외 처리
-  const profileImageUrl = watchProfile("profileImageUrl");
-
   const passwordValue = watchPassword("newPassword");
   const { passwordScore } = usePasswordStrength<userPasswordValues>(
     passwordValue,
@@ -93,7 +110,12 @@ export function useUserInfo() {
     userPasswordForm,
     onProfileFormSubmit: handleSubmitProfile(onProfileSubmit),
     onPasswordFormSubmit: handleSubmitPassword(onPasswordSubmit),
-    profileImageUrl,
     passwordScore,
+    imageProps: {
+      previewUrl,
+      fileInputRef,
+      onImageButtonClick: handleImageButtonClick,
+      onImageFileChange: handleImageFileChange,
+    },
   };
 }
