@@ -12,6 +12,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { UpwardPanel } from "./_components/UpwardPanel";
 
 export default async function ActivityDetailPage({
   params,
@@ -67,6 +68,8 @@ export default async function ActivityDetailPage({
           </Suspense>
         </HydrationBoundary>
       </div>
+
+      <UpwardPanel price={activity.price} />
     </div>
   );
 }
