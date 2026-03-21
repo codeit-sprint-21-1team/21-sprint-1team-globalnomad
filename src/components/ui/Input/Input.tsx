@@ -9,7 +9,7 @@ import { Eye, EyeOff } from "lucide-react";
 const inputVariants = cva(
   cn(
     "w-full inline-flex rounded-2xl items-center justify-center border border-gray-100 bg-white",
-    "px-[20px] py-[16.5px] text-base text-[#1F1F22] leading-none",
+    "px-[20px] py-[16.5px] text-[16px] font-medium text-[#1F1F22] leading-none",
     "leading-[100%] tracking-[-0.025em]",
     "placeholder-[#9FA0A7] focus-visible:outline-[#3D9EF2] focus-[#1F1F22] disabled:cursor-not-allowed disabled:opacity-50",
   ),
@@ -45,6 +45,7 @@ const Input = ({
   labelTxt,
   errorTxt,
   disabled,
+  readOnly,
   ref,
   ...props
 }: InputProps) => {
@@ -83,9 +84,12 @@ const Input = ({
               className,
             }),
             isPasswordType && "pr-12",
+            readOnly &&
+              "focus-visible:outline-none cursor-default text-[#9FA0A7]",
           )}
           ref={ref}
           disabled={disabled}
+          readOnly={readOnly}
           {...props}
         />
         {isPasswordType && (

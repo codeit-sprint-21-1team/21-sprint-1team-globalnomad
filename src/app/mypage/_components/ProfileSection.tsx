@@ -4,7 +4,9 @@ import { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/commons/utils/cn";
 
-export const ProfileSection = memo(({ imageSrc }: { imageSrc: string }) => {
+export const ProfileSection = memo(({ imageSrc }: { imageSrc?: string }) => {
+  const profileImage = imageSrc ? imageSrc : "/images/blank_profile.png";
+
   return (
     <div className="flex flex-col items-center gap-6 relative self-center">
       <div
@@ -15,8 +17,8 @@ export const ProfileSection = memo(({ imageSrc }: { imageSrc: string }) => {
         <Image
           width={120}
           height={120}
-          src={imageSrc}
-          alt="내프로필 사진"
+          src={profileImage}
+          alt="내 프로필 사진"
           className="object-cover w-full h-full"
         />
       </div>
