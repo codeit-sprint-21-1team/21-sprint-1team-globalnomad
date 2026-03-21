@@ -1,3 +1,19 @@
+export type ActivitySort =
+  | "most_reviewed"
+  | "price_asc"
+  | "price_desc"
+  | "latest";
+
+export interface GetActivityListParams {
+  method: "offset" | "cursor";
+  cursorId?: number;
+  category?: string;
+  keyword?: string;
+  sort?: ActivitySort;
+  page?: number;
+  size?: number;
+}
+
 export interface SubImage {
   id: number;
   imageUrl: string;
@@ -25,6 +41,28 @@ export interface Activity {
   rating: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export type ActivityListItem = Pick<
+  Activity,
+  | "id"
+  | "userId"
+  | "title"
+  | "description"
+  | "category"
+  | "price"
+  | "address"
+  | "bannerImageUrl"
+  | "rating"
+  | "reviewCount"
+  | "createdAt"
+  | "updatedAt"
+>;
+
+export interface ActivityListResponse {
+  cursorId?: number | null;
+  totalCount: number;
+  activities: ActivityListItem[];
 }
 
 export interface ReviewUser {
