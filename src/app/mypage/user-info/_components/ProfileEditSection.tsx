@@ -7,13 +7,12 @@ import { Button } from "@/components/ui/Buttons/Button";
 import { cn } from "@/commons/utils/cn";
 
 export default function ProfileEditSection() {
-  const { userProfileForm, onProfileFormSubmit, profileImageUrl } =
-    useUserInfo();
+  const { userProfileForm, onProfileFormSubmit, imageProps } = useUserInfo();
   const {
     register,
     formState: { errors, isValid, isDirty },
   } = userProfileForm;
-
+  const { previewUrl, onImageReset, isImageChanged, ...restProps } = imageProps;
   return (
     <>
       <div className="mt-[10px]">
@@ -39,7 +38,18 @@ export default function ProfileEditSection() {
       <section className="mt-[20px] md:mt-[24px] xl:mt-[24px]">
         <article>
           <form onSubmit={onProfileFormSubmit}>
-            <ProfileSection imageSrc={profileImageUrl} />
+            <ProfileSection
+              imageSrc={previewUrl}
+              imageProps={restProps}
+              isEditable={true}
+            />
+            <Button
+              type="button"
+              onClick={onImageReset}
+              disabled={!isImageChanged}
+            >
+              되돌리기
+            </Button>
 
             <Input
               {...register("email")}
