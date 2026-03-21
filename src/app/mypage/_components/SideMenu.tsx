@@ -2,6 +2,7 @@ import { cn } from "@/commons/utils/cn";
 import { useState, memo } from "react";
 import { ProfileSection } from "./ProfileSection";
 import { MenuItem } from "./MenuItem";
+import { useAuth } from "@/commons/contexts/AuthContext";
 
 const MENU_ITEMS = [
   { href: "/mypage/user-info", label: "내 정보", iconName: "user" },
@@ -22,9 +23,7 @@ export const SideMenu = memo(
     isRootMyPage: boolean;
     currentPath: string;
   }) => {
-    const [imageSrc, setImageSrc] = useState<string>(
-      "/images/blank_profile.png",
-    );
+    const { user } = useAuth();
 
     return (
       <aside
@@ -39,7 +38,7 @@ export const SideMenu = memo(
           "border-gray-50",
         )}
       >
-        <ProfileSection imageSrc={imageSrc} />
+        <ProfileSection imageSrc={user?.profileImageUrl || ""} />
         <nav>
           <ul className="flex flex-col items-center md:gap-[12px] xl:gap-[14px] mt-[24px]">
             {MENU_ITEMS.map((item) => (
