@@ -87,7 +87,7 @@ export function UpwardPanel({ price }: UpwardPanelProps) {
           )}
         >
           <span className="text-lg font-bold text-gray-950">
-            ₩{price.toLocaleString()}
+            {price === 0 ? "FREE" : `₩${price.toLocaleString()}`}
             <span className="text-sm font-normal text-gray-600"> /1명</span>
           </span>
 
