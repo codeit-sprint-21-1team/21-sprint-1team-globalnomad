@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDialog } from "@/components/ui/Dialog";
@@ -17,19 +17,16 @@ export function useKakaoOAuth() {
   const router = useRouter();
   const { showDialog } = useDialog();
 
-  useEffect(() => {
-    if (!code || isProcessing.current) return;
-    isProcessing.current = true;
+  const redirectToKakao = useCallback((targetMode: "login" | "signup") => {
+    const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+    const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login&state=${targetMode}`;
 
-    const redirectToKakao = (targetMode: "login" | "signup") => {
-      const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
-      const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
-      const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login&state=${targetMode}`;
+    window.location.href = KAKAO_AUTH_URL;
+  }, []);
 
-      window.location.href = KAKAO_AUTH_URL;
-    };
-
-    const processSignup = async (signupData: {
+  const processSignup = useCallback(
+    async (signupData: {
       token: string;
       redirectUri: string;
       nickname: string;
@@ -43,12 +40,12 @@ export function useKakaoOAuth() {
           redirectToKakao("login");
         },
       });
-    };
+    },
+    [showDialog, redirectToKakao],
+  );
 
-    const processLogin = async (authData: {
-      token: string;
-      redirectUri: string;
-    }) => {
+  const processLogin = useCallback(
+    async (authData: { token: string; redirectUri: string }) => {
       const response = await postOAuthKaKaoSignin(authData);
       const user = response?.data?.user;
       if (user) {
@@ -57,9 +54,12 @@ export function useKakaoOAuth() {
       router.replace("/");
       router.refresh();
       return user;
-    };
+    },
+    [queryClient, router],
+  );
 
-    const showErrorAndRedirect = (error: unknown) => {
+  const showErrorAndRedirect = useCallback(
+    (error: unknown) => {
       const errorMessage = handleApiError(error);
       showDialog({
         type: "alert",
@@ -72,7 +72,13 @@ export function useKakaoOAuth() {
           }
         },
       });
-    };
+    },
+    [mode, showDialog, router],
+  );
+
+  useEffect(() => {
+    if (!code || isProcessing.current) return;
+    isProcessing.current = true;
 
     const handleAuth = async () => {
       if (mode === "signup") {
@@ -129,5 +135,13 @@ export function useKakaoOAuth() {
     };
 
     handleAuth();
-  }, [code, router, queryClient, showDialog]);
+  }, [
+    code,
+    mode,
+    processSignup,
+    processLogin,
+    showErrorAndRedirect,
+    redirectToKakao,
+    showDialog,
+  ]);
 }

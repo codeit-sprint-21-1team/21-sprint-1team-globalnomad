@@ -34,6 +34,7 @@ export function useSignup() {
     },
   });
 
+  // eslint-disable-next-line -- React Hook Form의 watch API와 리액트 컴파일러 간의 호환성 이슈로 인한 예외 처리
   const passwordValue = watch("password");
   const { passwordScore } = usePasswordStrength<SignUpValues>(
     passwordValue,
@@ -43,7 +44,7 @@ export function useSignup() {
     if (passwordValue) {
       trigger("password");
     }
-  }, [passwordScore, trigger]);
+  }, [passwordValue, trigger]);
 
   const { mutate: signupMutation } = useMutation({
     mutationFn: (signUpData: SignUpRequest) => postSignup(signUpData),
@@ -66,6 +67,7 @@ export function useSignup() {
   });
 
   const onSubmit = (data: SignUpValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { terms, passwordConfirmation, passwordScore, ...signUpData } = data;
     signupMutation(signUpData);
   };

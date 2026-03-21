@@ -7,9 +7,9 @@ import { Checkbox } from "@/components/ui/Checkbox/Checkbox";
 import { PasswordStrengthBar } from "@/components/ui/PasswordStrengthBar/PasswordStrengthBar";
 import { Button } from "@/components/ui/Buttons/Button";
 import { useModal } from "@/components/ui/Modal";
-import { TersmContent } from "./_components/TermsContent";
-import Link from "next/link";
+import { TermsContent } from "./_components/TermsContent";
 import { KaKaoButton } from "../_components/KakaoButton";
+import Link from "next/link";
 
 export default function SignupPage() {
   const { register, control, errors, isValid, onFormSubmit, passwordScore } =
@@ -17,7 +17,7 @@ export default function SignupPage() {
 
   const { showModal } = useModal();
   const handleModalClick = () => {
-    showModal(<TersmContent />);
+    showModal(<TermsContent />);
   };
 
   return (

@@ -1,4 +1,4 @@
-export function TersmContent() {
+export function TermsContent() {
   return (
     <div className="w-[273px] h-[425px] md:w-[329px] md:h-[465px] text-[14px] md:text-[16px] font-medium text-black break-all overflow-y-auto">
       <h2 className="text-[16px] md:text-[18px] font-bold mb-[20px]">

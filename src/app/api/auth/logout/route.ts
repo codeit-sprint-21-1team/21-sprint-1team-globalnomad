@@ -11,7 +11,7 @@ export async function POST() {
     clearAuthCookies(response);
 
     return response;
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: "Logout failed" }, { status: 500 });
   }
 }

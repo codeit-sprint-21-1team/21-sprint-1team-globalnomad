@@ -79,7 +79,7 @@ async function proxy(req: NextRequest, path: string[], method: HttpMethod) {
     }
 
     return response;
-  } catch (err) {
+  } catch {
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },

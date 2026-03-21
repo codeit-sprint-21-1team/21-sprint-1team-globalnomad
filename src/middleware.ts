@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_ROUTES = ["/mypage"];
-const AUTH_ROUTES = ["/auth"];
-
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
