@@ -40,33 +40,33 @@ export default async function ActivityDetailPage({
   ]);
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="mt-6 md:mt-10 xl:mt-15 px-4 md:px-5 xl:px-0 xl:w-[1120px]  mx-auto grid grid-cols-1 xl:grid-rows-[400px] xl:grid-cols-[670px_410px] xl:gap-x-10">
-        <div className="xl:col-start-1">
-          <BannerImages
-            mainImageUrl={activity.bannerImageUrl}
-            subImages={activity.subImages}
-          />
+    <div className="mt-6 md:mt-10 xl:mt-15 px-4 md:px-5 xl:px-0 xl:w-[1120px]  mx-auto grid grid-cols-1 xl:grid-rows-[400px] xl:grid-cols-[670px_410px] xl:gap-x-10">
+      <div className="xl:col-start-1">
+        <BannerImages
+          mainImageUrl={activity.bannerImageUrl}
+          subImages={activity.subImages}
+        />
+      </div>
+
+      <div className="xl:col-start-2 xl:row-span-2 flex items-center justify-start flex-col">
+        <ActivityHeader activity={activity} />
+
+        <div className="h-200 flex items-center hidden xl:block">
+          캘린더란
         </div>
+      </div>
 
-        <div className="xl:col-start-2 xl:row-span-2 flex items-center justify-start flex-col">
-          <ActivityHeader activity={activity} />
+      <div className="xl:col-start-1 flex flex-col self-start">
+        <Description content={activity.description} />
 
-          <div className="h-200 flex items-center hidden xl:block">
-            캘린더란
-          </div>
-        </div>
+        <KakaoMap address={activity.address} title={activity.title} />
 
-        <div className="xl:col-start-1 flex flex-col self-start">
-          <Description content={activity.description} />
-
-          <KakaoMap address={activity.address} title={activity.title} />
-
+        <HydrationBoundary state={dehydrate(queryClient)}>
           <Suspense fallback={null}>
             <ReviewCardList activityId={activityId} />
           </Suspense>
-        </div>
+        </HydrationBoundary>
       </div>
-    </HydrationBoundary>
+    </div>
   );
 }

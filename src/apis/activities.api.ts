@@ -1,10 +1,12 @@
 import { Activity, Reviews } from "@/types/activities";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export const getActivityDetail = async (
   activityId: number,
 ): Promise<Activity> => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/activities/${activityId}`,
+    `${BASE_URL}/activities/${activityId}`,
     { next: { revalidate: 60 } },
   );
 
@@ -21,7 +23,7 @@ export const getActivityReviews = async (
   size: number = 3,
 ): Promise<Reviews> => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/activities/${activityId}/reviews?page=${page}&size=${size}`,
+    `${BASE_URL}/activities/${activityId}/reviews?page=${page}&size=${size}`,
     { next: { revalidate: 60 } },
   );
 
