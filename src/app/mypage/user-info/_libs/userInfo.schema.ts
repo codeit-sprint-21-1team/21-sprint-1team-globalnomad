@@ -1,8 +1,8 @@
 import z from "zod";
 
 export const userProfileFormSchema = z.object({
+  imageFile: z.instanceof(File).optional().nullable(),
   email: z.string(),
-  profileImageUrl: z.string().url().optional().or(z.literal("")),
   nickname: z
     .string()
     .min(1, "닉네임을 입력해주세요.")

@@ -1,5 +1,5 @@
 import { cn } from "@/commons/utils/cn";
-import { useState, memo } from "react";
+import { memo } from "react";
 import { ProfileSection } from "./ProfileSection";
 import { MenuItem } from "./MenuItem";
 import { useAuth } from "@/commons/contexts/AuthContext";
