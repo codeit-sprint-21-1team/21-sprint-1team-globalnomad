@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/Buttons/Button";
 import { cn } from "@/commons/utils/cn";
 
 export default function ProfileEditSection() {
-  const { userProfileForm, onProfileFormSubmit, imageProps } = useUserInfo();
+  const { userProfileForm, onProfileFormSubmit, imageProps, isSubmitting } =
+    useUserInfo();
   const {
     register,
     formState: { errors, isValid, isDirty },
@@ -43,6 +44,11 @@ export default function ProfileEditSection() {
               imageProps={restProps}
               isEditable={true}
             />
+            {errors.imageFile?.message && (
+              <p className="mt-2 text-sm text-red-500 leading-tight">
+                {errors.imageFile.message}
+              </p>
+            )}
             <Button
               type="button"
               onClick={onImageReset}
@@ -69,7 +75,10 @@ export default function ProfileEditSection() {
               errorTxt={errors.nickname?.message}
             />
 
-            <Button type="submit" disabled={!isValid || !isDirty}>
+            <Button
+              type="submit"
+              disabled={!isValid || !isDirty || isSubmitting}
+            >
               저장하기
             </Button>
           </form>

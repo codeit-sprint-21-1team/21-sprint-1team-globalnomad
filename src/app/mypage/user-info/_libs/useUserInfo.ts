@@ -9,7 +9,12 @@ import {
   userPasswordFormSchema,
   userPasswordValues,
   userProfileValues,
+  UpdateUserRequest,
 } from "./userInfo.schema";
+import { patchUserMe, postUserMeImage } from "@/apis/users.api";
+import { useDialog } from "@/components/ui/Dialog";
+import { handleApiError } from "@/commons/utils/handleApiError";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useUserInfo() {
   const { user } = useAuth();
@@ -17,10 +22,12 @@ export function useUserInfo() {
   const [previewUrl, setPreviewUrl] = useState<string>(
     user?.profileImageUrl || "",
   );
+  const queryClient = useQueryClient();
+  const { showDialog } = useDialog();
 
   const userProfileForm = useForm<z.infer<typeof userProfileFormSchema>>({
     resolver: zodResolver(userProfileFormSchema),
-    mode: "onTouched",
+    mode: "onChange",
     defaultValues: {
       imageFile: null,
       email: "",
@@ -48,6 +55,7 @@ export function useUserInfo() {
     watch: watchPassword,
     setValue: setPasswordValue,
     trigger: triggerPassword,
+    reset: resetPassword,
     handleSubmit: handleSubmitPassword,
   } = userPasswordForm;
 
@@ -77,7 +85,10 @@ export function useUserInfo() {
 
     const blobUrl = URL.createObjectURL(selectedFile);
     setPreviewUrl(blobUrl);
-    setValue("imageFile", selectedFile, { shouldDirty: true });
+    setValue("imageFile", selectedFile, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   const handleImageReset = () => {
@@ -86,7 +97,7 @@ export function useUserInfo() {
     }
     const originalUrl = user?.profileImageUrl || "";
     setPreviewUrl(originalUrl);
-    setValue("imageFile", null, { shouldDirty: true });
+    setValue("imageFile", null, { shouldDirty: true, shouldValidate: true });
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -113,12 +124,68 @@ export function useUserInfo() {
     }
   }, [passwordScore, passwordValue, triggerPassword]);
 
-  const onProfileSubmit = (data: userProfileValues) => {
-    console.log(data);
+  const { mutateAsync: updateUserProfileImage, isPending: isImageUploading } =
+    useMutation({
+      mutationFn: (updateUserFile: File) => postUserMeImage(updateUserFile),
+      onError: (error) => {
+        const errorMessage = handleApiError(error);
+        showDialog({
+          type: "alert",
+          content: errorMessage,
+        });
+      },
+    });
+
+  const { mutate: updateUserMutation, isPending: isInfoUpdating } = useMutation(
+    {
+      mutationFn: (updateUserData: UpdateUserRequest) =>
+        patchUserMe(updateUserData),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+        showDialog({
+          type: "alert",
+          content: "내 정보가 수정되었습니다.",
+        });
+      },
+      onError: (error) => {
+        const errorMessage = handleApiError(error);
+        showDialog({
+          type: "alert",
+          content: errorMessage,
+        });
+      },
+    },
+  );
+
+  const onProfileSubmit = async (data: userProfileValues) => {
+    const updateProfileData: UpdateUserRequest = {};
+
+    if (data.nickname !== user?.nickname) {
+      updateProfileData.nickname = data.nickname;
+    }
+
+    if (data.imageFile && previewUrl !== (user?.profileImageUrl || "")) {
+      const imageUrl = await updateUserProfileImage(data.imageFile);
+      updateProfileData.profileImageUrl = imageUrl;
+    }
+
+    if (Object.keys(updateProfileData).length > 0) {
+      updateUserMutation(updateProfileData);
+    }
   };
 
   const onPasswordSubmit = (data: userPasswordValues) => {
-    console.log(data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordConfirmation, passwordScore, ...updatePasswordData } = data;
+    updateUserMutation(updatePasswordData, {
+      onSuccess: () => {
+        resetPassword({
+          newPassword: "",
+          passwordConfirmation: "",
+          passwordScore: 0,
+        });
+      },
+    });
   };
 
   return {
@@ -135,5 +202,6 @@ export function useUserInfo() {
       onImageReset: handleImageReset,
       isImageChanged: previewUrl !== (user?.profileImageUrl || ""),
     },
+    isSubmitting: isImageUploading || isInfoUpdating,
   };
 }

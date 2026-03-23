@@ -7,8 +7,12 @@ import { Button } from "@/components/ui/Buttons/Button";
 import { cn } from "@/commons/utils/cn";
 
 export default function PasswordEditSection() {
-  const { userPasswordForm, onPasswordFormSubmit, passwordScore } =
-    useUserInfo();
+  const {
+    userPasswordForm,
+    onPasswordFormSubmit,
+    passwordScore,
+    isSubmitting,
+  } = useUserInfo();
   const {
     register,
     formState: { errors, isValid },
@@ -58,7 +62,7 @@ export default function PasswordEditSection() {
               errorTxt={errors.passwordConfirmation?.message}
             />
 
-            <Button type="submit" disabled={!isValid}>
+            <Button type="submit" disabled={!isValid || isSubmitting}>
               저장하기
             </Button>
           </form>
