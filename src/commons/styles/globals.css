@@ -162,3 +162,15 @@
     }
   }
 }
+
+@layer components {
+  .hero-section {
+    background:
+      url("/images/cloud.png") center top / cover no-repeat,
+      linear-gradient(
+        rgb(201, 228, 255) 0%,
+        rgb(228, 241, 255) 29%,
+        rgb(254, 254, 255) 100%
+      );
+  }
+}
