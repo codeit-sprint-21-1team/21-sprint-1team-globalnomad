@@ -11,10 +11,10 @@ export default async function Home() {
   const bestActivity = bestResponse.activities[0];
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20">
+    <div className="bg-gray-50 pb-20">
       <section className="mx-auto max-w-300 px-6 pt-4 sm:pt-6">
         <HeroSection bestActivity={bestActivity} />
       </section>
-    </main>
+    </div>
   );
 }
