@@ -58,7 +58,10 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
     }
     if (step === "datetime") {
       return (
-        <PanelButton disabled={!selectedSlot} onClick={() => setStep("headcount")}>
+        <PanelButton
+          disabled={!selectedSlot}
+          onClick={() => setStep("headcount")}
+        >
           확인
         </PanelButton>
       );
@@ -77,7 +80,7 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
 
       {/* 바텀시트 */}
       <div
-        className="fixed bottom-[84px] left-0 right-0 z-100 xl:hidden bg-white rounded-t-3xl flex flex-col overflow-hidden"
+        className="fixed bottom-[84px] left-0 right-0 z-100 xl:hidden bg-white rounded-t-3xl flex flex-col overflow-hidden max-h-[65vh]"
         style={{
           transform: isOpen ? `translateY(${dragY}px)` : "translateY(100%)",
           transition: isDragging
