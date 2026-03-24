@@ -25,8 +25,7 @@ export default function MyPageRootLayout({
   }, [isRootMyPage, router, isTablet]);
 
   return (
-    <>
-      <Header />
+    <div className="max-w-[1200px] mx-auto">
       <div className="flex justify-center md:gap-[50px] mt-[30px] mb-[30px] xl:mt-[40px] xl:mb-[40px] px-[24px] md:px-[30px]">
         <div className="flex-shrink-0">
           <SideMenu isRootMyPage={isRootMyPage} currentPath={pathname} />
@@ -42,7 +41,6 @@ export default function MyPageRootLayout({
           {children}
         </div>
       </div>
-      <Footer />
-    </>
+    </div>
   );
 }
