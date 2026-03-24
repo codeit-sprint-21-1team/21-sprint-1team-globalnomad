@@ -9,7 +9,7 @@ interface HeroSectionProps {
 export default function HeroSection({ bestActivity }: HeroSectionProps) {
   if (!bestActivity)
     return (
-      <div className="h-[240px] w-full animate-pulse rounded-xl bg-gray-200" />
+      <div className="h-[180px] w-full animate-pulse rounded-xl bg-gray-200 sm:h-[375px] md:h-[500px]" />
     );
 
   const month = new Date(bestActivity.createdAt).getMonth() + 1;

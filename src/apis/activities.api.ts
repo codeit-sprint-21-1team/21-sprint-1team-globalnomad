@@ -10,6 +10,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getActivityList = async (
   params: GetActivityListParams,
+  nextOptions?: NextFetchRequestConfig,
 ): Promise<ActivityListResponse> => {
   const query = buildQueryString(params);
   const response = await fetch(`${BASE_URL}/activities${query}`, {
@@ -17,10 +18,7 @@ export const getActivityList = async (
     headers: {
       "Content-Type": "application/json",
     },
-    next: {
-      revalidate: 60,
-      tags: ["activities"],
-    },
+    next: nextOptions || { revalidate: 3600, tags: ["activities"] },
   });
 
   if (!response.ok) {
