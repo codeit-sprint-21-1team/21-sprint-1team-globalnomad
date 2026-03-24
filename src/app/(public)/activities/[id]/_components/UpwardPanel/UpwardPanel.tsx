@@ -34,6 +34,8 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
     handleDayClick,
     setSelectedSlot,
     setHeadcount,
+    totalPrice,
+    reset,
   } = useReservation(availableSchedules, price);
 
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -100,6 +102,7 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
           <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
 
+        {/*컨텐츠 */}
         <div className="flex-1 overflow-y-auto px-4 no-scrollbar pb-4">
           {step === 1 && (
             <DateTimeStep
@@ -139,21 +142,47 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
               : "opacity-100 max-h-20",
           )}
         >
-          <span className="text-lg font-bold text-gray-950">
-            {priceLabel}
-            <span className="text-sm font-normal text-gray-600"> /1명</span>
-          </span>
-          <SelectionInfo selectionLabel={selectionLabel} onOpen={openSheet} />
+          {!isOpen && selectedSlot ? (
+            <>
+              <span className="text-base font-bold text-gray-950">
+                {headcount}명 · ₩{totalPrice.toLocaleString()}
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-blue-500 font-medium">
+                  {selectionLabel}
+                </span>
+                <button
+                  onClick={reset}
+                  className="text-sm text-gray-500 underline"
+                >
+                  초기화
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="text-lg font-bold text-gray-950">
+                {priceLabel}
+                <span className="text-sm font-normal text-gray-600"> /1명</span>
+              </span>
+              <SelectionInfo
+                selectionLabel={selectionLabel}
+                onOpen={openSheet}
+              />
+            </>
+          )}
         </div>
 
         {!isOpen && (
           <PanelButton disabled={!selectedSlot}>예약하기</PanelButton>
         )}
+
         {isOpen && step === 1 && (
           <PanelButton disabled={!selectedSlot} onClick={() => setStep(2)}>
             확인
           </PanelButton>
         )}
+
         {isOpen && step === 2 && (
           <PanelButton onClick={closeSheet}>확인</PanelButton>
         )}

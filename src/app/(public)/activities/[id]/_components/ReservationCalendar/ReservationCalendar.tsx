@@ -30,7 +30,7 @@ export function ReservationCalendar({
   } = useReservation(availableSchedules, price);
 
   return (
-    <div className="border border-gray-300 rounded-xl w-full overflow-hidden">
+    <div className="border border-gray-200 rounded-xl w-full overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
       {/* 가격 헤더 */}
       <div className="px-8 pt-6">
         <span className="text-xl font-bold text-gray-950">
@@ -51,6 +51,16 @@ export function ReservationCalendar({
           />
         </div>
 
+        {/* 참여 인원 수 */}
+        <div className="flex justify-between items-center mb-5">
+          <p className=" text-md font-bold text-gray-950 ">참여 인원 수</p>
+          <HeadcountSection
+            headcount={headcount}
+            onDecrement={() => setHeadcount((n) => Math.max(1, n - 1))}
+            onIncrement={() => setHeadcount((n) => n + 1)}
+          />
+        </div>
+
         {/* 예약 가능한 시간 */}
         <TimeSlotSection
           selectedDate={selectedDate}
@@ -58,20 +68,10 @@ export function ReservationCalendar({
           selectedSlot={selectedSlot}
           onSelectSlot={setSelectedSlot}
         />
-
-        {/* 참여 인원 수 */}
-        <div className="flex justify-between pt-4 mt-2">
-          <p className="text-base font-bold text-gray-950 mb-3">참여 인원 수</p>
-          <HeadcountSection
-            headcount={headcount}
-            onDecrement={() => setHeadcount((n) => Math.max(1, n - 1))}
-            onIncrement={() => setHeadcount((n) => n + 1)}
-          />
-        </div>
       </div>
 
       {/* 총 합계 + 예약하기 */}
-      <div className="px-4 pb-6 pt-4 flex flex-col gap-4">
+      <div className="border-t border-gray-300 mx-8 pb-6 pt-4 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <span className="text-base font-bold text-gray-950">총 합계</span>
           <span className="text-lg font-bold text-gray-950">

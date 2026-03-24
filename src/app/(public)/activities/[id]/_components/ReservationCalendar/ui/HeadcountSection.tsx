@@ -14,10 +14,10 @@ export function HeadcountSection({
   onIncrement,
 }: HeadcountSectionProps) {
   return (
-    <div className="flex items-center border border-gray-300 rounded w-fit">
+    <div className="flex items-center border border-gray-300 rounded-4xl w-fit">
       <button
         onClick={onDecrement}
-        className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+        className="w-10 h-8 flex items-center justify-center rounded-4xl text-gray-600 hover:bg-gray-50"
       >
         <Minus size={14} />
       </button>
@@ -26,7 +26,7 @@ export function HeadcountSection({
       </span>
       <button
         onClick={onIncrement}
-        className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+        className="w-10 h-8 flex items-center justify-center rounded-4xl text-gray-600 hover:bg-gray-50"
       >
         <Plus size={14} />
       </button>

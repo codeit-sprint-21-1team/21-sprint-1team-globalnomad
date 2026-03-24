@@ -30,11 +30,24 @@ export function useReservation(
 
   const handleDayClick = (day: Date) => {
     if (!scheduleMap[toDateStr(day)]) return;
+
+    if (selectedDate && toDateStr(day) === toDateStr(selectedDate)) {
+      setSelectedDate(undefined);
+      setSelectedSlot(null);
+      return;
+    }
+
     setSelectedDate(day);
     setSelectedSlot(null);
   };
 
   const totalPrice = price * headcount;
+
+  const reset = () => {
+    setSelectedDate(undefined);
+    setSelectedSlot(null);
+    setHeadcount(1);
+  };
 
   return {
     selectedDate,
@@ -47,5 +60,6 @@ export function useReservation(
     setSelectedSlot,
     setHeadcount,
     totalPrice,
+    reset,
   };
 }

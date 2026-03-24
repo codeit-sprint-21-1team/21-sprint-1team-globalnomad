@@ -18,35 +18,45 @@ export function TimeSlotSection({
   selectedSlot,
   onSelectSlot,
 }: TimeSlotSectionProps) {
-  return (
-    <div className="">
-      <p className="text-base font-bold text-gray-950 mb-3">예약 가능한 시간</p>
-      {!selectedDate ? (
+  const content = () => {
+    if (!selectedDate) {
+      return (
         <p className="text-sm text-gray-400 text-center py-4">
           날짜를 선택해주세요.
         </p>
-      ) : timeSlots.length === 0 ? (
+      );
+    }
+    if (timeSlots.length === 0) {
+      return (
         <p className="text-sm text-gray-400 text-center py-4">
           예약 가능한 시간이 없습니다.
         </p>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {timeSlots.map((slot) => (
-            <Button
-              key={slot.id}
-              variant="secondary"
-              size="sm"
-              onClick={() => onSelectSlot(slot)}
-              className={cn(
-                selectedSlot?.id === slot.id &&
-                  "border-[#3D9EF2] text-[#3D9EF2]",
-              )}
-            >
-              {slot.startTime}~{slot.endTime}
-            </Button>
-          ))}
-        </div>
-      )}
+      );
+    }
+    return (
+      <div className="flex flex-col gap-2">
+        {timeSlots.map((slot) => (
+          <Button
+            key={slot.id}
+            variant="secondary"
+            size="sm"
+            onClick={() => onSelectSlot(slot)}
+            className={cn(
+              selectedSlot?.id === slot.id &&
+                "border-blue-400 text-blue-400 bg-blue-50",
+            )}
+          >
+            {slot.startTime}~{slot.endTime}
+          </Button>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="">
+      <p className="text-base font-bold text-gray-950 mb-3">예약 가능한 시간</p>
+      {content()}
     </div>
   );
 }
