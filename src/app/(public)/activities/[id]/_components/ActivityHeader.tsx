@@ -1,5 +1,5 @@
 import { MapPin, Star, EllipsisVertical } from "lucide-react";
-import { Button } from "@/components/ui/Buttons/Button";
+
 import type { Activity } from "@/types/activities";
 
 interface ActivityHeaderProps {
@@ -8,7 +8,7 @@ interface ActivityHeaderProps {
 
 export function ActivityHeader({ activity }: ActivityHeaderProps) {
   return (
-    <div className="w-full pb-5 border-b border-gray-200 mt-5 md:mt-6 xl:mt-0">
+    <div className="w-full pb-5 border-b border-gray-200 xl:border-none mt-5 md:mt-6 xl:mt-0">
       <div className="flex items-start  justify-between">
         <span className="text-[13px] md:text-[14px] text-gray-600">
           {activity.category}

@@ -26,6 +26,17 @@ export interface Schedule {
   endTime: string;
 }
 
+export interface AvailableTime {
+  id: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface AvailableSchedule {
+  date: string;
+  times: AvailableTime[];
+}
+
 export interface Activity {
   id: number;
   userId: number;

@@ -5,6 +5,8 @@ import { BannerImages } from "./_components/BannerImages";
 import { Description } from "./_components/Description";
 import KakaoMap from "./_components/KakaoMap";
 import { ReviewCardList } from "./_components/ReviewCardList";
+import { ReservationCalendar } from "./_components/ReservationCalendar/ReservationCalendar";
+import { mockAvailableSchedules } from "./_mocks/availableSchedules";
 import { getActivityDetail, getActivityReviews } from "@/apis/activities.api";
 import {
   dehydrate,
@@ -12,7 +14,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { UpwardPanel } from "./_components/UpwardPanel";
+import { UpwardPanel } from "./_components/UpwardPanel/UpwardPanel";
 
 export default async function ActivityDetailPage({
   params,
@@ -49,11 +51,14 @@ export default async function ActivityDetailPage({
         />
       </div>
 
-      <div className="xl:col-start-2 xl:row-span-2 flex items-center justify-start flex-col">
+      <div className="xl:col-start-2 xl:row-span-2 flex items-center justify-start flex-col ">
         <ActivityHeader activity={activity} />
 
-        <div className="h-200 flex items-center hidden xl:block">
-          캘린더란
+        <div className="hidden xl:block mt-8 w-full">
+          <ReservationCalendar
+            availableSchedules={mockAvailableSchedules}
+            price={activity.price}
+          />
         </div>
       </div>
 
@@ -69,7 +74,10 @@ export default async function ActivityDetailPage({
         </HydrationBoundary>
       </div>
 
-      <UpwardPanel price={activity.price} />
+      <UpwardPanel
+        price={activity.price}
+        availableSchedules={mockAvailableSchedules}
+      />
     </div>
   );
 }

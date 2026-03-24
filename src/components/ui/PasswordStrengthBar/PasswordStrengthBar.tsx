@@ -31,8 +31,8 @@ export const PasswordStrengthBar = ({ score }: PasswordStrengthBarProps) => {
           <div
             key={level}
             className={cn(
-              "h-1.5 rounded-full transition-all duration-500 ease-out",
-              score >= level ? getLevelColor(level) : "bg-muted",
+              "h-4 rounded-2xl transition-all duration-500 ease-out",
+              score >= level ? getLevelColor(score) : "bg-muted",
             )}
           />
         ))}
