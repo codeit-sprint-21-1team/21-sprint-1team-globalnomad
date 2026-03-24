@@ -29,12 +29,11 @@ export const SideMenu = memo(
       <aside
         className={cn(
           isRootMyPage ? "block" : "hidden",
-          "w-[327px] mx-auto",
-          "md:block md:w-[178px] md:h-auto",
-          "xl:w-[290px] xl:h-auto",
+          "md:block w-[327px] md:w-[178px] xl:w-[290px] md:h-auto xl:h-auto",
           "bg-white shadow-[0px_4px_24px_0px_#9CB4CA33]",
           "border border-solid rounded-xl",
           "py-6 px-[14px]",
+          "mx-auto mb-[163px] md:mb-0",
           "border-gray-50",
         )}
       >

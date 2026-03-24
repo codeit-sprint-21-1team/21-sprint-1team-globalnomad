@@ -17,7 +17,7 @@ import { handleApiError } from "@/commons/utils/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useUserInfo() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string>(
     user?.profileImageUrl || "",
@@ -91,13 +91,20 @@ export function useUserInfo() {
     });
   };
 
-  const handleImageReset = () => {
+  const handleProfileFormReset = () => {
     if (previewUrl?.startsWith("blob:")) {
       URL.revokeObjectURL(previewUrl);
     }
-    const originalUrl = user?.profileImageUrl || "";
-    setPreviewUrl(originalUrl);
-    setValue("imageFile", null, { shouldDirty: true, shouldValidate: true });
+
+    if (user) {
+      resetProfile({
+        imageFile: null,
+        email: user.email ?? "",
+        nickname: user.nickname ?? "",
+      });
+
+      setPreviewUrl(user.profileImageUrl || "");
+    }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -189,18 +196,18 @@ export function useUserInfo() {
   };
 
   return {
+    isLoading,
     userProfileForm,
     userPasswordForm,
     onProfileFormSubmit: handleSubmitProfile(onProfileSubmit),
     onPasswordFormSubmit: handleSubmitPassword(onPasswordSubmit),
+    onProfileFormReset: handleProfileFormReset,
     passwordScore,
     imageProps: {
       previewUrl,
       fileInputRef,
       onImageButtonClick: handleImageButtonClick,
       onImageFileChange: handleImageFileChange,
-      onImageReset: handleImageReset,
-      isImageChanged: previewUrl !== (user?.profileImageUrl || ""),
     },
     isSubmitting: isImageUploading || isInfoUpdating,
   };

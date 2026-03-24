@@ -27,7 +27,8 @@ export const ProfileSection = memo(
         <div
           className={cn(
             "relative",
-            "w-[120px] h-[120px] md:w-[70px] md:h-[70px] xl:w-[120px] xl:h-[120px]",
+            "w-[120px] h-[120px]",
+            !isEditable && "md:w-[70px] md:h-[70px] xl:w-[120px] xl:h-[120px]",
           )}
         >
           <div className="relative w-full h-full rounded-full overflow-hidden">
@@ -52,11 +53,7 @@ export const ProfileSection = memo(
               />
               <button
                 type="button"
-                className={cn(
-                  "absolute z-[10]",
-                  "bottom-[4px] right-[2px] md:bottom-[2px] md:right-[-2.5px] xl:bottom-[4px] xl:right-[2px]",
-                  "w-[30px] h-[30px] md:w-[24px] md:h-[24px] xl:w-[30px] xl:h-[30px]",
-                )}
+                className="absolute z-[10] bottom-[4px] right-[2px] w-[30px] h-[30px]"
                 onClick={onImageButtonClick}
               >
                 <Image

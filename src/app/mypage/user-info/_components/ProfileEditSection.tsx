@@ -5,17 +5,27 @@ import { Input } from "@/components/ui/Input/Input";
 import { ProfileSection } from "../../_components/ProfileSection";
 import { Button } from "@/components/ui/Buttons/Button";
 import { cn } from "@/commons/utils/cn";
+import ProfileEditSectionSkeleton from "./ProfileEditSectionSkeleton";
 
 export default function ProfileEditSection() {
-  const { userProfileForm, onProfileFormSubmit, imageProps, isSubmitting } =
-    useUserInfo();
+  const {
+    isLoading,
+    userProfileForm,
+    onProfileFormSubmit,
+    onProfileFormReset,
+    imageProps,
+    isSubmitting,
+  } = useUserInfo();
   const {
     register,
     formState: { errors, isValid, isDirty },
   } = userProfileForm;
-  const { previewUrl, onImageReset, isImageChanged, ...restProps } = imageProps;
+  const { previewUrl, ...restProps } = imageProps;
+
+  if (isLoading) return <ProfileEditSectionSkeleton />;
+
   return (
-    <>
+    <div>
       <div className="mt-[10px]">
         <div
           className={cn(
@@ -36,9 +46,12 @@ export default function ProfileEditSection() {
           프로필 이미지와 닉네임을 수정하실 수 있습니다.
         </div>
       </div>
-      <section className="mt-[20px] md:mt-[24px] xl:mt-[24px]">
+      <section className="mt-[20px] md:mt-[24px]">
         <article>
-          <form onSubmit={onProfileFormSubmit}>
+          <form
+            className="flex flex-col gap-[18px] md:gap-[24px]"
+            onSubmit={onProfileFormSubmit}
+          >
             <ProfileSection
               imageSrc={previewUrl}
               imageProps={restProps}
@@ -49,13 +62,6 @@ export default function ProfileEditSection() {
                 {errors.imageFile.message}
               </p>
             )}
-            <Button
-              type="button"
-              onClick={onImageReset}
-              disabled={!isImageChanged}
-            >
-              되돌리기
-            </Button>
 
             <Input
               {...register("email")}
@@ -75,15 +81,29 @@ export default function ProfileEditSection() {
               errorTxt={errors.nickname?.message}
             />
 
-            <Button
-              type="submit"
-              disabled={!isValid || !isDirty || isSubmitting}
-            >
-              저장하기
-            </Button>
+            <div className="flex justify-center gap-[12px] mt-[16px] md:mt-0">
+              <Button
+                size="sm"
+                variant="secondary"
+                type="button"
+                onClick={onProfileFormReset}
+                disabled={!isDirty || isSubmitting}
+                className="flex-1 md:max-w-[120px]"
+              >
+                되돌리기
+              </Button>
+              <Button
+                size="sm"
+                type="submit"
+                disabled={!isValid || !isDirty || isSubmitting}
+                className="flex-1 md:max-w-[120px]"
+              >
+                저장하기
+              </Button>
+            </div>
           </form>
         </article>
       </section>
-    </>
+    </div>
   );
 }

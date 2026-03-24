@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/Input/Input";
 import { PasswordStrengthBar } from "@/components/ui/PasswordStrengthBar/PasswordStrengthBar";
 import { Button } from "@/components/ui/Buttons/Button";
 import { cn } from "@/commons/utils/cn";
+import PasswordEditSectionSkeleton from "./PasswordEditSectionSkeleton";
 
 export default function PasswordEditSection() {
   const {
+    isLoading,
     userPasswordForm,
     onPasswordFormSubmit,
     passwordScore,
@@ -18,8 +20,10 @@ export default function PasswordEditSection() {
     formState: { errors, isValid },
   } = userPasswordForm;
 
+  if (isLoading) return <PasswordEditSectionSkeleton />;
+
   return (
-    <>
+    <div>
       <div className="mt-[10px]">
         <div
           className={cn(
@@ -40,18 +44,21 @@ export default function PasswordEditSection() {
           비밀번호를 수정하실 수 있습니다.
         </div>
       </div>
-      <section className="mt-[20px] md:mt-[24px] xl:mt-[24px]">
+      <section className="mt-[20px] md:mt-[24px]">
         <article>
-          <form onSubmit={onPasswordFormSubmit}>
+          <form
+            className="flex flex-col gap-[18px] md:gap-[24px]"
+            onSubmit={onPasswordFormSubmit}
+          >
             <Input
               {...register("newPassword")}
               labelTxt="비밀번호"
               id="newPassword"
               type="password"
               placeholder="8자 이상 입력해 주세요"
+              extra={<PasswordStrengthBar score={passwordScore} />}
               errorTxt={errors.newPassword?.message}
             />
-            {<PasswordStrengthBar score={passwordScore} />}
 
             <Input
               {...register("passwordConfirmation")}
@@ -62,12 +69,17 @@ export default function PasswordEditSection() {
               errorTxt={errors.passwordConfirmation?.message}
             />
 
-            <Button type="submit" disabled={!isValid || isSubmitting}>
+            <Button
+              size="sm"
+              className="w-full md:max-w-[120px] mt-[16px] md:mt-0 mx-auto"
+              type="submit"
+              disabled={!isValid || isSubmitting}
+            >
               저장하기
             </Button>
           </form>
         </article>
       </section>
-    </>
+    </div>
   );
 }
