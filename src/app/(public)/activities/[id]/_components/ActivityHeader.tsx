@@ -1,5 +1,5 @@
 import { MapPin, Star, EllipsisVertical } from "lucide-react";
-import { Button } from "@/components/ui/Buttons/Button";
+
 import type { Activity } from "@/types/activities";
 
 interface ActivityHeaderProps {

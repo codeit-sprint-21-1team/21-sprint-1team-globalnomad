@@ -33,12 +33,7 @@ function isDateDisabled(
   return day < today || !scheduleMap[toDateStr(day)];
 }
 
-function CalendarDayButton({
-  day: _day,
-  modifiers,
-  className: _cls,
-  ...props
-}: DayButtonProps) {
+function CalendarDayButton({ modifiers, ...props }: DayButtonProps) {
   return (
     <button
       {...props}
