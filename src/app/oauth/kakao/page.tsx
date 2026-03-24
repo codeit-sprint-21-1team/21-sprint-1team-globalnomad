@@ -2,8 +2,9 @@
 
 import { Suspense } from "react";
 import { useKakaoOAuth } from "./_libs/useKakaoOAuth";
+import KaKaoLoading from "./_libs/KakaoLoading";
 
-const KakaoLoading = () => <div>카카오 인증 정보 확인 중...</div>;
+const KakaoLoading = () => <KaKaoLoading />;
 
 function KakaoCallbackInner() {
   useKakaoOAuth();
