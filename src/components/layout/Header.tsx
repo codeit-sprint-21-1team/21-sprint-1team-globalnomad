@@ -14,12 +14,11 @@ export default function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50",
-        "px-2.5 md:px-5 py-2.5 md:py-5",
+        "relative top-0 z-50 border-b border-gray-200 bg-white",
         className,
       )}
     >
-      <div className="max-w-385 mx-auto h-10 flex items-center justify-between">
+      <div className="mx-auto flex h-[70px] items-center justify-between px-6 md:h-[80px] md:px-20 xl:px-50">
         <Link href="/">
           <div className="md:hidden">
             <Image

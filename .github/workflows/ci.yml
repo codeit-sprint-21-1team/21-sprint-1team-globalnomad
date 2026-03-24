@@ -29,6 +29,8 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
         run: npm run build
 
       # 성공 시 Discord 알림
