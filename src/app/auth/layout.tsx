@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   const mode = isLogin ? "login" : "signup";
 
   return (
-    <div className="flex items-center justify-center min-h-[100vh] px-[24px] py-[40px] md:py-[60px] xl:py-[80px]">
+    <div className="flex items-center justify-center min-h-[100vh] px-[24px] md:px-[52px] py-[40px] md:py-[60px] xl:py-[80px]">
       <div className="flex flex-col max-w-[640px] w-full">
         <header className="flex flex-col items-center mb-[42px] md:mb-[62px]">
           <h1 className="sr-only">{isLogin ? "로그인" : "회원가입"}</h1>
