@@ -24,11 +24,10 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: rgba(187, 221, 255, 0.2);
-  --chart-2: rgba(187, 221, 255, 0.45);
-  --chart-3: rgba(187, 221, 255, 0.8);
-  --chart-4: rgb(136, 187, 255);
-  --chart-5: rgb(85, 153, 255);
+  --chart-1: #ff2727;
+  --chart-2: #ffa500;
+  --chart-3: #3d9ef2;
+  --chart-4: #1e66ff;
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);

@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 const inputVariants = cva(
   cn(
-    "w-full inline-flex rounded-2xl items-center justify-center border border-gray-100 bg-white",
+    "w-full inline-flex min-h-[54px] rounded-2xl items-center justify-center border border-gray-100 bg-white",
     "px-[20px] py-[16.5px] text-[16px] font-medium text-[#1F1F22] leading-none",
     "leading-[100%] tracking-[-0.025em]",
     "placeholder-[#9FA0A7] focus-visible:outline-[#3D9EF2] focus-[#1F1F22] disabled:cursor-not-allowed disabled:opacity-50",
@@ -33,6 +33,7 @@ export interface InputProps
   labelTxt?: string;
   errorTxt?: string;
   ref?: React.Ref<HTMLInputElement>;
+  extra?: React.ReactNode;
 }
 /**
  * className?, type?, id?, labelTxt?, errorTxt?, disabled(boolean)
@@ -47,6 +48,7 @@ const Input = ({
   disabled,
   readOnly,
   ref,
+  extra,
   ...props
 }: InputProps) => {
   const generatedId = React.useId();
@@ -114,6 +116,7 @@ const Input = ({
           </button>
         )}
       </div>
+      {extra}
       {errorTxt && (
         <p className="mt-2 text-sm text-red-500 leading-tight">{errorTxt}</p>
       )}

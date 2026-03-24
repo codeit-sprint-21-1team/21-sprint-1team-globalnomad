@@ -34,9 +34,9 @@ export const buttonVariants = cva(
           "bg-transparent border-transparent hover:bg-gray-100 text-gray-700",
       },
       size: {
-        sm: "rounded-[12px] py-[9.5px] text-[14px] [&_svg]:size-[16px]",
-        md: "rounded-[14px] py-[11.5px] text-[16px] [&_svg]:size-[18px]",
-        lg: "rounded-[16px] py-[14.5px] text-[16px] [&_svg]:size-[24px]",
+        sm: "h-[41px] rounded-[12px] py-[9.5px] text-[14px] [&_svg]:size-[16px]",
+        md: "h-[48px] rounded-[14px] py-[11.5px] text-[16px] [&_svg]:size-[18px]",
+        lg: "h-[54px] rounded-[16px] py-[14.5px] text-[16px] [&_svg]:size-[24px]",
         "icon-sm":
           "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
         icon: "size-10 rounded-[12px] p-0 shrink-0",

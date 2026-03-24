@@ -1,7 +1,33 @@
 import z from "zod";
 
 export const userProfileFormSchema = z.object({
-  imageFile: z.instanceof(File).optional().nullable(),
+  imageFile: z
+    .instanceof(File)
+    .nullable()
+    .optional()
+    .superRefine((file, ctx) => {
+      if (!file) return;
+
+      const ACCEPTED_TYPES = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+      ];
+      if (!ACCEPTED_TYPES.includes(file.type)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "JPG, PNG, WEBP 형식의 이미지만 업로드 가능합니다.",
+        });
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "파일 크기는 최대 5MB를 넘을 수 없습니다.",
+        });
+      }
+    }),
   email: z.string(),
   nickname: z
     .string()
@@ -28,3 +54,9 @@ export const userPasswordFormSchema = z
     path: ["passwordConfirmation"],
   });
 export type userPasswordValues = z.infer<typeof userPasswordFormSchema>;
+
+export interface UpdateUserRequest {
+  nickname?: string;
+  profileImageUrl?: string;
+  newPassword?: string;
+}
