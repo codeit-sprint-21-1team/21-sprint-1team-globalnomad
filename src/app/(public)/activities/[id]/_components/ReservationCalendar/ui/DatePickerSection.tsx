@@ -55,6 +55,8 @@ interface DatePickerSectionProps {
   selectedDate: Date | undefined;
   toDateStr: (d: Date) => string;
   onDayClick: (day: Date) => void;
+  month?: Date;
+  onMonthChange?: (month: Date) => void;
 }
 
 export function DatePickerSection({
@@ -62,6 +64,8 @@ export function DatePickerSection({
   selectedDate,
   toDateStr,
   onDayClick,
+  month,
+  onMonthChange,
 }: DatePickerSectionProps) {
   return (
     <DayPicker
@@ -70,6 +74,8 @@ export function DatePickerSection({
       onDayClick={onDayClick}
       disabled={(day) => isDateDisabled(day, scheduleMap, toDateStr)}
       showOutsideDays
+      month={month}
+      onMonthChange={onMonthChange}
       formatters={{
         formatWeekdayName: (day) => WEEKDAY_LABELS[day.getDay()],
       }}

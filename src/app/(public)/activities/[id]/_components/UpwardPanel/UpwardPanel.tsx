@@ -3,26 +3,28 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { cn } from "@/commons/utils/cn";
-import type { AvailableSchedule } from "@/types/activities";
 import { useReservation } from "../ReservationCalendar/lib/useReservation";
 import { DateTimeStep } from "./ui/DateTimeStep";
 import { HeadcountStep } from "./ui/HeadcountStep";
 import { SelectionInfo } from "./ui/SelectionInfo";
 import { PanelButton } from "./ui/PanelButton";
 import { useDragSheet } from "./lib/useDragSheet";
+import { useRequireAuth } from "@/commons/hooks/useRequireAuth";
 
 type Step = "datetime" | "headcount";
 
 interface UpwardPanelProps {
   price: number;
-  availableSchedules: AvailableSchedule[];
+  activityId: number;
 }
 
-export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
+export function UpwardPanel({ price, activityId }: UpwardPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<Step>("datetime");
 
   const {
+    currentMonth,
+    setCurrentMonth,
     selectedDate,
     selectedSlot,
     headcount,
@@ -34,8 +36,11 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
     setHeadcount,
     totalPrice,
     reset,
-  } = useReservation(availableSchedules, price);
+    handleReservation,
+    isPending,
+  } = useReservation(activityId, price);
 
+  const requireAuth = useRequireAuth();
   const closeSheet = () => setIsOpen(false);
 
   const { dragY, isDragging, dragHandlers } = useDragSheet(closeSheet);
@@ -54,7 +59,14 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
 
   function getActionButton() {
     if (!isOpen) {
-      return <PanelButton disabled={!selectedSlot}>예약하기</PanelButton>;
+      return (
+        <PanelButton
+          disabled={!selectedSlot || isPending}
+          onClick={() => requireAuth(handleReservation)}
+        >
+          {isPending ? "예약 중..." : "예약하기"}
+        </PanelButton>
+      );
     }
     if (step === "datetime") {
       return (
@@ -80,7 +92,7 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
 
       {/* 바텀시트 */}
       <div
-        className="fixed bottom-[84px] left-0 right-0 z-100 xl:hidden bg-white rounded-t-3xl flex flex-col overflow-hidden max-h-[65vh]"
+        className="fixed bottom-[84px] left-0 right-0 z-100 xl:hidden bg-white rounded-t-3xl flex flex-col overflow-hidden max-h-[68vh]"
         style={{
           transform: isOpen ? `translateY(${dragY}px)` : "translateY(100%)",
           transition: isDragging
@@ -100,7 +112,7 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
         </div>
 
         {/* 컨텐츠 */}
-        <div className="flex-1 overflow-y-auto px-4 no-scrollbar pb-4">
+        <div className="flex-1 overflow-y-auto px-4  pb-4">
           {step === "datetime" && (
             <DateTimeStep
               scheduleMap={scheduleMap}
@@ -110,6 +122,8 @@ export function UpwardPanel({ price, availableSchedules }: UpwardPanelProps) {
               timeSlots={timeSlots}
               selectedSlot={selectedSlot}
               onSelectSlot={setSelectedSlot}
+              month={currentMonth}
+              onMonthChange={setCurrentMonth}
             />
           )}
           {step === "headcount" && (
