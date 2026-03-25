@@ -4,25 +4,39 @@ import { MapPin, Star } from "lucide-react";
 
 import type { Activity } from "@/types/activities";
 import Kebab from "@/components/ui/Kebab/Kebab";
+import { useMutation } from "@tanstack/react-query";
 import { useDialog } from "@/components/ui/Dialog";
+import { useAuth } from "@/commons/contexts/AuthContext";
+import { useRequireAuth } from "@/commons/hooks/useRequireAuth";
 import { deleteMyActivity } from "@/apis/myActivities.api";
+import { handleApiError } from "@/commons/utils/handleApiError";
 
 interface ActivityHeaderProps {
   activity: Activity;
 }
 
 export function ActivityHeader({ activity }: ActivityHeaderProps) {
+  const { user } = useAuth();
   const { showDialog } = useDialog();
+  const requireAuth = useRequireAuth();
+
+  const { mutate: deleteActivity } = useMutation({
+    mutationFn: () => deleteMyActivity(activity.id),
+    onSuccess: () =>
+      showDialog({ type: "alert", content: "삭제가 완료됐습니다." }),
+    onError: (error) =>
+      showDialog({ type: "alert", content: handleApiError(error) }),
+  });
 
   const handleDelete = () => {
     showDialog({
       type: "confirm",
       content: "정말 삭제하시겠어요?",
-      onConfirm: async () => {
-        await deleteMyActivity(activity.id);
-      },
+      onConfirm: () => requireAuth(deleteActivity),
     });
   };
+
+  const isOwner = !!user && user.id === activity.userId;
 
   return (
     <div className="w-full pb-5 border-b border-gray-200 xl:border-none mt-5 md:mt-6 xl:mt-0">
@@ -30,7 +44,7 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
         <span className="text-[13px] md:text-[14px] text-gray-600">
           {activity.category}
         </span>
-        <Kebab onEdit={() => {}} onDelete={handleDelete} />
+        {!isOwner && <Kebab onEdit={() => {}} onDelete={handleDelete} />}
       </div>
 
       <h1 className=" text-[18px] md:text-[24px]  font-bold text-gray-950 leading-tight">
