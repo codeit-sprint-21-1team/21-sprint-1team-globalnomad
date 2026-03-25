@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { UpwardPanel } from "./_components/UpwardPanel/UpwardPanel";
+import { notFound } from "next/navigation";
 
 export default async function ActivityDetailPage({
   params,
@@ -27,19 +28,33 @@ export default async function ActivityDetailPage({
   const activityId = Number(id);
   const page = Number(pageParam) || 1;
 
-  const [activity, queryClient] = await Promise.all([
-    getActivityDetail(activityId),
-    (async () => {
-      const qc = new QueryClient({
-        defaultOptions: { queries: { staleTime: 60 * 1000 } },
-      });
-      await qc.prefetchQuery({
-        queryKey: ["activity-reviews", activityId, page],
-        queryFn: () => getActivityReviews(activityId, page),
-      });
-      return qc;
-    })(),
-  ]);
+  const fetchData = async () => {
+    try {
+      const [activity, queryClient] = await Promise.all([
+        getActivityDetail(activityId),
+        (async () => {
+          const qc = new QueryClient({
+            defaultOptions: { queries: { staleTime: 60 * 1000 } },
+          });
+          await qc.prefetchQuery({
+            queryKey: ["activity-reviews", activityId, page],
+            queryFn: () => getActivityReviews(activityId, page),
+          });
+          return qc;
+        })(),
+      ]);
+
+      if (!activity) return null;
+      return { activity, queryClient };
+    } catch {
+      return null;
+    }
+  };
+
+  const data = await fetchData();
+
+  if (!data) notFound();
+  const { activity, queryClient } = data;
 
   return (
     <div className="mt-6 md:mt-10 xl:mt-15 px-4 md:px-5 xl:px-0 xl:w-[1120px]  mx-auto grid grid-cols-1 xl:grid-rows-[400px] xl:grid-cols-[670px_410px] xl:gap-x-10">
@@ -54,10 +69,7 @@ export default async function ActivityDetailPage({
         <ActivityHeader activity={activity} />
 
         <div className="hidden xl:block mt-8 w-full">
-          <ReservationCalendar
-            activityId={activityId}
-            price={activity.price}
-          />
+          <ReservationCalendar activityId={activityId} price={activity.price} />
         </div>
       </div>
 
@@ -73,10 +85,7 @@ export default async function ActivityDetailPage({
         </HydrationBoundary>
       </div>
 
-      <UpwardPanel
-        price={activity.price}
-        activityId={activityId}
-      />
+      <UpwardPanel price={activity.price} activityId={activityId} />
     </div>
   );
 }
