@@ -13,6 +13,8 @@ interface DateTimeStepProps {
   timeSlots: AvailableTime[];
   selectedSlot: SelectedSlot | null;
   onSelectSlot: (slot: SelectedSlot) => void;
+  month?: Date;
+  onMonthChange?: (month: Date) => void;
 }
 
 export function DateTimeStep({
@@ -23,6 +25,8 @@ export function DateTimeStep({
   timeSlots,
   selectedSlot,
   onSelectSlot,
+  month,
+  onMonthChange,
 }: DateTimeStepProps) {
   return (
     <>
@@ -34,6 +38,8 @@ export function DateTimeStep({
             selectedDate={selectedDate}
             toDateStr={toDateStr}
             onDayClick={onDayClick}
+            month={month}
+            onMonthChange={onMonthChange}
           />
         </div>
         <div className="[flex:3]">
