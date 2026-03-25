@@ -1,7 +1,7 @@
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDialog } from "@/components/ui/Dialog";
 import { postOAuthKaKaoSignin, postOAuthKaKaoSignup } from "@/apis/oauth.api";
 import { generateRandomNickname } from "@/commons/utils/randomNickname";
@@ -44,19 +44,26 @@ export function useKakaoOAuth() {
     [showDialog, redirectToKakao],
   );
 
-  const processLogin = useCallback(
-    async (authData: { token: string; redirectUri: string }) => {
-      const response = await postOAuthKaKaoSignin(authData);
-      const user = response?.data?.user;
+  const { mutate: kakaoLoginMutation } = useMutation({
+    mutationFn: (authData: { token: string; redirectUri: string }) =>
+      postOAuthKaKaoSignin(authData),
+    onSuccess: (response) => {
+      const user = response?.data?.data?.user || response?.data?.user;
+
       if (user) {
         queryClient.setQueryData(["user"], user);
       }
+
       router.replace("/");
-      router.refresh();
-      return user;
     },
-    [queryClient, router],
-  );
+    onError: (error) => {
+      const errorMessage = handleApiError(error);
+      showDialog({
+        type: "alert",
+        content: errorMessage,
+      });
+    },
+  });
 
   const showErrorAndRedirect = useCallback(
     (error: unknown) => {
@@ -112,25 +119,7 @@ export function useKakaoOAuth() {
           token: code,
           redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URI || "",
         };
-        try {
-          await processLogin(loginData);
-        } catch (error) {
-          if (
-            axios.isAxiosError(error) &&
-            (error.response?.status === 403 || error.response?.status === 404)
-          ) {
-            showDialog({
-              type: "alert",
-              content:
-                "가입되지 않은 계정입니다.\n안전한 계정 생성을 위해 다시 한번 카카오 인증을 진행해 주세요.",
-              onConfirm: () => {
-                redirectToKakao("signup");
-              },
-            });
-          } else {
-            showErrorAndRedirect(error);
-          }
-        }
+        kakaoLoginMutation(loginData);
       }
     };
 
@@ -139,7 +128,7 @@ export function useKakaoOAuth() {
     code,
     mode,
     processSignup,
-    processLogin,
+    kakaoLoginMutation,
     showErrorAndRedirect,
     redirectToKakao,
     showDialog,

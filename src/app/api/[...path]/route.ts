@@ -69,15 +69,6 @@ async function proxy(req: NextRequest, path: string[], method: HttpMethod) {
     const data = await res.json().catch(() => ({}));
     const response = NextResponse.json(data, { status: res.status });
 
-    if (res.ok && path.includes("sign-in") && path.includes("kakao")) {
-      if (data.accessToken && data.refreshToken) {
-        setAuthCookies(response, {
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        });
-      }
-    }
-
     return response;
   } catch {
     return NextResponse.json(
