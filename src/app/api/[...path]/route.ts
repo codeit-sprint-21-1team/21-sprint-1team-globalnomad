@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import {
-  tryRefresh,
-  clearAuthCookies,
-  setAuthCookies,
-} from "@/apis/auth.server";
+import { tryRefresh, clearAuthCookies } from "@/apis/auth.server";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
