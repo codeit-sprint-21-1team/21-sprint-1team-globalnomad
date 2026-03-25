@@ -6,7 +6,6 @@ import { Description } from "./_components/Description";
 import KakaoMap from "./_components/KakaoMap";
 import { ReviewCardList } from "./_components/ReviewCardList";
 import { ReservationCalendar } from "./_components/ReservationCalendar/ReservationCalendar";
-import { mockAvailableSchedules } from "./_mocks/availableSchedules";
 import { getActivityDetail, getActivityReviews } from "@/apis/activities.api";
 import {
   dehydrate,
@@ -56,7 +55,7 @@ export default async function ActivityDetailPage({
 
         <div className="hidden xl:block mt-8 w-full">
           <ReservationCalendar
-            availableSchedules={mockAvailableSchedules}
+            activityId={activityId}
             price={activity.price}
           />
         </div>
@@ -76,7 +75,7 @@ export default async function ActivityDetailPage({
 
       <UpwardPanel
         price={activity.price}
-        availableSchedules={mockAvailableSchedules}
+        activityId={activityId}
       />
     </div>
   );

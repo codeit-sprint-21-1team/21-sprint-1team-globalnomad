@@ -3,8 +3,10 @@ import {
   ActivityListResponse,
   Activity,
   Reviews,
+  AvailableSchedule,
 } from "@/types/activities";
 import { buildQueryString } from "@/commons/utils/buildQueryString";
+import axios from "./axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -57,4 +59,28 @@ export const getActivityReviews = async (
   }
 
   return res.json();
+};
+
+export const getAvailableSchedule = async (
+  activityId: number,
+  year: string,
+  month: string,
+): Promise<AvailableSchedule[]> => {
+  const res = await axios.get<AvailableSchedule[]>(
+    `/activities/${activityId}/available-schedule`,
+    { params: { year, month } },
+  );
+  return res.data;
+};
+
+export const createReservation = async (
+  activityId: number,
+  scheduleId: number,
+  headCount: number,
+): Promise<{ id: number }> => {
+  const res = await axios.post<{ id: number }>(
+    `/activities/${activityId}/reservations`,
+    { scheduleId, headCount },
+  );
+  return res.data;
 };
