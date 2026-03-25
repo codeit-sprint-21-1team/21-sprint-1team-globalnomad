@@ -2,7 +2,7 @@ import { cn } from "@/commons/utils/cn";
 
 export default function ReservationStatusPage() {
   return (
-    <main className="px-[24px] py-[10px] md:px-0 md:py-0 xl:px-0 xl:py-0">
+    <main className="md:px-0 md:py-0 xl:px-0 xl:py-0">
       <header className="mt-[10px]">
         <div
           className={cn(
