@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import {
-  tryRefresh,
-  clearAuthCookies,
-  setAuthCookies,
-} from "@/apis/auth.server";
+import { tryRefresh, clearAuthCookies } from "@/apis/auth.server";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
@@ -68,15 +64,6 @@ async function proxy(req: NextRequest, path: string[], method: HttpMethod) {
 
     const data = await res.json().catch(() => ({}));
     const response = NextResponse.json(data, { status: res.status });
-
-    if (res.ok && path.includes("sign-in") && path.includes("kakao")) {
-      if (data.accessToken && data.refreshToken) {
-        setAuthCookies(response, {
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        });
-      }
-    }
 
     return response;
   } catch {

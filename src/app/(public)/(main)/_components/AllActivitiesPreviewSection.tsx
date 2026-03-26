@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Buttons/Button";
 import type { ActivityListItem } from "@/types/activities";
-import ActivityCard from "./ActivityCard";
+import ActivityCard from "@/components/ui/ActivityCard/ActivityCard";
 
 interface AllActivitiesPreviewSectionProps {
   activities: ActivityListItem[];
