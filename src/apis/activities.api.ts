@@ -34,7 +34,7 @@ export const getActivityDetail = async (
   activityId: number,
 ): Promise<Activity> => {
   const res = await fetch(`${BASE_URL}/activities/${activityId}`, {
-    next: { revalidate: 60 },
+    next: { revalidate: 60, tags: [`activity-${activityId}`] },
   });
 
   if (!res.ok) {
@@ -51,7 +51,7 @@ export const getActivityReviews = async (
 ): Promise<Reviews> => {
   const res = await fetch(
     `${BASE_URL}/activities/${activityId}/reviews?page=${page}&size=${size}`,
-    { next: { revalidate: 60 } },
+    { next: { revalidate: 60, tags: [`activity-reviews-${activityId}`] } },
   );
 
   if (!res.ok) {
