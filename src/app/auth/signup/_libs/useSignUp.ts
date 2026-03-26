@@ -44,7 +44,7 @@ export function useSignup() {
     if (passwordValue) {
       trigger("password");
     }
-  }, [passwordValue, trigger]);
+  }, [passwordValue, passwordScore, trigger]);
 
   const { mutate: signupMutation } = useMutation({
     mutationFn: (signUpData: SignUpRequest) => postSignup(signUpData),

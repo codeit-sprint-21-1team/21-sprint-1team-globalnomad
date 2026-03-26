@@ -1,7 +1,6 @@
 import { useDebounce } from "@/commons/hooks/useDebounce";
 import { useEffect, useMemo } from "react";
 import { FieldValues, Path, PathValue, UseFormSetValue } from "react-hook-form";
-import zxcvbn from "zxcvbn";
 
 export function usePasswordStrength<T extends FieldValues>(
   passwordValue: string | undefined,
@@ -9,9 +8,24 @@ export function usePasswordStrength<T extends FieldValues>(
 ) {
   const debouncedPassword = useDebounce(passwordValue || "", 150);
 
+  const calculatePasswordScore = (password: string) => {
+    let strength = 0;
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+
+    if (password.length >= 8) strength += 1;
+    if (hasLowerCase && hasNumber) strength += 1;
+    if (hasSpecial) strength += 1;
+    if (password.length >= 12 && hasUpperCase) strength += 1;
+
+    return strength;
+  };
+
   const passwordScore = useMemo(() => {
     if (!debouncedPassword) return 0;
-    return debouncedPassword ? zxcvbn(debouncedPassword).score : 0;
+    return calculatePasswordScore(debouncedPassword);
   }, [debouncedPassword]);
 
   useEffect(() => {
