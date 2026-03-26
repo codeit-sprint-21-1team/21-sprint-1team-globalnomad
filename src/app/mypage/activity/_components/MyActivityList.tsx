@@ -5,7 +5,7 @@ import { getActivityList } from "@/apis/myActivities.api";
 import MyActivityItem from "./MyActivityItem";
 import MyActivitySkeleton from "./MyActivitySkeleton";
 import useInfiniteScroll from "@/commons/hooks/useInfiniteScroll";
-import Image from "next/image";
+import EmptyState from "@/components/ui/EmptyState/EmptyState";
 
 export default function MyActivityList() {
   const {
@@ -50,7 +50,11 @@ export default function MyActivityList() {
         </div>
       )}
 
-      {isError && <p>데이터 로드 중 에러가 발생했습니다.</p>}
+      {isError && (
+        <div className="flex flex-col items-center justify-center mt-[60px]">
+          <EmptyState message={"데이터 로드 중 에러가 발생했습니다."} />
+        </div>
+      )}
 
       {allActivities.length > 0 && (
         <div className="flex flex-col gap-4">
@@ -65,17 +69,8 @@ export default function MyActivityList() {
       )}
 
       {isEmpty && (
-        <div className="flex flex-col items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <Image
-              src="/images/no_list.png"
-              width={120}
-              height={120}
-              alt="no list img"
-              className="mx-auto"
-            />
-            <p className="text-gray-500 mt-[30px]">아직 등록한 체험이 없어요</p>
-          </div>
+        <div className="flex flex-col items-center justify-center mt-[60px]">
+          <EmptyState message={"아직 등록한 체험이 없어요"} />
         </div>
       )}
     </>
