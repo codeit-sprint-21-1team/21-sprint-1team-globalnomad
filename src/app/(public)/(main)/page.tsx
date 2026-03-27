@@ -1,11 +1,10 @@
-import { randomInt } from "node:crypto";
 import { getActivityList } from "@/apis/activities.api";
 import HeroSection from "./_components/HeroSection";
 import BestItemsCarousel from "./_components/BestItemsCarousel";
 import AllActivitiesPreviewSection from "./_components/AllActivitiesPreviewSection";
 
 export default async function Home() {
-  const [bestResponse, latestResponse] = await Promise.all([
+  const [bestResult, latestResult] = await Promise.allSettled([
     getActivityList(
       {
         method: "offset",
@@ -30,13 +29,12 @@ export default async function Home() {
     ),
   ]);
 
-  const topActivities = bestResponse.activities;
-  const heroIndex = randomInt(topActivities.length || 1);
-  const bestActivity = topActivities[heroIndex];
-  const carouselActivities = topActivities.filter(
-    (activity) => activity.id !== bestActivity?.id,
-  );
-  const previewActivities = latestResponse.activities;
+  const topActivities =
+    bestResult.status === "fulfilled" ? bestResult.value.activities : [];
+  const bestActivity = topActivities[0];
+  const carouselActivities = topActivities.slice(1);
+  const previewActivities =
+    latestResult.status === "fulfilled" ? latestResult.value.activities : [];
 
   return (
     <main className="hero-section pb-20">

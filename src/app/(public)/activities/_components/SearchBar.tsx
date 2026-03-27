@@ -19,7 +19,7 @@ export default function SearchBar() {
       keyword: keyword || null,
       page: 1,
     });
-    router.push(`/activities?${queryString}`);
+    router.push(`/activities?${queryString}`, { scroll: true });
   };
 
   return (

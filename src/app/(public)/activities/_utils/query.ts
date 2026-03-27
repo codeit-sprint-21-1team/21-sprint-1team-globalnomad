@@ -2,6 +2,10 @@
  * URL 파라미터 고정 순서 (카테고리, 키워드, 정렬, 페이지)
  */
 const PARAM_ORDER = ["category", "keyword", "sort", "page"] as const;
+const DEFAULT_QUERY_VALUES = {
+  page: "1",
+  sort: "latest",
+} as const;
 
 type ParamKey = (typeof PARAM_ORDER)[number] | string;
 
@@ -22,6 +26,14 @@ export const updateQueryString = (
       map.set(key, String(value));
     }
   });
+
+  if (map.get("page") === DEFAULT_QUERY_VALUES.page) {
+    map.delete("page");
+  }
+
+  if (map.get("sort") === DEFAULT_QUERY_VALUES.sort) {
+    map.delete("sort");
+  }
 
   const result = new URLSearchParams();
 

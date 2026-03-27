@@ -24,7 +24,7 @@ export default function CategoryFilter() {
       category: value,
       page: 1,
     });
-    router.push(`/activities?${queryString}`);
+    router.push(`/activities?${queryString}`, { scroll: true });
   };
 
   return (
