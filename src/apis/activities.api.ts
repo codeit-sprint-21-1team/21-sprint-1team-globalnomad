@@ -16,11 +16,7 @@ export const getActivityList = async (
 ): Promise<ActivityListResponse> => {
   const query = buildQueryString(params);
   const response = await fetch(`${BASE_URL}/activities${query}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    next: nextOptions || { revalidate: 3600, tags: ["activities"] },
+    next: nextOptions ?? { revalidate: 60, tags: ["activities"] },
   });
 
   if (!response.ok) {

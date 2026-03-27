@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/Input/Input";
@@ -13,7 +13,7 @@ export default function SearchBar() {
   const searchParams = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: SubmitEvent) => {
     e.preventDefault();
     const queryString = updateQueryString(searchParams, {
       keyword: keyword || null,

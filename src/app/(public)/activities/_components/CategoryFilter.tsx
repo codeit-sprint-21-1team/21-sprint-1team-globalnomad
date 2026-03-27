@@ -24,7 +24,8 @@ export default function CategoryFilter() {
       category: value,
       page: 1,
     });
-    router.push(`/activities?${queryString}`, { scroll: true });
+    const nextUrl = queryString ? `/activities?${queryString}` : "/activities";
+    router.push(nextUrl, { scroll: true });
   };
 
   return (

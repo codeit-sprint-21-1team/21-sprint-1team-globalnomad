@@ -76,6 +76,15 @@ export interface ActivityListResponse {
   activities: ActivityListItem[];
 }
 
+export type ActivityItem = {
+  id: number;
+  bannerImageUrl: string;
+  rating: number;
+  reviewCount: number;
+  title: string;
+  price: number;
+};
+
 export interface ReviewUser {
   profileImageUrl: string;
   nickname: string;
