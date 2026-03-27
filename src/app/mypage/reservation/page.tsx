@@ -31,7 +31,7 @@ export default async function ReservationPage({
 
   return (
     <div className="flex flex-col gap-[50px] mb-[24px] md:mb-[225px]">
-      <header className="mt-[10px]">
+      <header>
         <div
           className={cn(
             "w-full",
