@@ -8,7 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/Carousel/Carousel";
 import type { ActivityListItem } from "@/types/activities";
-import ActivityCard from "./ActivityCard";
+import ActivityCard from "@/components/ui/ActivityCard/ActivityCard";
 
 interface BestItemsCarouselProps {
   activities: ActivityListItem[];
