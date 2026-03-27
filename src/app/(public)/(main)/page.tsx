@@ -39,7 +39,7 @@ export default async function Home() {
   const previewActivities = latestResponse.activities;
 
   return (
-    <main className="hero-section pb-20">
+    <main className=" pb-20">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-6 pt-4 sm:gap-16 sm:pt-6">
         <HeroSection bestActivity={bestActivity} />
         <BestItemsCarousel activities={carouselActivities} />

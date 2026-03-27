@@ -1,7 +1,6 @@
 import { cn } from "@/commons/utils/cn";
 import { ReservationTabs } from "./_components/ReservationTabs";
 import { Suspense } from "react";
-import axios from "@/apis/axios";
 
 const TAB_ITEMS = [
   { action: "all", label: "전체" },

@@ -36,7 +36,8 @@ export function ReservationCalendar({
   const requireAuth = useRequireAuth();
 
   return (
-    <div className="border border-gray-200 rounded-xl w-full overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
+    <div className="bg-white border border-gray-200 rounded-xl w-full overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
+      {/* 가격 헤더 */}
       <div className="px-8 pt-6">
         <span className="text-xl font-bold text-gray-950">
           ₩{price.toLocaleString()}
