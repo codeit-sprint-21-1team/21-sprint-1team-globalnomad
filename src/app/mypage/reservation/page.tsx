@@ -13,10 +13,11 @@ import { TAB_ITEMS } from "@/commons/consts/reservations";
 export default async function ReservationPage({
   searchParams,
 }: {
-  searchParams: { status?: string };
+  searchParams: Promise<{ status?: string }>;
 }) {
   const queryClient = new QueryClient();
-  const status = searchParams.status || "all";
+  const { status: rawStatus } = await searchParams;
+  const status = rawStatus || "all";
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["myReservations", status],
@@ -55,9 +56,11 @@ export default async function ReservationPage({
       </header>
 
       <section className="mt-[13px] md:mt-[30px] xl:mt-[30px]">
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <MyReservationList />
-        </HydrationBoundary>
+        <Suspense fallback={<div>목록 로딩 중...</div>}>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <MyReservationList />
+          </HydrationBoundary>
+        </Suspense>
       </section>
     </div>
   );
