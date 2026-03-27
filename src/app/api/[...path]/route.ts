@@ -56,6 +56,7 @@ async function proxy(req: NextRequest, path: string[], method: HttpMethod) {
           path: "/",
           maxAge: 60 * 30,
         });
+        return finalResponse;
       } else {
         clearAuthCookies(unauthorizedResponse);
         return unauthorizedResponse;
