@@ -61,6 +61,10 @@ export const getActivityReviews = async (
   return res.json();
 };
 
+export const deleteMyActivity = async (activityId: number): Promise<void> => {
+  await axios.delete(`/my-activities/${activityId}`);
+};
+
 export const getAvailableSchedule = async (
   activityId: number,
   year: string,
