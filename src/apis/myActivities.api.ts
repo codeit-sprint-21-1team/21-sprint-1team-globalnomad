@@ -11,3 +11,7 @@ export const getActivityList = async ({
   });
   return res.data;
 };
+
+export const deleteMyActivity = async (activityId: number): Promise<void> => {
+  await axios.delete(`/my-activities/${activityId}`);
+};

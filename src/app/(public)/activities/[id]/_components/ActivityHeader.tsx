@@ -1,19 +1,56 @@
-import { MapPin, Star, EllipsisVertical } from "lucide-react";
+"use client";
+
+import { MapPin, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import type { Activity } from "@/types/activities";
+import Kebab from "@/components/ui/Kebab/Kebab";
+import { useMutation } from "@tanstack/react-query";
+import { useDialog } from "@/components/ui/Dialog";
+import { useAuth } from "@/commons/contexts/AuthContext";
+import { useRequireAuth } from "@/commons/hooks/useRequireAuth";
+import { deleteMyActivity } from "@/apis/myActivities.api";
+import { handleApiError } from "@/commons/utils/handleApiError";
 
 interface ActivityHeaderProps {
   activity: Activity;
 }
 
 export function ActivityHeader({ activity }: ActivityHeaderProps) {
+  const router = useRouter();
+  const { user } = useAuth();
+  const { showDialog } = useDialog();
+  const requireAuth = useRequireAuth();
+
+  const { mutate: deleteActivity } = useMutation({
+    mutationFn: () => deleteMyActivity(activity.id),
+    onSuccess: () =>
+      showDialog({ type: "alert", content: "삭제가 완료됐습니다." }),
+    onError: (error) =>
+      showDialog({ type: "alert", content: handleApiError(error) }),
+  });
+
+  const handleDelete = () => {
+    showDialog({
+      type: "confirm",
+      content: "정말 삭제하시겠어요?",
+      onConfirm: () => requireAuth(deleteActivity),
+    });
+  };
+
+  const isOwner = !!user && user.id === activity.userId;
+
+  const handleEdit = () => {
+    router.push(`/mypage/activity/edit/${activity.id}`);
+  };
+
   return (
     <div className="w-full pb-5 border-b border-gray-200 xl:border-none mt-5 md:mt-6 xl:mt-0">
       <div className="flex items-start  justify-between">
         <span className="text-[13px] md:text-[14px] text-gray-600">
           {activity.category}
         </span>
-        <EllipsisVertical />
+        {isOwner && <Kebab onEdit={handleEdit} onDelete={handleDelete} />}
       </div>
 
       <h1 className=" text-[18px] md:text-[24px]  font-bold text-gray-950 leading-tight">

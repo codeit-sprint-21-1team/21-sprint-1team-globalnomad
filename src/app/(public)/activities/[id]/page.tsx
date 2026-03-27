@@ -1,5 +1,6 @@
 export const revalidate = 60;
 
+import type { Metadata } from "next";
 import { ActivityHeader } from "./_components/ActivityHeader";
 import { BannerImages } from "./_components/BannerImages";
 import { Description } from "./_components/Description";
@@ -15,6 +16,27 @@ import {
 import { Suspense } from "react";
 import { UpwardPanel } from "./_components/UpwardPanel/UpwardPanel";
 import { notFound } from "next/navigation";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ page?: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const activityId = Number(id);
+  const activity = await getActivityDetail(activityId);
+
+  return {
+    title: activity.title,
+    description: activity.description.slice(0, 150),
+    openGraph: {
+      title: activity.title,
+      description: activity.description,
+      images: [activity.bannerImageUrl],
+    },
+  };
+}
 
 export default async function ActivityDetailPage({
   params,
