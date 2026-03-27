@@ -39,7 +39,10 @@ export default function Page() {
       </div>
 
       <div className="p-5 w-[400px]">
-        <DateInputPicker labelTxt="예약 날짜" />
+        <DateInputPicker
+          labelTxt="예약 날짜"
+          onValueChange={(value) => console.log(value)}
+        />
       </div>
     </>
   );
