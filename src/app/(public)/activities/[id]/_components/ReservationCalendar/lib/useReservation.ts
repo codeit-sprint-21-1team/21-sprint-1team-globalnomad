@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import type { AvailableTime } from "@/types/activities";
 import { getAvailableSchedule, createReservation } from "@/apis/activities.api";
@@ -19,6 +19,7 @@ export function useReservation(activityId: number, price: number) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
   const [headcount, setHeadcount] = useState(1);
+  const queryClient = useQueryClient();
 
   const year = format(currentMonth, "yyyy");
   const month = format(currentMonth, "MM");
@@ -65,6 +66,7 @@ export function useReservation(activityId: number, price: number) {
     mutationFn: () =>
       createReservation(activityId, selectedSlot!.id, headcount),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["myReservations"] });
       reset();
       showDialog({ type: "alert", content: "예약이 완료되었습니다." });
     },

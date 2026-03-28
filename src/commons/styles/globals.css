@@ -172,4 +172,33 @@
         rgb(254, 254, 255) 100%
       );
   }
+
+  .deleting-item {
+    animation: slide-up-fade 0.4s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  @keyframes slide-up-fade {
+    0% {
+      opacity: 1;
+      max-height: 250px;
+      margin-bottom: 16px;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 0;
+      max-height: 80px;
+      margin-bottom: 8px;
+      transform: translateY(-5px);
+    }
+    100% {
+      opacity: 0;
+      max-height: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      transform: translateY(-10px);
+    }
+  }
 }

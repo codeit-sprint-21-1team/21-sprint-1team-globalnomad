@@ -8,7 +8,7 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  active?: boolean;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 const buttonVariants = cva(
@@ -38,6 +38,7 @@ export function FilterButton({
   className,
   asChild = false,
   active = false,
+  ref,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button";
@@ -45,6 +46,7 @@ export function FilterButton({
   return (
     <Comp
       data-slot="button"
+      ref={ref}
       className={cn(buttonVariants({ className, active }))}
       {...props}
     />

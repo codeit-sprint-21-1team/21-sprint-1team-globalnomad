@@ -123,7 +123,8 @@ function Calendar({
           defaultClassNames.range_end,
         ),
         today: cn(
-          "rounded-(--cell-radius) bg-muted text-foreground data-[selected=true]:rounded-none",
+          "rounded-[100px] bg-[#E5F3FF] !text-[#3D9EF2]",
+          "data-[selected=true]:rounded-[100px] data-[selected=true]:bg-[#3D9EF2] data-[selected=true]:text-white",
           defaultClassNames.today,
         ),
         outside: cn(
@@ -206,6 +207,7 @@ function CalendarDayButton({
       ref={ref}
       variant="ghost"
       size="icon"
+      data-today={modifiers.today}
       data-day={day.date.toLocaleDateString(locale?.code)}
       data-selected-single={
         modifiers.selected &&
@@ -217,7 +219,17 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70",
+        "relative isolate z-10 flex aspect-square size-auto h-full w-full min-w-(--cell-size) flex-col gap-1 border-0 p-0 leading-none font-normal outline-none ring-0 focus:ring-0 focus-visible:ring-0",
+
+        "data-[today=true]:text-[#3D9EF2]",
+
+        "data-[selected-single=true]:rounded-full data-[selected-single=true]:bg-[#3D9EF2] data-[selected-single=true]:!text-white",
+        "data-[range-start=true]:rounded-full data-[range-start=true]:bg-[#3D9EF2] data-[range-start=true]:!text-white",
+        "data-[range-end=true]:rounded-full data-[range-end=true]:bg-[#3D9EF2] data-[range-end=true]:!text-white",
+
+        "hover:bg-[#E5F3FF] hover:text-[#3D9EF2] hover:rounded-full",
+
+        "[&>span]:text-xs [&>span]:opacity-70 dark:hover:text-foreground",
         defaultClassNames.day,
         className,
       )}

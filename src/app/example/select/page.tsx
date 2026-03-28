@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  LabeledSelect,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select/Select";
+import { LabeledSelect } from "@/components/ui/Select/Select";
 
 const options = [
   { value: "red", label: "빨강" },
