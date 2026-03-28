@@ -6,18 +6,7 @@ import SearchBar from "./_components/SearchBar";
 import CategoryFilter from "./_components/CategoryFilter";
 import ActivitiesListSwitcher from "./_components/ActivitiesListSwitcher";
 
-type ActivitiesSearchParams = {
-  category?: string;
-  keyword?: string;
-  sort?: string;
-  page?: string;
-};
-
-interface ActivitiesPageProps {
-  searchParams: Promise<ActivitiesSearchParams>;
-}
-
-export default async function ActivitiesPage({}: ActivitiesPageProps) {
+export default async function ActivitiesPage() {
   const data = await getActivityList({
     method: "offset",
     size: 10,
@@ -32,13 +21,11 @@ export default async function ActivitiesPage({}: ActivitiesPageProps) {
       <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
         🎡 모든 체험
       </h1>
-
       <section className="w-full">
         <Suspense fallback={null}>
           <SearchBar />
         </Suspense>
       </section>
-
       <div className="flex flex-col gap-6">
         <section className="flex w-full items-center justify-between gap-4">
           <Suspense fallback={null}>

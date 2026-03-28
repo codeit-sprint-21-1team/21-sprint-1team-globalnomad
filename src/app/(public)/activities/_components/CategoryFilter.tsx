@@ -25,7 +25,8 @@ export default function CategoryFilter() {
       page: 1,
     });
     const nextUrl = queryString ? `/activities?${queryString}` : "/activities";
-    router.push(nextUrl, { scroll: true });
+    router.push(nextUrl, { scroll: false });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

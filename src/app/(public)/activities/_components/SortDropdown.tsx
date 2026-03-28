@@ -27,7 +27,8 @@ export default function SortDropdown() {
       sort: value,
       page: 1,
     });
-    router.push(`/activities?${queryString}`, { scroll: true });
+    router.push(`/activities?${queryString}`, { scroll: false });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
