@@ -5,6 +5,7 @@ import ReactQueryProvider from "@/commons/contexts/ReactQueryProvider";
 import { AuthProvider } from "@/commons/contexts/AuthContext";
 import { DialogProvider } from "@/components/ui/Dialog";
 import { ModalProvider } from "@/components/ui/Modal";
+import NotificationProvider from "@/commons/contexts/NotificationProvider";
 
 const pretendard = localFont({
   src: [
@@ -77,7 +78,10 @@ export default function RootLayout({
         <ReactQueryProvider>
           <AuthProvider>
             <DialogProvider>
-              <ModalProvider>{children}</ModalProvider>
+              <ModalProvider>
+                {children}
+                <NotificationProvider />
+              </ModalProvider>
             </DialogProvider>
           </AuthProvider>
         </ReactQueryProvider>
