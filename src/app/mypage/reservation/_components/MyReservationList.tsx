@@ -92,7 +92,33 @@ export default function MyReservationList() {
               alt="no list img"
               className="mx-auto"
             />
-            <p className="text-gray-500 mt-[30px]">아직 예약한 체험이 없어요</p>
+
+            {status === "pending" && (
+              <p className="text-gray-500 mt-[30px]">
+                신청하신 예약이 없습니다. 새로운 체험을 찾아보세요!
+              </p>
+            )}
+            {status === "canceled" && (
+              <p className="text-gray-500 mt-[30px]">
+                취소된 예약 내역이 없습니다
+              </p>
+            )}
+            {status === "confirmed" && (
+              <p className="text-gray-500 mt-[30px]">
+                확정된 예약이 없습니다. 곧 좋은 소식이 있을 거예요
+              </p>
+            )}
+            {status === "declined" && (
+              <p className="text-gray-500 mt-[30px]">
+                거절된 예약 내역이 없습니다
+              </p>
+            )}
+            {status === "completed" && (
+              <p className="text-gray-500 mt-[30px]">
+                아직 완료된 체험이 없습니다. 첫 체험을 시작해볼까요?
+              </p>
+            )}
+
             <Button
               variant="default"
               onClick={handleHomeClick}
