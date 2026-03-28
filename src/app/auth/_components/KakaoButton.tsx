@@ -15,7 +15,12 @@ export function KaKaoButton({ mode }: KaKaoButtonType) {
   };
 
   return (
-    <Button variant="secondary" size="lg" onClick={onKakaoSignUp}>
+    <Button
+      variant="secondary"
+      size="lg"
+      aria-label="카카오 계정으로 시작하기"
+      onClick={onKakaoSignUp}
+    >
       <Image width={24} height={24} src="/icons/kakao.svg" alt="" />
       카카오로 시작하기
     </Button>

@@ -10,11 +10,16 @@ import { cn } from "@/commons/utils/cn";
 export default function LoginPage() {
   const { register, control, errors, isValid, onFormSubmit } = useLogin();
 
+  const handleInput = () => {
+    window.dispatchEvent(new CustomEvent("typing-start"));
+  };
+
   return (
     <>
       <form
         className="flex flex-col gap-[16px] md:gap-[20px]"
         onSubmit={onFormSubmit}
+        onInput={handleInput}
       >
         <Input
           {...register("email")}
