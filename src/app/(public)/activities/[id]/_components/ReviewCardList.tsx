@@ -5,11 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { getActivityReviews } from "@/apis/activities.api";
 import { Pagination } from "@/components/ui/Pagination/Pagination";
 import { Star } from "lucide-react";
+import Image from "next/image";
 import { ReviewCard } from "./ReviewCard";
 
 const SIZE = 3;
 
 function getRatingLabel(rating: number): string {
+  if (rating === 0) return "---";
   if (rating >= 4) return "매우 만족";
   if (rating >= 3) return "만족";
   if (rating >= 2) return "보통";
@@ -58,15 +60,29 @@ export function ReviewCardList({ activityId }: ReviewCardListProps) {
         </div>
       </div>
 
-      <ul className="flex flex-col gap-8 md:gap-5 mb-7 ">
-        {reviews.reviews.map((review) => (
-          <li key={review.id}>
-            <ReviewCard review={review} />
-          </li>
-        ))}
-      </ul>
-
-      <Pagination totalPage={totalPage} />
+      {reviews.totalCount === 0 ? (
+        <div className="flex flex-col items-center gap-4 py-16 text-gray-400">
+          <Image
+            src="/images/logo-symbol.svg"
+            alt="GlobalNomad 로고"
+            width={80}
+            height={80}
+            className="opacity-30"
+          />
+          <p className="text-sm">아직 등록된 후기가 없어요.</p>
+        </div>
+      ) : (
+        <>
+          <ul className="flex flex-col gap-8 md:gap-5 mb-7 ">
+            {reviews.reviews.map((review) => (
+              <li key={review.id}>
+                <ReviewCard review={review} />
+              </li>
+            ))}
+          </ul>
+          <Pagination totalPage={totalPage} />
+        </>
+      )}
     </section>
   );
 }

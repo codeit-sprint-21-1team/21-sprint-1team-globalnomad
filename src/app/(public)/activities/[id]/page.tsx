@@ -87,7 +87,7 @@ export default async function ActivityDetailPage({
         />
       </div>
 
-      <div className="xl:col-start-2 xl:row-span-2 flex items-center justify-start flex-col ">
+      <div className="xl:col-start-2 xl:row-span-2 flex items-center justify-start flex-col xl:self-start xl:sticky xl:top-8">
         <ActivityHeader activity={activity} />
 
         <div className="hidden xl:block mt-8 w-full">
