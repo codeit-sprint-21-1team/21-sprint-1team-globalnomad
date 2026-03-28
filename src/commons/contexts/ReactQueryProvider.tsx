@@ -15,6 +15,18 @@ interface ApiError {
   };
 }
 
+const handleAuthError = (error: unknown) => {
+  const err = error as ApiError;
+  const is401 = err?.status === 401 || err?.response?.status === 401;
+
+  if (typeof window !== "undefined" && is401) {
+    if (window.location.pathname.includes("/auth/login")) {
+      return;
+    }
+    window.location.href = "/auth/login";
+  }
+};
+
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -27,26 +39,10 @@ function makeQueryClient() {
       },
     },
     queryCache: new QueryCache({
-      onError: (error: unknown) => {
-        const err = error as ApiError;
-        if (
-          typeof window !== "undefined" &&
-          (err?.status === 401 || err?.response?.status === 401)
-        ) {
-          window.location.href = "/auth/login";
-        }
-      },
+      onError: handleAuthError,
     }),
     mutationCache: new MutationCache({
-      onError: (error: unknown) => {
-        const err = error as ApiError;
-        if (
-          typeof window !== "undefined" &&
-          (err?.status === 401 || err?.response?.status === 401)
-        ) {
-          window.location.href = "/auth/login";
-        }
-      },
+      onError: handleAuthError,
     }),
   });
 }
