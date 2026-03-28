@@ -20,11 +20,16 @@ export default function SignupPage() {
     showModal(<TermsContent />);
   };
 
+  const handleInput = () => {
+    window.dispatchEvent(new CustomEvent("typing-start"));
+  };
+
   return (
     <>
       <form
         className="flex flex-col gap-[16px] md:gap-[20px]"
         onSubmit={onFormSubmit}
+        onInput={handleInput}
       >
         <Input
           {...register("email")}
