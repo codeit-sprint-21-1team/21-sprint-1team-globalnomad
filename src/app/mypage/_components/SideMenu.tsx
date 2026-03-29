@@ -3,6 +3,7 @@ import { memo } from "react";
 import { ProfileSection } from "./ProfileSection";
 import { MenuItem } from "./MenuItem";
 import { useAuth } from "@/commons/contexts/AuthContext";
+import UserBadge from "./UserBadge";
 
 const MENU_ITEMS = [
   { href: "/mypage/user-info", label: "내 정보", iconName: "user" },
@@ -29,7 +30,7 @@ export const SideMenu = memo(
       <aside
         className={cn(
           isRootMyPage ? "block" : "hidden",
-          "md:block w-[327px] md:w-[178px] xl:w-[290px] md:h-auto xl:h-auto",
+          "md:block w-full md:w-[178px] xl:w-[290px] h-fit",
           "bg-white shadow-[0px_4px_24px_0px_#9CB4CA33]",
           "border border-solid rounded-xl",
           "py-6 px-[14px]",
@@ -38,6 +39,7 @@ export const SideMenu = memo(
         )}
       >
         <ProfileSection imageSrc={user?.profileImageUrl || ""} />
+        <UserBadge />
         <nav>
           <ul className="flex flex-col items-center md:gap-[12px] xl:gap-[14px] mt-[24px]">
             {MENU_ITEMS.map((item) => (
