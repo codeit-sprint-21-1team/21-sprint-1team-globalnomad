@@ -9,12 +9,14 @@ import Image from "next/image";
 import { cva } from "class-variance-authority";
 
 const selectTriggerVariants = cva(
-  "flex w-full items-center justify-between rounded-[16px] border bg-transparent px-[20px] py-[16px] text-sm transition-colors outline-none select-none disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-gray-400 [&_img]:transition-transform [&_img]:duration-200 data-[state=open]:[&_img]:rotate-180",
+  "flex w-full h-12 items-center justify-between rounded-[16px] border bg-transparent px-[20px] font-medium text-[16px] text-[#1F1F22] transition-colors outline-none select-none disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:text-[16px] data-placeholder:font-medium data-placeholder:text-gray-400 [&_img]:transition-transform [&_img]:duration-200 data-[state=open]:[&_img]:rotate-180",
   {
     variants: {
       variant: {
-        default: "border-gray-100",
-        error: "border-red-500 focus:border-red-500",
+        default:
+          "border-[#E0E0E5] data-[state=open]:border-[#3D9EF2] data-[state=open]:ring-1 data-[state=open]:ring-[#3D9EF2] focus:border-[#3D9EF2]",
+        error:
+          "border-red-500 !border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 data-[state=open]:border-red-500 data-[state=open]:ring-red-500",
       },
     },
     defaultVariants: {
@@ -206,9 +208,10 @@ interface CustomSelectProps extends React.ComponentPropsWithoutRef<
   labelTxt?: string;
   errorTxt?: string;
   placeholder?: string;
-  items: { value: string; label: string }[];
+  items: readonly { value: string; label: string }[];
   className?: string;
   maxHeight?: string;
+  onBlur?: React.FocusEventHandler;
 }
 
 export function LabeledSelect({
@@ -218,19 +221,32 @@ export function LabeledSelect({
   items,
   className,
   maxHeight,
+  onBlur,
+  onValueChange,
   ...props
 }: CustomSelectProps) {
   return (
-    <div className={cn("w-full flex flex-col gap-[10px]", className)}>
+    <div className={cn("w-full flex flex-col gap-[10px]")}>
       {labelTxt && (
-        <label className="text-[16px] font-bold leading-[100%] tracking-[-0.025em] text-gray-900">
+        <label className="text-[16px] font-bold leading-[100%] tracking-[-0.025em] text-gray-900 hidden md:inline-flex">
           {labelTxt}
         </label>
       )}
 
-      <Select {...props}>
+      <Select
+        {...props}
+        onValueChange={onValueChange}
+        onOpenChange={(open) => {
+          if (!open && onBlur) {
+            onBlur({} as React.FocusEvent);
+          }
+        }}
+      >
         <SelectTrigger
-          className={cn(errorTxt ? "border-red-500" : "border-gray-100")}
+          key={errorTxt ? "error-active" : "normal"}
+          variant={errorTxt ? "error" : "default"}
+          className={cn("h-[54px]", className)}
+          style={errorTxt ? { borderColor: "#ef4444" } : {}}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

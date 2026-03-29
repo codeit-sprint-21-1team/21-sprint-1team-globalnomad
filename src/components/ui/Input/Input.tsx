@@ -34,6 +34,7 @@ export interface InputProps
   errorTxt?: string;
   ref?: React.Ref<HTMLInputElement>;
   extra?: React.ReactNode;
+  optional?: boolean;
 }
 /**
  * className?, type?, id?, labelTxt?, errorTxt?, disabled(boolean)
@@ -49,6 +50,7 @@ const Input = ({
   readOnly,
   ref,
   extra,
+  optional,
   ...props
 }: InputProps) => {
   const generatedId = React.useId();
@@ -73,7 +75,10 @@ const Input = ({
             "mb-[10px]",
           )}
         >
-          {labelTxt}
+          {labelTxt}{" "}
+          {optional && (
+            <span className="text-blue-400 text-[14px] ml-[5px]">(선택)</span>
+          )}
         </label>
       )}
       <div className="relative flex items-center">
@@ -86,8 +91,7 @@ const Input = ({
               className,
             }),
             isPasswordType && "pr-12",
-            readOnly &&
-              "focus-visible:outline-none cursor-default text-[#9FA0A7]",
+            readOnly && "focus-visible:outline-none text-[#9FA0A7]",
           )}
           ref={ref}
           disabled={disabled}

@@ -13,6 +13,7 @@ export interface DialogOptions {
   content: ReactNode;
   type: "confirm" | "alert";
   onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 interface DialogContextValue {
@@ -38,6 +39,11 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     onClose();
   }, [dialog, onClose]);
 
+  const handleCancel = useCallback(() => {
+    dialog?.onCancel?.();
+    onClose();
+  }, [dialog, onClose]);
+
   return (
     <DialogContext.Provider value={{ showDialog, onClose }}>
       <div inert={dialog ? true : undefined}>{children}</div>
@@ -47,7 +53,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
       {dialog?.type === "confirm" && (
         <ConfirmDialog
           content={dialog.content}
-          onClose={onClose}
+          onClose={handleCancel}
           onConfirm={handleConfirm}
         />
       )}
