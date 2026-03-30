@@ -7,16 +7,14 @@ export function useUserBadge() {
   const results = useQueries({
     queries: [
       {
-        queryKey: ["myActivities"],
+        queryKey: ["myActivities", "badge"],
         queryFn: () => getMyActivityList({ cursorId: null }),
-        staleTime: Infinity,
-        gcTime: 1000 * 60 * 5,
+        staleTime: 0,
       },
       {
-        queryKey: ["myReservations"],
+        queryKey: ["myReservations", "badge"],
         queryFn: () => getMyReservationList({ cursorId: null }),
-        staleTime: Infinity,
-        gcTime: 1000 * 60 * 5,
+        staleTime: 0,
       },
     ],
   });
