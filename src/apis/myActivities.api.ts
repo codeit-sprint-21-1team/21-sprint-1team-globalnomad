@@ -4,6 +4,7 @@ import {
   CreateActivityResponse,
   MessageResponse,
   MyActivitiesListType,
+  ReservationDashboardItem,
   UpdateActivityRequest,
 } from "@/types/myActivities.type";
 
@@ -67,5 +68,21 @@ export const updateMyActivity = async (
   data: UpdateActivityRequest,
 ) => {
   const res = await axios.patch(`/my-activities/${activityId}`, data);
+  return res.data;
+};
+
+export const getReservationDashboard = async ({
+  activityId,
+  year,
+  month,
+}: {
+  activityId: number;
+  year: string;
+  month: string;
+}): Promise<ReservationDashboardItem[]> => {
+  const res = await axios.get<ReservationDashboardItem[]>(
+    `/my-activities/${activityId}/reservation-dashboard`,
+    { params: { year, month } },
+  );
   return res.data;
 };

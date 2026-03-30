@@ -100,3 +100,14 @@ export interface UpdateActivityRequest {
 
 export type MyActivityMutationData = (CreateActivityRequest &
   UpdateActivityRequest) & { id?: number };
+
+export interface ReservationCounts {
+  completed: number;
+  confirmed: number;
+  pending: number;
+}
+
+export interface ReservationDashboardItem {
+  date: string; // "YYYY-MM-DD"
+  reservations: ReservationCounts;
+}
