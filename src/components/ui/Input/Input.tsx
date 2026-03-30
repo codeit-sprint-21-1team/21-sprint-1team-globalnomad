@@ -103,8 +103,10 @@ const Input = ({
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={disabled}
+            aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
             className={cn(
               "absolute right-4 flex items-center justify-center",
+              "p-2",
               " text-gray-500 ",
               "focus:outline-none",
               disabled
