@@ -136,7 +136,13 @@ export function DateInputPicker({
           }}
         >
           <PopoverTrigger asChild>
-            <button type="button" className="text-gray-500 hover:text-gray-700">
+            <button
+              type="button"
+              className="flex items-center justify-center min-w-[44px] min-h-[44px] text-gray-500 hover:text-gray-700 transition-colors"
+              aria-label={
+                labelTxt ? `${labelTxt} 달력 열기` : "날짜 선택 달력 열기"
+              }
+            >
               <CalendarIcon className="size-5" />
             </button>
           </PopoverTrigger>
