@@ -32,10 +32,10 @@ export default function ActivitiesPagination({
     const queryString = updateQueryString(searchParams, {
       page: pageNumber,
     });
-    router.replace(
-      queryString ? `${pathname}?${queryString}` : pathname,
-      { scroll: true },
-    );
+    router.replace(queryString ? `${pathname}?${queryString}` : pathname, {
+      scroll: false,
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -80,9 +80,7 @@ export default function ActivitiesPagination({
             <ChevronRightIcon
               data-icon="inline-end"
               className={cn(
-                currentPage === totalPage
-                  ? "text-[#B3B4BC]"
-                  : "text-[#1F1F22]",
+                currentPage === totalPage ? "text-[#B3B4BC]" : "text-[#1F1F22]",
               )}
             />
           </PaginationLink>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
 import { getActivityList } from "@/apis/myActivities.api";
@@ -19,14 +19,16 @@ interface ActivityDropdownProps {
   onSelect: (activity: Activity) => void;
 }
 
-const PLACEHOLDER = "체험을 선택하세요";
+const PLACEHOLDER = "체험을 불러오는중...";
 
 export default function ActivityDropdown({
   selectedActivity,
   onSelect,
 }: ActivityDropdownProps) {
   const [open, setOpen] = useState(false);
-  const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
+  const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(
+    null,
+  );
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
@@ -45,6 +47,12 @@ export default function ActivityDropdown({
   });
 
   const allActivities = data?.pages.flatMap((page) => page.activities) ?? [];
+
+  useEffect(() => {
+    if (!selectedActivity && allActivities.length > 0) {
+      onSelect(allActivities[0]);
+    }
+  }, [allActivities]);
 
   const handleValueChange = (val: string) => {
     const activity = allActivities.find((a) => a.id === Number(val));
