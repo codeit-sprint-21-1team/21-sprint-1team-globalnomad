@@ -31,20 +31,48 @@ function readValue(
 
   const value = input[key];
 
-  if (value === null || value === undefined) {
+  if (value === null || value === undefined || value === "") {
     return undefined;
   }
 
   return String(value);
 }
 
+const ALLOWED_SORTS: ActivitySort[] = [
+  "latest",
+  "most_reviewed",
+  "price_asc",
+  "price_desc",
+];
+
+const ALLOWED_CATEGORIES: string[] = [
+  "문화 · 예술",
+  "관광",
+  "식음료",
+  "스포츠",
+  "투어",
+  "웰빙",
+];
+
 export function normalizeActivitiesParams(
   input: ActivitiesQueryInput,
 ): ActivitiesQueryParams {
-  const category = readValue(input, "category") || undefined;
-  const keyword = readValue(input, "keyword") || undefined;
-  const sort = (readValue(input, "sort") as ActivitySort | undefined) || DEFAULT_SORT;
-  const page = Number(readValue(input, "page")) || DEFAULT_PAGE;
+  const rawCategory = readValue(input, "category");
+  const category =
+    rawCategory && ALLOWED_CATEGORIES.includes(rawCategory)
+      ? rawCategory
+      : undefined;
+
+  const rawKeyword = readValue(input, "keyword")?.trim();
+  const keyword =
+    rawKeyword && rawKeyword.length > 0 ? rawKeyword.slice(0, 50) : undefined;
+
+  const rawSort = readValue(input, "sort") as ActivitySort | undefined;
+  const sort =
+    rawSort && ALLOWED_SORTS.includes(rawSort) ? rawSort : DEFAULT_SORT;
+
+  const rawPage = Number(readValue(input, "page"));
+  const page = isNaN(rawPage) || rawPage < 1 ? DEFAULT_PAGE : rawPage;
 
   return {
     category,

@@ -6,21 +6,22 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { getActivityList } from "@/apis/myActivities.api";
+import { getMyActivityList } from "@/apis/myActivities.api";
+import Link from "next/link";
 
 export default async function ActivityPage() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["myActivities"],
-    queryFn: () => getActivityList({ cursorId: null }),
+    queryFn: () => getMyActivityList({ cursorId: null }),
     initialPageParam: null,
   });
 
   return (
-    <main className="px-[24px] py-[10px] md:px-0 md:py-0 xl:px-0 xl:py-0">
+    <main className="md:px-0 md:py-0 xl:px-0 xl:py-0">
       <header className="mt-[10px] flex justify-between items-start">
-        <div className="flex flex-col w-[290px] justify-between">
+        <div className="flex flex-col w-[260px] justify-between">
           <div
             className={cn(
               "",
@@ -40,10 +41,12 @@ export default async function ActivityPage() {
             체험을 등록하거나 수정 및 삭제가 가능합니다.
           </div>
         </div>
-        <div className="w-[138px]">
-          <Button variant="default" size="md">
-            체험 등록하기
-          </Button>
+        <div className="w-[138px] ml-[20px]">
+          <Link href="/mypage/activity/create">
+            <Button variant="default" size="md">
+              체험 등록하기
+            </Button>
+          </Link>
         </div>
       </header>
 

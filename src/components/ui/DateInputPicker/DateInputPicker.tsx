@@ -25,15 +25,24 @@ interface DateInputPickerProps {
   labelTxt?: string;
   errorTxt?: string;
   placeholder?: string;
+  value?: Date | null;
+  onValueChange: (date: Date | null) => void;
+  onBlur?: React.FocusEventHandler;
 }
 
 export function DateInputPicker({
   labelTxt,
   errorTxt,
+  value,
+  onValueChange,
+  onBlur,
   placeholder = format(new Date(), "yy/MM/dd"),
+  // ...props
 }: DateInputPickerProps) {
-  const [date, setDate] = React.useState<Date | undefined>();
-  const [inputValue, setInputValue] = React.useState("");
+  const [date, setDate] = React.useState<Date | undefined>(value ?? undefined);
+  const [inputValue, setInputValue] = React.useState(
+    value ? format(value, "yy/MM/dd") : "",
+  );
   const [isOpen, setIsOpen] = React.useState(false);
   const [rangeError, setRangeError] = React.useState("");
 
@@ -59,13 +68,13 @@ export function DateInputPicker({
       if (isValid(parsedDate)) {
         if (isBefore(parsedDate, minDate) || isAfter(parsedDate, maxDate)) {
           setRangeError("올바른 날짜 범위를 입력해주세요");
-          setDate(undefined);
+          onValueChange(null);
         } else {
-          setDate(parsedDate);
-          setRangeError("");
+          onValueChange(parsedDate);
         }
       } else {
         setRangeError("유효하지 않은 날짜입니다.");
+        onValueChange(null);
       }
     } else {
       setDate(undefined);
@@ -77,18 +86,28 @@ export function DateInputPicker({
     if (selectedDate) {
       setInputValue(format(selectedDate, "yy/MM/dd"));
       setRangeError("");
+      onValueChange(selectedDate);
       setIsOpen(false);
     }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (isOpen) return;
+    if (inputValue.length === 0 || inputValue.length < 8) {
+      onValueChange(null);
+    }
+    if (onBlur) onBlur(e);
   };
 
   return (
     <div className="relative w-full">
       <Input
         labelTxt={labelTxt}
-        errorTxt={errorTxt || rangeError}
+        errorTxt={rangeError || errorTxt}
         placeholder={placeholder}
         value={inputValue}
         onChange={handleInputChange}
+        onBlur={handleBlur}
         inputMode="numeric"
         className="pr-12"
         maxLength={8}
@@ -103,11 +122,19 @@ export function DateInputPicker({
       <div
         className={cn(
           "absolute right-4 flex items-center",
-          labelTxt ? "top-[55px]" : "top-[26px]",
+          labelTxt ? "top-[58px]" : "top-[26px]",
           "transform -translate-y-1/2",
         )}
       >
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <Popover
+          open={isOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open);
+            if (!open && onBlur) {
+              onBlur({} as React.FocusEvent);
+            }
+          }}
+        >
           <PopoverTrigger asChild>
             <button type="button" className="text-gray-500 hover:text-gray-700">
               <CalendarIcon className="size-5" />

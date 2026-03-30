@@ -63,7 +63,10 @@ async function proxy(req: NextRequest, path: string[], method: HttpMethod) {
       }
     }
 
-    const data = await res.json().catch(() => ({}));
+    const data = res.status === 204 ? null : await res.json().catch(() => ({}));
+    if (res.status === 204) {
+      return new NextResponse(null, { status: 204 });
+    }
     const response = NextResponse.json(data, { status: res.status });
 
     return response;
