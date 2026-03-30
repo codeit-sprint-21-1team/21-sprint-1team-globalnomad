@@ -25,10 +25,15 @@ export default function AuthButton() {
         <DropdownMenuTrigger asChild>
           <Avatar className="h-10 w-10">
             <AvatarImage src={user.profileImageUrl} />
-            <AvatarFallback>{user.nickname}</AvatarFallback>
+            <AvatarFallback className="overflow-hidden">
+              {user.nickname.slice(0, 1).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="z-50 min-w-[120px] rounded-lg border border-gray-200 bg-white p-0 shadow-md">
+        <DropdownMenuContent
+          align="end"
+          className="z-50 min-w-[120px] rounded-lg border border-gray-200 bg-white p-0 shadow-md"
+        >
           <DropdownMenuGroup>
             <DropdownMenuItem className="cursor-pointer px-4 py-3 rounded-lg justify-center text-sm font-medium text-gray-800 outline-none hover:bg-gray-50 focus:bg-[#E5F3FF]">
               <Link href="/mypage" className="w-full text-center">
