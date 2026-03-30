@@ -18,6 +18,7 @@ export default function PreviewItem({
           alt="미리보기"
           fill
           className="rounded-[16px] object-cover"
+          unoptimized
         />
         <button
           type="button"
