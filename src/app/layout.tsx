@@ -75,7 +75,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const hasSession = cookieStore.has("accessToken");
+  const hasSession =
+    cookieStore.has("access_token") || cookieStore.has("refresh_token");
 
   return (
     <html lang="ko" className={pretendard.variable}>
