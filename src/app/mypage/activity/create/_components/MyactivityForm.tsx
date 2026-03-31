@@ -69,6 +69,7 @@ export default function MyactivityForm({
               <LabeledSelect
                 key={field.value || "empty"}
                 labelTxt="카테고리"
+                isNeedLabel={true}
                 items={CATEGORY_OPTIONS}
                 value={field.value}
                 onValueChange={field.onChange}
@@ -177,6 +178,7 @@ export default function MyactivityForm({
                           <button
                             type="button"
                             onClick={addSchedule}
+                            aria-label="일정 추가"
                             className="flex items-center justify-center min-w-[42px] min-h-[42px] bg-[#3D9EF2] rounded-full text-white mt-[4px] md:mt-[30px] ml-[4px] shrink-0"
                           >
                             <Plus size={18} strokeWidth={3} />
@@ -185,6 +187,7 @@ export default function MyactivityForm({
                           <button
                             type="button"
                             onClick={() => removeSchedule(index)}
+                            aria-label={`${index + 1}번째 일정 삭제`}
                             className="flex items-center justify-center min-w-[42px] min-h-[42px] bg-[#EDEEF2] rounded-full text-black mt-[4px] ml-[4px] shrink-0"
                           >
                             <Minus size={18} strokeWidth={3} />
@@ -284,7 +287,10 @@ export default function MyactivityForm({
           </div>
         </div>
       </form>
-      <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
+      <Script
+        src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+        strategy="lazyOnload"
+      />
     </div>
   );
 }

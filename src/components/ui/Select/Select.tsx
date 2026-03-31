@@ -55,6 +55,7 @@ function SelectTrigger({
   size = "default",
   variant = "default",
   children,
+  "aria-label": ariaLabel,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default";
@@ -65,6 +66,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(selectTriggerVariants({ variant }), className)}
+      aria-label={ariaLabel}
       {...props}
     >
       {children}
@@ -74,7 +76,7 @@ function SelectTrigger({
           src="/icons/arrow_down.svg"
           width={24}
           height={24}
-          alt="select arrow icon"
+          alt="select-arrow-icon"
         ></Image>
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
@@ -206,6 +208,7 @@ interface CustomSelectProps extends React.ComponentPropsWithoutRef<
   typeof SelectPrimitive.Root
 > {
   labelTxt?: string;
+  isNeedLabel?: boolean;
   errorTxt?: string;
   placeholder?: string;
   items: readonly { value: string; label: string }[];
@@ -216,6 +219,7 @@ interface CustomSelectProps extends React.ComponentPropsWithoutRef<
 
 export function LabeledSelect({
   labelTxt,
+  isNeedLabel,
   errorTxt,
   placeholder,
   items,
@@ -228,7 +232,12 @@ export function LabeledSelect({
   return (
     <div className={cn("w-full flex flex-col gap-[10px]")}>
       {labelTxt && (
-        <label className="text-[16px] font-bold leading-[100%] tracking-[-0.025em] text-gray-900 hidden md:inline-flex">
+        <label
+          className={cn(
+            "text-[16px] font-bold leading-[100%] tracking-[-0.025em] text-gray-900",
+            !isNeedLabel ? "hidden md:inline-flex" : "flex",
+          )}
+        >
           {labelTxt}
         </label>
       )}
@@ -244,6 +253,7 @@ export function LabeledSelect({
       >
         <SelectTrigger
           key={errorTxt ? "error-active" : "normal"}
+          aria-label={labelTxt || placeholder || "항목 선택"}
           variant={errorTxt ? "error" : "default"}
           className={cn("h-[54px]", className)}
           style={errorTxt ? { borderColor: "#ef4444" } : {}}
