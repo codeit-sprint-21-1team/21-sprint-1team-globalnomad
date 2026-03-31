@@ -25,11 +25,13 @@ export const deleteMyActivity = async (activityId: number): Promise<void> => {
 
 export const getMyActivityList = async ({
   cursorId,
+  size = 5,
 }: {
   cursorId?: number | null;
+  size?: number;
 }) => {
   const res = await axios.get<MyActivitiesListType>("/my-activities", {
-    params: { cursorId, size: 5 },
+    params: { cursorId, size },
   });
   return res.data;
 };
