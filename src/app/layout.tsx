@@ -6,6 +6,7 @@ import { AuthProvider } from "@/commons/contexts/AuthContext";
 import { DialogProvider } from "@/components/ui/Dialog";
 import { ModalProvider } from "@/components/ui/Modal";
 import NotificationProvider from "@/commons/contexts/NotificationProvider";
+import { Toaster } from "@/components/ui/Sonner/Sonner";
 
 const pretendard = localFont({
   src: [
@@ -81,6 +82,7 @@ export default function RootLayout({
               <ModalProvider>
                 {children}
                 <NotificationProvider />
+                <Toaster />
               </ModalProvider>
             </DialogProvider>
           </AuthProvider>

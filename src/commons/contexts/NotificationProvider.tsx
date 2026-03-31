@@ -1,56 +1,55 @@
-// components/NotificationProvider.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useNotificationPolling } from "../hooks/useNotificationPolling";
+import { toast } from "sonner";
+
 import { useAuth } from "@/commons/contexts/AuthContext";
-import { NotificationItem } from "@/types/notifications.type";
+import { useNotificationPolling } from "../hooks/useNotificationPolling";
 
 export default function NotificationProvider() {
   const { user } = useAuth();
   const userId = user?.id;
 
-  // React Query 폴링 실행
-  const { data, isSuccess, isFetching } = useNotificationPolling(userId);
+  const { data, isSuccess } = useNotificationPolling(userId);
 
-  // 이미 확인한 알림 ID들을 추적하는 Set
-  const knownIds = useRef<Set<number>>(new Set());
-
-  useEffect(() => {
-    if (isSuccess && data?.notifications) {
-      const currentNotifications: NotificationItem[] = data.notifications;
-
-      console.log(
-        `[Polling] ${new Date().toLocaleTimeString()} - 데이터 수신: ${currentNotifications.length}개`,
-      );
-
-      if (knownIds.current.size === 0 && currentNotifications.length > 0) {
-        currentNotifications.forEach((n) => knownIds.current.add(n.id));
-        console.log("알림 초기화 완료 (기존 알림들은 무시)");
-        return;
-      }
-
-      // 2. 신규 알림 감지 로직
-      currentNotifications.forEach((notification) => {
-        if (!knownIds.current.has(notification.id)) {
-          console.warn(" [신규 알림 발생]", {
-            id: notification.id,
-            content: notification.content,
-            time: notification.createdAt,
-          });
-
-          // 확인한 목록에 추가하여 중복 출력 방지
-          knownIds.current.add(notification.id);
-        }
-      });
-    }
-  }, [data, isSuccess]);
+  const initializedUserId = useRef<number | null>(null);
+  const lastObservedTopId = useRef<number>(0);
 
   useEffect(() => {
-    if (isFetching) {
-      console.log("서버에서 최신 알림 정보를 가져오는 중");
+    if (!userId) {
+      initializedUserId.current = null;
+      lastObservedTopId.current = 0;
+      return;
     }
-  }, [isFetching]);
+
+    if (initializedUserId.current !== userId) {
+      initializedUserId.current = null;
+      lastObservedTopId.current = 0;
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (!userId || !isSuccess || !data?.notifications) return;
+
+    const notifications = data.notifications;
+    const currentTopId = notifications[0]?.id ?? 0;
+
+    if (initializedUserId.current === null) {
+      initializedUserId.current = userId;
+      lastObservedTopId.current = currentTopId;
+      return;
+    }
+
+    if (currentTopId === 0) {
+      return;
+    }
+
+    if (currentTopId > lastObservedTopId.current) {
+      toast("새 알림이 도착했습니다.");
+    }
+
+    lastObservedTopId.current = currentTopId;
+  }, [data, isSuccess, userId]);
 
   return null;
 }

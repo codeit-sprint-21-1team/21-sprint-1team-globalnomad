@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import AuthButton from "../ui/Auth/AuthButton";
+import NotificationBell from "../ui/Notification/NotificationBell";
 
 interface HeaderProps {
   className?: string;
@@ -40,7 +41,10 @@ export default function Header({ className }: HeaderProps) {
             />
           </div>
         </Link>
-        <AuthButton />
+        <div className="flex items-center gap-4">
+          <NotificationBell />
+          <AuthButton />
+        </div>
       </div>
     </header>
   );
