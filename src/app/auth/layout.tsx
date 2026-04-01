@@ -24,9 +24,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           <SocialAuthSection mode={isLogin ? "login" : "signup"} />
         </main>
 
-        <footer className="text-[16px] tracking-[-2.5%] font-medium text-[#9FA0A7] text-center">
+        <footer className="flex items-center justify-center gap-[4px] text-[16px] tracking-[-2.5%] font-medium text-[#9FA0A7] text-center">
           <span>{isLogin ? "회원이 아니신가요?" : "회원이신가요?"}</span>
-          &nbsp;
           <Link
             className="underline"
             href={isLogin ? "/auth/signup" : "/auth/login"}

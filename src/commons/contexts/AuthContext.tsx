@@ -14,13 +14,21 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({
+  children,
+  initialSession,
+}: {
+  children: ReactNode;
+  initialSession: boolean;
+}) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const { data: user, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: getUserMe,
+    enabled: initialSession || !!queryClient.getQueryData(["user"]),
+    initialData: initialSession ? undefined : null,
     retry: false,
     meta: { authRequired: false },
   });

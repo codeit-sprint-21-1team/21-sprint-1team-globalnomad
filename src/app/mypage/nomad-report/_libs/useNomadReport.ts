@@ -15,7 +15,7 @@ export function useNomadReport() {
       },
       {
         queryKey: ["myActivities", "nomadReport"],
-        queryFn: () => getMyActivityList({ cursorId: null }),
+        queryFn: () => getMyActivityList({ cursorId: null, size: 50 }),
         staleTime: Infinity,
         gcTime: 1000 * 60 * 5,
       },

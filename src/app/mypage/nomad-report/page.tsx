@@ -3,6 +3,7 @@
 import { cn } from "@/commons/utils/cn";
 import { useNomadReport } from "./_libs/useNomadReport";
 import ActivitySummary from "./_components/ActivitySummary";
+import ReportList from "./_components/ReportList";
 
 export default function NomadReportPage() {
   const { reservationData, activityData, isLoading } = useNomadReport();
@@ -36,6 +37,11 @@ export default function NomadReportPage() {
           <ActivitySummary
             reviewDataTotalCount={reservationData?.totalCount || 0}
             activityDataTotalCount={activityData?.totalCount || 0}
+          />
+
+          <ReportList
+            reservationData={reservationData?.reservations || []}
+            activityData={activityData?.activities || []}
           />
         </article>
       </section>
