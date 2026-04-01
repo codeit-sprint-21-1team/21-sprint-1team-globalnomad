@@ -9,15 +9,14 @@ export function middleware(request: NextRequest) {
 
   const accessToken = request.cookies.get("access_token")?.value;
   const refreshToken = request.cookies.get("refresh_token")?.value;
-  const hasValidSession = accessToken || refreshToken;
 
   const isProtectedRoute = pathname.startsWith("/mypage");
-  if (isProtectedRoute && !hasValidSession) {
+  if (isProtectedRoute && !accessToken && !refreshToken) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
   const isAuthRoute = pathname.startsWith("/auth");
-  if (isAuthRoute && hasValidSession) {
+  if (isAuthRoute && accessToken) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

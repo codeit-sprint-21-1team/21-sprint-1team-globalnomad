@@ -30,8 +30,6 @@ const handleAuthError = (
 
   if (typeof window !== "undefined" && is401) {
     if (window.location.pathname.includes("/auth/login")) return;
-
-    window.location.href = "/auth/login";
   }
 };
 
