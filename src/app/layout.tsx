@@ -6,6 +6,7 @@ import { AuthProvider } from "@/commons/contexts/AuthContext";
 import { DialogProvider } from "@/components/ui/Dialog";
 import { ModalProvider } from "@/components/ui/Modal";
 import NotificationProvider from "@/commons/contexts/NotificationProvider";
+import { cookies } from "next/headers";
 
 const pretendard = localFont({
   src: [
@@ -19,6 +20,7 @@ const pretendard = localFont({
     },
   ],
   variable: "--font-pretendard",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -67,16 +69,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const hasSession =
+    cookieStore.has("access_token") || cookieStore.has("refresh_token");
+
   return (
     <html lang="ko" className={pretendard.variable}>
       <body className={pretendard.className}>
         <ReactQueryProvider>
-          <AuthProvider>
+          <AuthProvider initialSession={hasSession}>
             <DialogProvider>
               <ModalProvider>
                 {children}
