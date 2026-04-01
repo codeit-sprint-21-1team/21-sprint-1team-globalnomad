@@ -12,9 +12,10 @@ interface SubImage {
 interface BannerImagesProps {
   mainImageUrl: string;
   subImages: SubImage[];
+  title: string;
 }
 
-export function BannerImages({ mainImageUrl, subImages }: BannerImagesProps) {
+export function BannerImages({ mainImageUrl, subImages, title }: BannerImagesProps) {
   const count = subImages.length;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -28,7 +29,7 @@ export function BannerImages({ mainImageUrl, subImages }: BannerImagesProps) {
           {mainImageUrl ? (
             <Image
               src={mainImageUrl}
-              alt="메인 배너"
+              alt={`${title} 메인 이미지`}
               fill
               className="object-cover hover:scale-105 transition-transform duration-200"
             />
@@ -44,7 +45,7 @@ export function BannerImages({ mainImageUrl, subImages }: BannerImagesProps) {
           >
             <Image
               src={subImages[0].imageUrl}
-              alt="서브 이미지 1"
+              alt={`${title} 이미지 2`}
               fill
               className="object-cover hover:scale-105 transition-transform duration-200"
             />
@@ -60,7 +61,7 @@ export function BannerImages({ mainImageUrl, subImages }: BannerImagesProps) {
             >
               <Image
                 src={subImages[i].imageUrl}
-                alt={`서브 이미지 ${i + 1}`}
+                alt={`${title} 이미지 ${i + 2}`}
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-200"
               />
@@ -76,7 +77,7 @@ export function BannerImages({ mainImageUrl, subImages }: BannerImagesProps) {
           <div className="relative w-[min(800px,90vw)] h-[min(600px,80vh)]">
             <Image
               src={selectedImage}
-              alt="확대 이미지"
+              alt={`${title} 확대 이미지`}
               fill
               className="object-contain"
             />

@@ -84,6 +84,7 @@ export default async function ActivityDetailPage({
         <BannerImages
           mainImageUrl={activity.bannerImageUrl}
           subImages={activity.subImages}
+          title={activity.title}
         />
       </div>
 
