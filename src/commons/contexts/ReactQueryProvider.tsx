@@ -26,13 +26,13 @@ const handleAuthError = (
   const err = error as ApiError;
   const is401 = err?.status === 401 || err?.response?.status === 401;
 
+  if (!is401 || typeof window === "undefined") return;
+
   if (queryOrMutation?.meta?.authRequired === false) return;
 
-  if (typeof window !== "undefined" && is401) {
-    if (window.location.pathname.includes("/auth/login")) return;
+  if (window.location.pathname.includes("/auth/login")) return;
 
-    window.location.href = "/auth/login";
-  }
+  window.location.href = "/auth/login";
 };
 
 function makeQueryClient() {

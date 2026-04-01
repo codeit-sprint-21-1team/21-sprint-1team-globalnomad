@@ -16,32 +16,45 @@ import { useDialog } from "@/components/ui/Dialog";
 import { handleApiError } from "@/commons/utils/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useUserInfo() {
-  const { user, isLoading } = useAuth();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(
-    user?.profileImageUrl || "",
-  );
+export const useUpdateUserMutation = () => {
   const queryClient = useQueryClient();
+  const { showDialog } = useDialog();
+
+  return useMutation({
+    mutationFn: (updateUserData: UpdateUserRequest) =>
+      patchUserMe(updateUserData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      showDialog({
+        type: "alert",
+        content: "내 정보가 수정되었습니다.",
+      });
+    },
+    onError: (error) => {
+      const errorMessage = handleApiError(error);
+      showDialog({
+        type: "alert",
+        content: errorMessage,
+      });
+    },
+  });
+};
+
+export function useUserProfile() {
+  const { user } = useAuth();
+  const { mutate: updateInfo, isPending } = useUpdateUserMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [blobUrl, setBlobUrl] = useState<string>("");
+  const previewUrl = blobUrl || user?.profileImageUrl || "";
   const { showDialog } = useDialog();
 
   const userProfileForm = useForm<z.infer<typeof userProfileFormSchema>>({
     resolver: zodResolver(userProfileFormSchema),
     mode: "onChange",
-    defaultValues: {
+    values: {
       imageFile: null,
-      email: "",
-      nickname: "",
-    },
-  });
-
-  const userPasswordForm = useForm<z.infer<typeof userPasswordFormSchema>>({
-    resolver: zodResolver(userPasswordFormSchema),
-    mode: "onTouched",
-    defaultValues: {
-      newPassword: "",
-      passwordConfirmation: "",
-      passwordScore: 0,
+      email: user?.email ?? "",
+      nickname: user?.nickname ?? "",
     },
   });
 
@@ -50,26 +63,6 @@ export function useUserInfo() {
     reset: resetProfile,
     handleSubmit: handleSubmitProfile,
   } = userProfileForm;
-
-  const {
-    watch: watchPassword,
-    setValue: setPasswordValue,
-    trigger: triggerPassword,
-    reset: resetPassword,
-    handleSubmit: handleSubmitPassword,
-  } = userPasswordForm;
-
-  useEffect(() => {
-    if (user) {
-      resetProfile({
-        imageFile: null,
-        email: user.email ?? "",
-        nickname: user.nickname ?? "",
-      });
-
-      setPreviewUrl(user.profileImageUrl || "");
-    }
-  }, [user, resetProfile]);
 
   const handleImageButtonClick = () => {
     fileInputRef.current?.click();
@@ -83,8 +76,10 @@ export function useUserInfo() {
       URL.revokeObjectURL(previewUrl);
     }
 
-    const blobUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(blobUrl);
+    if (blobUrl) URL.revokeObjectURL(blobUrl);
+    const newUrl = URL.createObjectURL(selectedFile);
+    setBlobUrl(newUrl);
+
     setValue("imageFile", selectedFile, {
       shouldDirty: true,
       shouldValidate: true,
@@ -96,15 +91,8 @@ export function useUserInfo() {
       URL.revokeObjectURL(previewUrl);
     }
 
-    if (user) {
-      resetProfile({
-        imageFile: null,
-        email: user.email ?? "",
-        nickname: user.nickname ?? "",
-      });
-
-      setPreviewUrl(user.profileImageUrl || "");
-    }
+    setBlobUrl("");
+    resetProfile();
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -113,23 +101,9 @@ export function useUserInfo() {
 
   useEffect(() => {
     return () => {
-      if (previewUrl.startsWith("blob:")) {
-        URL.revokeObjectURL(previewUrl);
-      }
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
     };
-  }, [previewUrl]);
-
-  // eslint-disable-next-line -- React Hook Form의 watch API와 리액트 컴파일러 간의 호환성 이슈로 인한 예외 처리
-  const passwordValue = watchPassword("newPassword");
-  const { passwordScore } = usePasswordStrength<userPasswordValues>(
-    passwordValue,
-    setPasswordValue,
-  );
-  useEffect(() => {
-    if (passwordValue) {
-      triggerPassword("newPassword");
-    }
-  }, [passwordScore, passwordValue, triggerPassword]);
+  }, [blobUrl]);
 
   const { mutateAsync: updateUserProfileImage, isPending: isImageUploading } =
     useMutation({
@@ -142,27 +116,6 @@ export function useUserInfo() {
         });
       },
     });
-
-  const { mutate: updateUserMutation, isPending: isInfoUpdating } = useMutation(
-    {
-      mutationFn: (updateUserData: UpdateUserRequest) =>
-        patchUserMe(updateUserData),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user"] });
-        showDialog({
-          type: "alert",
-          content: "내 정보가 수정되었습니다.",
-        });
-      },
-      onError: (error) => {
-        const errorMessage = handleApiError(error);
-        showDialog({
-          type: "alert",
-          content: errorMessage,
-        });
-      },
-    },
-  );
 
   const onProfileSubmit = async (data: userProfileValues) => {
     const updateProfileData: UpdateUserRequest = {};
@@ -177,14 +130,61 @@ export function useUserInfo() {
     }
 
     if (Object.keys(updateProfileData).length > 0) {
-      updateUserMutation(updateProfileData);
+      updateInfo(updateProfileData);
     }
   };
+
+  return {
+    userProfileForm,
+    onProfileFormSubmit: handleSubmitProfile(onProfileSubmit),
+    onProfileFormReset: handleProfileFormReset,
+    imageProps: {
+      previewUrl,
+      fileInputRef,
+      onImageButtonClick: handleImageButtonClick,
+      onImageFileChange: handleImageFileChange,
+    },
+    isSubmitting: isImageUploading || isPending,
+  };
+}
+
+export function useUserPassword() {
+  const { mutate: updateInfo, isPending } = useUpdateUserMutation();
+
+  const userPasswordForm = useForm<z.infer<typeof userPasswordFormSchema>>({
+    resolver: zodResolver(userPasswordFormSchema),
+    mode: "onTouched",
+    defaultValues: {
+      newPassword: "",
+      passwordConfirmation: "",
+      passwordScore: 0,
+    },
+  });
+
+  const {
+    watch: watchPassword,
+    setValue: setPasswordValue,
+    trigger: triggerPassword,
+    reset: resetPassword,
+    handleSubmit: handleSubmitPassword,
+  } = userPasswordForm;
+
+  // eslint-disable-next-line -- React Hook Form의 watch API와 리액트 컴파일러 간의 호환성 이슈로 인한 예외 처리
+  const passwordValue = watchPassword("newPassword");
+  const { passwordScore } = usePasswordStrength<userPasswordValues>(
+    passwordValue,
+    setPasswordValue,
+  );
+  useEffect(() => {
+    if (passwordValue) {
+      triggerPassword("newPassword");
+    }
+  }, [passwordScore, passwordValue, triggerPassword]);
 
   const onPasswordSubmit = (data: userPasswordValues) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordConfirmation, passwordScore, ...updatePasswordData } = data;
-    updateUserMutation(updatePasswordData, {
+    updateInfo(updatePasswordData, {
       onSuccess: () => {
         resetPassword({
           newPassword: "",
@@ -196,19 +196,9 @@ export function useUserInfo() {
   };
 
   return {
-    isLoading,
-    userProfileForm,
     userPasswordForm,
-    onProfileFormSubmit: handleSubmitProfile(onProfileSubmit),
     onPasswordFormSubmit: handleSubmitPassword(onPasswordSubmit),
-    onProfileFormReset: handleProfileFormReset,
     passwordScore,
-    imageProps: {
-      previewUrl,
-      fileInputRef,
-      onImageButtonClick: handleImageButtonClick,
-      onImageFileChange: handleImageFileChange,
-    },
-    isSubmitting: isImageUploading || isInfoUpdating,
+    isSubmitting: isPending,
   };
 }

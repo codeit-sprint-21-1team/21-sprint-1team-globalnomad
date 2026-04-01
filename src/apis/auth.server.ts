@@ -23,14 +23,15 @@ export async function tryRefresh(
   try {
     const response = await fetch(`${API_BASE}/auth/tokens`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${refreshToken}`,
+      },
     });
 
     if (!response.ok) return null;
 
     const { accessToken } = await response.json();
-
     res.cookies.set("access_token", accessToken, {
       ...cookieOptions,
       maxAge: 60 * 30,

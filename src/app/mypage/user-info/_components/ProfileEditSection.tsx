@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserInfo } from "../_libs/useUserInfo";
+import { useUserProfile } from "../_libs/useUserInfo";
 import { Input } from "@/components/ui/Input/Input";
 import { ProfileSection } from "../../_components/ProfileSection";
 import { Button } from "@/components/ui/Buttons/Button";
@@ -13,7 +13,7 @@ export default function ProfileEditSection() {
     onProfileFormReset,
     imageProps,
     isSubmitting,
-  } = useUserInfo();
+  } = useUserProfile();
   const {
     register,
     formState: { errors, isValid, isDirty },

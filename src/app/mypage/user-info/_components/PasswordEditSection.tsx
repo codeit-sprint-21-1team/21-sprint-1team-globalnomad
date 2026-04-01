@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserInfo } from "../_libs/useUserInfo";
+import { useUserPassword } from "../_libs/useUserInfo";
 import { Input } from "@/components/ui/Input/Input";
 import { PasswordStrengthBar } from "@/components/ui/PasswordStrengthBar/PasswordStrengthBar";
 import { Button } from "@/components/ui/Buttons/Button";
@@ -12,7 +12,7 @@ export default function PasswordEditSection() {
     onPasswordFormSubmit,
     passwordScore,
     isSubmitting,
-  } = useUserInfo();
+  } = useUserPassword();
   const {
     register,
     formState: { errors, isValid },
