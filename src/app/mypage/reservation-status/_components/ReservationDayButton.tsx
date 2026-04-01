@@ -36,13 +36,13 @@ export function ReservationDayButton({
       {...props}
       className={cn(
         "relative flex flex-col items-center w-full h-full min-h-[60px] px-1 pt-1 pb-2 text-sm font-medium",
-        "hover:bg-[#E5F3FF] hover:text-[#3D9EF2]",
+        "hover:bg-sky-50 hover:text-[#3D9EF2] rounded-xl",
         modifiers.outside && "text-muted-foreground opacity-50",
         modifiers.today && "text-black font-bold",
       )}
     >
       {info && (
-        <span className="absolute top-1 right-1 size-[6px] rounded-full bg-red-500" />
+        <span className="absolute top-1 right-[25%] xl:right-[38%] size-[6px] rounded-full bg-red-500" />
       )}
       <span className="mb-1">{day.date.getDate()}</span>
       {info && (

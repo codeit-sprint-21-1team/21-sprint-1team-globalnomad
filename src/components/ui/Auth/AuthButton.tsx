@@ -24,7 +24,7 @@ export default function AuthButton() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="h-10 w-10">
-            <AvatarImage src={user.profileImageUrl} />
+            <AvatarImage src={user.profileImageUrl} alt="프로필 메뉴 열기" />
             <AvatarFallback className="overflow-hidden">
               {user.nickname.slice(0, 1).toUpperCase()}
             </AvatarFallback>
