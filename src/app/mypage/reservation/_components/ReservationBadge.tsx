@@ -6,9 +6,12 @@ import { cn } from "@/commons/utils/cn";
 
 export function ReservationBadge({
   status,
+  isPast,
 }: {
   status: Exclude<ReservationStatus, "all">;
+  isPast: boolean;
 }) {
+  status = isPast && status === "pending" ? "expired" : status;
   const item = RESERVATION_CONFIG[status];
 
   if (!item) return null;

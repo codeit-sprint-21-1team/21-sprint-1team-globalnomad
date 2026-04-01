@@ -24,7 +24,7 @@ type UpdateReservationRequest = Partial<
   Pick<Reservation, "status" | "headCount" | "scheduleId">
 >;
 
-export const patchUpdateMyReservation = async ({
+export const patchCancelMyReservation = async ({
   reservationId,
   updateData,
 }: {
@@ -33,6 +33,20 @@ export const patchUpdateMyReservation = async ({
 }) => {
   const res = await axios.patch<Reservation>(
     `/my-reservations/${reservationId}`,
+    updateData,
+  );
+  return res.data;
+};
+
+export const patchUpdateMyReservation = async ({
+  reservationId,
+  updateData,
+}: {
+  reservationId: number;
+  updateData: UpdateReservationRequest;
+}) => {
+  const res = await axios.patch<Reservation>(
+    `/my-reservations/${reservationId}/application`,
     updateData,
   );
   return res.data;

@@ -8,6 +8,7 @@ interface HeadcountStepProps {
   onDecrement: () => void;
   onIncrement: () => void;
   onBack: () => void;
+  isNotBack?: boolean;
 }
 
 export function HeadcountStep({
@@ -15,16 +16,20 @@ export function HeadcountStep({
   onDecrement,
   onIncrement,
   onBack,
+  isNotBack = false,
 }: HeadcountStepProps) {
   return (
     <>
-      <button
-        className="flex items-center gap-1 text-base font-bold text-gray-950 mb-4"
-        onClick={onBack}
-      >
-        <ChevronLeft size={20} />
-        인원
-      </button>
+      {!isNotBack && (
+        <button
+          className="flex items-center gap-1 text-base font-bold text-gray-950 mb-4"
+          onClick={onBack}
+        >
+          <ChevronLeft size={20} />
+          인원
+        </button>
+      )}
+
       <p className="text-sm text-gray-500 mb-4">예약할 인원을 선택해주세요.</p>
       <div className="flex justify-between items-center">
         <p className="text-base font-bold text-gray-950">참여 인원 수</p>

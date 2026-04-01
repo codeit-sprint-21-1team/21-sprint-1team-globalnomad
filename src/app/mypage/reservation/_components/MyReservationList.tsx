@@ -21,6 +21,7 @@ export default function MyReservationList() {
     isFetchingNextPage,
     isLoading,
     isError,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ["myReservations", status],
     queryFn: ({ pageParam }) =>
@@ -41,6 +42,10 @@ export default function MyReservationList() {
     router.push("/");
   };
 
+  const handleRetry = () => {
+    refetch();
+  };
+
   const targetRef = useInfiniteScroll({
     onIntersect: fetchNextPage,
     enabled: hasNextPage,
@@ -59,7 +64,27 @@ export default function MyReservationList() {
         </div>
       )}
 
-      {isError && <p>데이터 로드 중 에러가 발생했습니다.</p>}
+      {isError && (
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <Image
+              src="/images/no_list.png"
+              width={120}
+              height={120}
+              alt="no list img"
+              className="mx-auto"
+            />
+            <p className="mt-[20px]">데이터 로드 중 에러가 발생했습니다.</p>
+            <Button
+              variant="default"
+              onClick={handleRetry}
+              className="w-[182px] h-[54px] text-white mt-[30px]"
+            >
+              다시 시도
+            </Button>
+          </div>
+        </div>
+      )}
 
       {allReservations.length > 0 && (
         <div className="flex flex-col w-full min-w-0">
@@ -68,6 +93,7 @@ export default function MyReservationList() {
               key={reservation.id}
               {...reservation}
               index={i}
+              // now={now}
             />
           ))}
 
@@ -82,7 +108,7 @@ export default function MyReservationList() {
         </div>
       )}
 
-      {isEmpty && (
+      {isEmpty && !isError && (
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-center">
             <Image

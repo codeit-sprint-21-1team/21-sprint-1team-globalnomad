@@ -5,6 +5,11 @@ export const RESERVATION_CONFIG = {
     label: "예약 신청",
     style: "bg-[#E9FBE4] text-[#2BA90D]",
   },
+  expired: {
+    action: "expired",
+    label: "신청 만료",
+    style: "bg-black text-white",
+  },
   canceled: {
     action: "canceled",
     label: "예약 취소",

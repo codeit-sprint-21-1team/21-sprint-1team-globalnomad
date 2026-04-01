@@ -5,16 +5,18 @@ import ActionButtons from "./ActionButtons";
 import { Reservation } from "@/types/myReservations.type";
 import { ReservationBadge } from "./ReservationBadge";
 import Link from "next/link";
-import { formatPrice } from "@/commons/utils/etcUtils";
+import { checkIsPastDate, formatPrice } from "@/commons/utils/etcUtils";
 import { cn } from "@/commons/utils/cn";
 
 interface MyReservationItemProps extends Reservation {
   index: number;
+  // now: number;
 }
 
 export default function MyReservationItem({
   id,
   activity,
+  scheduleId,
   status,
   reviewSubmitted,
   totalPrice,
@@ -23,7 +25,9 @@ export default function MyReservationItem({
   startTime,
   endTime,
   index,
+  // now,
 }: MyReservationItemProps) {
+  const isPast = checkIsPastDate(date);
   return (
     <div
       className={cn(
@@ -39,7 +43,7 @@ export default function MyReservationItem({
       <div className="flex w-full h-[136px] md:h-[153px] xl:h-[181px] rounded-[24px] shadow-[0_4px_24px_0_rgba(156,180,202,0.2)] overflow-hidden bg-white">
         <div className="flex-1 flex flex-col p-[15px] md:p-[20px] min-w-0">
           <Link href={`/activities/${activity.id}`} className="block min-w-0">
-            <ReservationBadge status={status} />
+            <ReservationBadge status={status} isPast={isPast} />
             <h3 className="text-[16px] truncate xl:text-lg font-bold leading-none tracking-[-2.5%] mt-[8px]">
               {activity.title}
             </h3>
@@ -69,15 +73,17 @@ export default function MyReservationItem({
             <div className="hidden xl:flex">
               <ActionButtons
                 reservationId={id}
+                scheduleId={scheduleId}
                 status={status}
                 activityId={activity.id}
                 activityTitle={activity.title}
                 date={date}
                 startTime={startTime}
                 endTime={endTime}
-                // totalPrice={totalPrice}
+                totalPrice={totalPrice}
                 headCount={headCount}
                 reviewSubmitted={reviewSubmitted}
+                // now={now}
                 // TODO:: 추후 삭제
                 // status={"completed"}
               />
@@ -102,15 +108,17 @@ export default function MyReservationItem({
       <div className="flex xl:hidden justify-end">
         <ActionButtons
           reservationId={id}
+          scheduleId={scheduleId}
           status={status}
           activityId={activity.id}
           activityTitle={activity.title}
           date={date}
           startTime={startTime}
           endTime={endTime}
-          // totalPrice={totalPrice}
+          totalPrice={totalPrice}
           headCount={headCount}
           reviewSubmitted={reviewSubmitted}
+          // now={now}
           // TODO:: 추후 삭제
           // status={"completed"}
         />

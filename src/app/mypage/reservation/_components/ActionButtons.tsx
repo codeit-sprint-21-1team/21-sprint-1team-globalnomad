@@ -1,6 +1,6 @@
 "use client";
 
-import { patchUpdateMyReservation } from "@/apis/myReservations.api";
+import { patchCancelMyReservation } from "@/apis/myReservations.api";
 import { Button } from "@/components/ui/Buttons/Button";
 import { useDialog } from "@/components/ui/Dialog";
 import { useModal } from "@/components/ui/Modal";
@@ -8,40 +8,51 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ReviewForm from "./ReviewForm";
 import { useMoveAndScroll } from "@/commons/hooks/useMoveAndScroll";
 import { AxiosError } from "axios";
+import { MyReservationEdit } from "./MyReservationEdit";
+import { checkIsPastDate } from "@/commons/utils/etcUtils";
 
 export default function ActionButtons({
   reservationId,
+  scheduleId,
   status,
   activityId,
   activityTitle,
   date,
   startTime,
   endTime,
+  totalPrice,
   headCount,
   reviewSubmitted,
+  // now,
 }: {
   reservationId: number;
+  scheduleId: number;
   status: string;
   activityId: number;
   activityTitle: string;
   date: string;
   startTime: string;
   endTime: string;
+  totalPrice: number;
   headCount: number;
   reviewSubmitted: boolean;
+  // now: number;
 }) {
   const queryClient = useQueryClient();
   const { showModal, onClose } = useModal();
   const { showDialog } = useDialog();
   const { moveToBottom } = useMoveAndScroll();
 
+  const isPast = checkIsPastDate(date);
+
   // TODO:: 추후 삭제
   // status = "completed"; // test
-  console.log("resevationActionButtons status::", status);
+  // console.log("resevationActionButtons status::", status);
+  // console.log("user status::", user);
 
   const cancelMutation = useMutation({
     mutationFn: () =>
-      patchUpdateMyReservation({
+      patchCancelMyReservation({
         reservationId,
         updateData: { status: "canceled" },
       }),
@@ -62,8 +73,21 @@ export default function ActionButtons({
     },
   });
 
-  // TODO:: 예약 변경 (변경 api 가 없어서 다른 기능으로 변경예정)
-  const handleChange = () => {};
+  const handleChange = async () => {
+    showModal(
+      <MyReservationEdit
+        activityId={activityId}
+        price={totalPrice / headCount}
+        initialData={{
+          reservationId: reservationId,
+          scheduleId: scheduleId,
+          headcount: headCount,
+          date: date,
+        }}
+        onClose={onClose}
+      />,
+    );
+  };
 
   const handleCancel = async () => {
     showDialog({
@@ -103,7 +127,7 @@ export default function ActionButtons({
           <Button
             variant="default"
             onClick={handleCreateReview}
-            className="w-full h-[37px] xl:w-[75px] xl:h-[29px] rounded-[8px] bg-[#3D9EF2] px-[10px] py-[6px] font-medium text-[14px] leading-none tracking-[-2.5%] text-white ml-[12px]"
+            className="w-full h-[37px] xl:w-[75px] xl:h-[29px] rounded-[8px] bg-[#3D9EF2] px-[10px] py-[6px] font-medium text-[14px] leading-none tracking-[-2.5%] text-white"
           >
             후기 작성
           </Button>
@@ -111,13 +135,13 @@ export default function ActionButtons({
           <Button
             variant="default"
             onClick={handleReviewGo}
-            className="w-full h-[37px] xl:w-[75px] xl:h-[29px] rounded-[8px] bg-[#733df2] border-[#733df2] px-[10px] py-[6px] font-medium text-[14px] leading-none tracking-[-2.5%] text-white ml-[12px]"
+            className="w-full h-[37px] xl:w-[75px] xl:h-[29px] rounded-[8px] bg-[#733df2] border-[#733df2] px-[10px] py-[6px] font-medium text-[14px] leading-none tracking-[-2.5%] text-white"
           >
             후기 보기
           </Button>
         ))}
 
-      {status === "pending" && (
+      {status === "pending" && !isPast && (
         <div className="flex w-full">
           <Button
             onClick={handleChange}
@@ -128,7 +152,7 @@ export default function ActionButtons({
           <Button
             onClick={handleCancel}
             disabled={cancelMutation.isPending}
-            className="w-[48.5%] h-[37px] xl:w-[75px] xl:h-[29px] rounded-[8px] border-0 bg-[#EDEEF2] px-[10px] py-[6px] font-medium text-[14px] leading-none tracking-[-2.5%] text-gray-600 ml-[12px]"
+            className="w-[48.5%] h-[37px] xl:w-[75px] xl:h-[29px] rounded-[8px] border-0 bg-[#EDEEF2] px-[10px] py-[6px] font-medium text-[14px] leading-none tracking-[-2.5%] text-gray-600 ml-[15px]"
           >
             예약 취소
           </Button>
