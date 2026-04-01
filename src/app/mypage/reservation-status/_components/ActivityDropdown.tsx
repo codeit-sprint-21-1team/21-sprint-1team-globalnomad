@@ -49,10 +49,11 @@ export default function ActivityDropdown({
   const allActivities = data?.pages.flatMap((page) => page.activities) ?? [];
 
   useEffect(() => {
-    if (!selectedActivity && allActivities.length > 0) {
-      onSelect(allActivities[0]);
+    const first = data?.pages[0]?.activities[0];
+    if (!selectedActivity && first) {
+      onSelect(first);
     }
-  }, [allActivities]);
+  }, [data, selectedActivity, onSelect]);
 
   const handleValueChange = (val: string) => {
     const activity = allActivities.find((a) => a.id === Number(val));
