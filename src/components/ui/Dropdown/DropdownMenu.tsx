@@ -35,7 +35,7 @@ function DropdownMenuContent({
         sideOffset={sideOffset}
         align={align}
         className={cn(
-          "z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) min-w-32 origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-popover p-1 text-popover-foreground shadow-md duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:overflow-hidden data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "z-50 p-2 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) min-w-32 origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-popover text-popover-foreground shadow-md duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:overflow-hidden data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           className,
         )}
         {...props}
@@ -75,7 +75,7 @@ function DropdownMenuRadioItem({
         "relative flex cursor-default items-center gap-1.5",
         "text-[16px] font-medium tracking-[-2.5%] text-[#1F1F22]",
         "py-2 pr-8 pl-1.5",
-        "outline-none select-none focus:bg-accent focus:text-accent-foreground data-[state=checked]:text-[#3D9EF2] data-disabled:pointer-events-none data-disabled:opacity-50",
+        "outline-none select-none cursor-pointer rounded-md focus:bg-accent focus:text-accent-foreground data-[state=checked]:text-[#3D9EF2] data-disabled:pointer-events-none data-disabled:opacity-50",
         className,
       )}
       {...props}

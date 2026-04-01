@@ -44,7 +44,7 @@ export default function ReservationCalendar({
   );
 
   return (
-    <div className="mt-[16px] rounded-[8px] border border-[#CBC9CF] p-4 w-full">
+    <div className="mt-[16px] md:rounded-3xl md:p-4 w-full md:shadow-[0_4px_16px_rgba(0,0,0,0.08)]">
       <DayPicker
         mode="single"
         month={currentMonth}
@@ -62,16 +62,16 @@ export default function ReservationCalendar({
           months: "relative flex flex-col w-full",
           month: "flex w-full flex-col gap-4",
           month_caption: "flex items-center justify-center h-8",
-          caption_label: "font-semibold text-sm",
-          nav: "absolute inset-x-0 top-0 h-8 flex items-center justify-between",
-          button_previous: "p-1 rounded hover:bg-gray-100 text-gray-700",
-          button_next: "p-1 rounded hover:bg-gray-100 text-gray-700",
-          weekdays: "flex w-full",
+          caption_label: "font-semibold text-md",
+          nav: "absolute inset-x-0 top-0 h-8 flex items-center justify-center",
+          button_previous: "pr-15 rounded hover:bg-gray-100 text-gray-700",
+          button_next: "pl-15 rounded hover:bg-gray-100 text-gray-700",
+          weekdays: "flex w-full border-b border-gray-300 pb-3",
           weekday:
-            "flex-1 text-center text-[0.8rem] text-muted-foreground select-none",
+            "flex-1 text-center text-[0.8rem] text-muted-foreground select-none ",
           weeks: "w-full",
           week: "flex w-full mt-2",
-          day: "aspect-auto h-15 flex-1",
+          day: "aspect-auto h-[90px] md:h-[110px] flex-1",
         }}
         components={{
           Chevron: ({ orientation }) =>

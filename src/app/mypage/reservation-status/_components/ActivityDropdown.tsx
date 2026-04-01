@@ -66,7 +66,7 @@ export default function ActivityDropdown({
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button
-          className="flex w-full items-center justify-between rounded-[4px] border border-[#CBC9CF] bg-white px-[16px] py-[14px] text-[16px] font-medium outline-none data-[state=open]:border-[#1F1F22]"
+          className="flex w-full items-center justify-between rounded-2xl border border-gray-300 bg-white px-[16px] py-[14px] text-[16px] font-medium outline-none data-[state=open]:border-[#1F1F22]"
           aria-label="체험 선택"
         >
           <span
@@ -81,7 +81,7 @@ export default function ActivityDropdown({
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="p-0">
+      <DropdownMenuContent className="border border-gray-200 bg-white shadow-[0_4px_16px_rgba(0,0,0,0.08)] ">
         <div ref={setScrollContainer} className="max-h-[300px] overflow-y-auto">
           {isLoading && (
             <div className="py-4 text-center text-sm text-[#A4A1AA]">
