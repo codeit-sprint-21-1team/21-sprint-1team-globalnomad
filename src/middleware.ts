@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
   }
 
   const isAuthRoute = pathname.startsWith("/auth");
-  if (isAuthRoute && accessToken) {
+  if (isAuthRoute && (accessToken || refreshToken)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
