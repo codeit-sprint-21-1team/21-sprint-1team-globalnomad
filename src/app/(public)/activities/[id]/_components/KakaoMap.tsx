@@ -88,7 +88,7 @@ export default function KakaoMap({ address, title }: KakaoMapProps) {
     <>
       <Script
         src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`}
-        onLoad={handleLoad}
+        onReady={handleLoad}
       />
       <span className="mt-4 md:mt-8 text-[16px] md:text-[18px] font-bold">
         오시는 길
