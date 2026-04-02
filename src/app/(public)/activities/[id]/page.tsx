@@ -5,8 +5,7 @@ import { ActivityHeader } from "./_components/ActivityHeader";
 import { BannerImages } from "./_components/BannerImages";
 import { Description } from "./_components/Description";
 import KakaoMap from "./_components/KakaoMap";
-import { ReviewCardList } from "./_components/ReviewCardList";
-import { ReviewListSkeleton } from "./_components/ReviewListSkeleton";
+import { ReviewSection } from "./_components/ReviewSection";
 import { ReservationCalendar } from "./_components/ReservationCalendar/ReservationCalendar";
 import { getActivityDetail, getActivityReviews } from "@/apis/activities.api";
 import {
@@ -14,11 +13,8 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { Suspense } from "react";
 import { UpwardPanel } from "./_components/UpwardPanel/UpwardPanel";
 import { notFound } from "next/navigation";
-import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
-import QueryErrorFallback from "@/components/ErrorBoundary/QueryErrorFallback";
 
 export async function generateMetadata({
   params,
@@ -105,18 +101,7 @@ export default async function ActivityDetailPage({
         <KakaoMap address={activity.address} title={activity.title} />
 
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <ErrorBoundary
-            fallback={(_, reset) => (
-              <QueryErrorFallback
-                reset={reset}
-                message="후기를 불러오는 데 실패했습니다."
-              />
-            )}
-          >
-            <Suspense fallback={<ReviewListSkeleton />}>
-              <ReviewCardList activityId={activityId} />
-            </Suspense>
-          </ErrorBoundary>
+          <ReviewSection activityId={activityId} />
         </HydrationBoundary>
       </div>
 
