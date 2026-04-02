@@ -5,6 +5,7 @@ import { ActivityHeader } from "./_components/ActivityHeader";
 import { BannerImages } from "./_components/BannerImages";
 import { Description } from "./_components/Description";
 import KakaoMap from "./_components/KakaoMap";
+import { MapErrorFallback } from "./_components/MapErrorFallback";
 import { ReviewSection } from "./_components/ReviewSection";
 import { ReservationCalendar } from "./_components/ReservationCalendar/ReservationCalendar";
 import { getActivityDetail, getActivityReviews } from "@/apis/activities.api";
@@ -16,6 +17,7 @@ import {
 import { UpwardPanel } from "./_components/UpwardPanel/UpwardPanel";
 import { notFound } from "next/navigation";
 import { ReservationErrorBoundary } from "./_components/ReservationErrorBoundary";
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 
 export async function generateMetadata({
   params,
@@ -101,7 +103,9 @@ export default async function ActivityDetailPage({
       <div className="xl:col-start-1 flex flex-col self-start">
         <Description content={activity.description} />
 
-        <KakaoMap address={activity.address} title={activity.title} />
+        <ErrorBoundary fallback={<MapErrorFallback address={activity.address} />}>
+          <KakaoMap address={activity.address} title={activity.title} />
+        </ErrorBoundary>
 
         <HydrationBoundary state={dehydrate(queryClient)}>
           <ReviewSection activityId={activityId} />

@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useRef, useState } from "react";
+import { useReducer, useRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MapPin } from "lucide-react";
 
@@ -19,7 +19,10 @@ interface KakaoMapProps {
 
 export default function KakaoMap({ address, title }: KakaoMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [mapError, setMapError] = useState(false);
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
+  const errorRef = useRef<Error | null>(null);
+
+  if (errorRef.current) throw errorRef.current;
 
   const handleLoad = () => {
     window.kakao.maps.load(() => {
@@ -76,7 +79,8 @@ export default function KakaoMap({ address, title }: KakaoMapProps) {
           });
           overlay.setMap(map);
         } else {
-          setMapError(true);
+          errorRef.current = new Error(`주소를 찾을 수 없습니다: ${address}`);
+          forceUpdate();
         }
       });
     });
@@ -95,25 +99,10 @@ export default function KakaoMap({ address, title }: KakaoMapProps) {
         <MapPin size={16} />
         {address}
       </span>
-      {mapError ? (
-        <div className="w-full h-[450px] rounded-2xl mb-5 md:mb-10 flex flex-col items-center justify-center gap-3 bg-gray-100 text-gray-500">
-          <MapPin size={32} className="text-gray-400" />
-          <p className="text-sm font-medium">주소를 찾을 수 없습니다.</p>
-          <a
-            href={`https://map.kakao.com/link/search/${encodeURIComponent(address)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-blue-500 underline"
-          >
-            카카오맵에서 직접 검색하기
-          </a>
-        </div>
-      ) : (
-        <div
-          ref={mapRef}
-          className="w-full h-[450px] rounded-2xl overflow-hidden mb-5 md:mb-10"
-        />
-      )}
+      <div
+        ref={mapRef}
+        className="w-full h-[450px] rounded-2xl overflow-hidden mb-5 md:mb-10"
+      />
       <hr />
     </>
   );
