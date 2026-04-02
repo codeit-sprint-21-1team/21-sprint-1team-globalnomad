@@ -30,6 +30,7 @@ export function ReviewCardList({ activityId }: ReviewCardListProps) {
   const { data: reviews } = useQuery({
     queryKey: ["activity-reviews", activityId, page],
     queryFn: () => getActivityReviews(activityId, page, SIZE),
+    throwOnError: true,
   });
 
   if (!reviews) return null;
