@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useReducer, useRef } from "react";
+import { useRef, useState } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MapPin } from "lucide-react";
 
@@ -19,10 +19,9 @@ interface KakaoMapProps {
 
 export default function KakaoMap({ address, title }: KakaoMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
-  const errorRef = useRef<Error | null>(null);
+  const [mapError, setMapError] = useState<Error | null>(null);
 
-  if (errorRef.current) throw errorRef.current;
+  if (mapError) throw mapError;
 
   const handleLoad = () => {
     window.kakao.maps.load(() => {
@@ -79,8 +78,7 @@ export default function KakaoMap({ address, title }: KakaoMapProps) {
           });
           overlay.setMap(map);
         } else {
-          errorRef.current = new Error(`주소를 찾을 수 없습니다: ${address}`);
-          forceUpdate();
+          setMapError(new Error(`주소를 찾을 수 없습니다: ${address}`));
         }
       });
     });
