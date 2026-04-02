@@ -15,6 +15,7 @@ import {
 } from "@tanstack/react-query";
 import { UpwardPanel } from "./_components/UpwardPanel/UpwardPanel";
 import { notFound } from "next/navigation";
+import { ReservationErrorBoundary } from "./_components/ReservationErrorBoundary";
 
 export async function generateMetadata({
   params,
@@ -91,7 +92,9 @@ export default async function ActivityDetailPage({
         <ActivityHeader activity={activity} />
 
         <div className="hidden xl:block mt-8 w-full">
-          <ReservationCalendar activityId={activityId} price={activity.price} />
+          <ReservationErrorBoundary>
+            <ReservationCalendar activityId={activityId} price={activity.price} />
+          </ReservationErrorBoundary>
         </div>
       </div>
 
@@ -105,7 +108,9 @@ export default async function ActivityDetailPage({
         </HydrationBoundary>
       </div>
 
-      <UpwardPanel price={activity.price} activityId={activityId} />
+      <ReservationErrorBoundary>
+        <UpwardPanel price={activity.price} activityId={activityId} />
+      </ReservationErrorBoundary>
     </div>
   );
 }

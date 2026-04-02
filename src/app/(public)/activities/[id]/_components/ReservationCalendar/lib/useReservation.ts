@@ -44,6 +44,7 @@ export function useReservation(
   const { data: availableSchedules = [] } = useQuery({
     queryKey: ["available-schedules", activityId, year, month],
     queryFn: () => getAvailableSchedule(activityId, year, month),
+    throwOnError: true,
     select: (data) => {
       const now = new Date();
       const todayStr = format(now, "yyyy-MM-dd");
