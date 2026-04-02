@@ -163,8 +163,8 @@ export function useReservation(
     },
     onError: (error) => {
       const message = axios.isAxiosError(error)
-        ? (error.response?.data?.message ?? "예약에 수정에 실패했습니다.")
-        : "예약에 수정에 실패했습니다.";
+        ? (error.response?.data?.message ?? "예약 변경에 실패했습니다.")
+        : "예약 변경에 실패했습니다.";
       showDialog({ type: "alert", content: message });
     },
   });
