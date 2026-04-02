@@ -22,7 +22,7 @@ export default function AuthButton() {
   if (user) {
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger>
           <Avatar className="h-10 w-10">
             <AvatarImage src={user.profileImageUrl} alt="프로필 메뉴 열기" />
             <AvatarFallback className="overflow-hidden">
