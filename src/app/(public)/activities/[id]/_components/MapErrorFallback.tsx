@@ -1,10 +1,11 @@
+import React from "react";
 import { MapPin } from "lucide-react";
 
 interface MapErrorFallbackProps {
   address: string;
 }
 
-export function MapErrorFallback({ address }: MapErrorFallbackProps): JSX.Element {
+export function MapErrorFallback({ address }: MapErrorFallbackProps): React.ReactElement {
   return (
     <>
       <span className="mt-4 md:mt-8 text-[16px] md:text-[18px] font-bold">
