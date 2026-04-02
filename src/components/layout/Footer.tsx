@@ -22,8 +22,8 @@ const SNS_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className=" w-full border-t border-gray-200 bg-white z-50">
-      <div className="mx-auto flex flex-col gap-3 px-6 py-3.5 h-[80px] md:h-[90px] md:flex-row md:items-center md:justify-between md:px-20 xl:px-50 md:gap-0">
+    <footer className="w-full border-t border-gray-200 bg-white z-50">
+      <div className="max-w-[1200px] mx-auto flex flex-col gap-3 px-6 py-3.5 h-[80px] md:h-[90px] md:flex-row md:items-center md:justify-between md:gap-0">
         <div className="flex items-center justify-center gap-6 text-sm text-gray-600 font-medium  md:order-2">
           <Link href="#" className="hover:underline">
             Privacy Policy

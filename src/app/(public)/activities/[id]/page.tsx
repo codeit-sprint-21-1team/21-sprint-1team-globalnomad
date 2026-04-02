@@ -79,7 +79,7 @@ export default async function ActivityDetailPage({
   const { activity, queryClient } = data;
 
   return (
-    <div className="mt-6 md:mt-10 xl:mt-15 px-4 md:px-5 xl:px-0 xl:w-[1120px]  mx-auto grid grid-cols-1 xl:grid-rows-[400px] xl:grid-cols-[670px_410px] xl:gap-x-10">
+    <div className="max-w-[1200px] mx-auto px-6 mt-6 md:mt-10 xl:mt-15 grid grid-cols-1 xl:grid-rows-[400px] xl:grid-cols-[670px_410px] xl:gap-x-10 xl:justify-between">
       <div className="xl:col-start-1">
         <BannerImages
           mainImageUrl={activity.bannerImageUrl}

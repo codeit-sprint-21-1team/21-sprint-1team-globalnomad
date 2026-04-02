@@ -28,8 +28,8 @@ export default function MyPageRootLayout({
     <>
       <div className="flex flex-col w-full min-h-screen">
         <Header />
-        <div className="flex-1 w-full max-w-[1200px] mx-auto">
-          <div className="flex md:gap-[50px] mt-[30px] mb-[30px] xl:mt-[40px] xl:mb-[40px] px-[24px] md:px-[30px]">
+        <div className="flex-1 max-w-[1200px] w-full mx-auto px-6">
+          <div className="flex md:gap-[50px] mt-[30px] mb-[30px] xl:mt-[40px] xl:mb-[40px]">
             <SideMenu isRootMyPage={isRootMyPage} currentPath={pathname} />
 
             <div

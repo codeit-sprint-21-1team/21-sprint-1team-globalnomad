@@ -19,7 +19,7 @@ export default function Header({ className }: HeaderProps) {
         className,
       )}
     >
-      <div className="mx-auto flex h-[70px] items-center justify-between px-6 md:h-[80px] md:px-20 xl:px-50">
+      <div className="max-w-[1200px] mx-auto flex h-[70px] items-center justify-between px-6 md:h-[80px]">
         <Link href="/">
           <div className="md:hidden">
             <Image
