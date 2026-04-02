@@ -7,6 +7,8 @@ export function useNotificationPolling(userId?: number) {
     queryKey: ["notifications", userId],
     queryFn: getMyNotifications,
     enabled: !!userId,
+    retry: false,
+    meta: { authRequired: false },
     staleTime: 0,
     refetchInterval: 30000,
     refetchIntervalInBackground: false,
