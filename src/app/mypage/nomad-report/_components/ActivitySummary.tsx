@@ -1,9 +1,11 @@
 interface ActivitySummaryPropsType {
+  user: string;
   activityDataTotalCount: number;
   reviewDataTotalCount: number;
 }
 
 export default function ActivitySummary({
+  user,
   reviewDataTotalCount,
   activityDataTotalCount,
 }: ActivitySummaryPropsType) {
@@ -14,7 +16,7 @@ export default function ActivitySummary({
       <>
         아직 기록된 여정이 없어요.
         <br />
-        OO님만의 소중한 경험으로 리포트를 채워보세요!
+        {user}님만의 소중한 경험으로 리포트를 채워보세요!
       </>
     );
   } else if (activityDataTotalCount === 0) {
@@ -31,7 +33,7 @@ export default function ActivitySummary({
       <>
         벌써 <strong>{activityDataTotalCount}번</strong>의 세계를 만나셨네요!
         <br />
-        이제 OO님만의 세계를 열어 영감을 나눠주세요.
+        이제 {user}님만의 세계를 열어 영감을 나눠주세요.
       </>
     );
   } else {

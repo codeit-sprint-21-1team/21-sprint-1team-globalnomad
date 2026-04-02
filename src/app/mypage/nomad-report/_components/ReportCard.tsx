@@ -5,7 +5,7 @@ interface ReportCardPropsType {
   mode: "reservation" | "activity";
   id: number | undefined;
   title: string;
-  description: string;
+  description: React.ReactNode;
   imageUrl: string | undefined;
 }
 

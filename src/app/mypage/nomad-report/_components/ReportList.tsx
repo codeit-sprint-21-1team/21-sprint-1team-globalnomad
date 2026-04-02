@@ -1,21 +1,31 @@
-import { Reservation } from "@/types/myReservations.type";
-import { Activity } from "@/types/myActivities.type";
+import { Activity } from "@/types/activities";
 import MostReservationCard from "./MostReservationCard";
 import MostActivityCard from "./MostActivityCard";
 
 interface ReportListPropsType {
-  reservationData: Reservation[];
-  activityData: Activity[];
+  user: string;
+  mostReservation: {
+    data: Activity | undefined;
+    count: number;
+  };
+  mostActivity: {
+    data: Activity | undefined;
+    count: number;
+  };
 }
 
 export default function ReportList({
-  reservationData = [],
-  activityData = [],
+  user,
+  mostReservation,
+  mostActivity,
 }: ReportListPropsType) {
   return (
     <div className="flex justify-center items-center flex-col md:flex-row gap-[24px]">
-      <MostReservationCard reservationData={reservationData} />
-      <MostActivityCard activityData={activityData} />
+      <MostReservationCard
+        user={user || ""}
+        mostReservation={mostReservation}
+      />
+      <MostActivityCard user={user || ""} mostActivity={mostActivity} />
     </div>
   );
 }
