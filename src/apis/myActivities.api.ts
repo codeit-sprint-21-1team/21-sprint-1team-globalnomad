@@ -4,17 +4,25 @@ import {
   CreateActivityResponse,
   MessageResponse,
   MyActivitiesListType,
+  ReservationListBySchedule,
   ReservationDashboardItem,
+  ReservationMutationStatus,
+  ReservationStatusFilter,
+  ReservedScheduleItem,
   UpdateActivityRequest,
 } from "@/types/myActivities.type";
 
+export const MY_ACTIVITIES_PAGE_SIZE = 10;
+
 export const getActivityList = async ({
   cursorId,
+  size = MY_ACTIVITIES_PAGE_SIZE,
 }: {
   cursorId?: number | null;
+  size?: number;
 }) => {
   const res = await axios.get<MyActivitiesListType>("/my-activities", {
-    params: { cursorId, size: 5 },
+    params: { cursorId, size },
   });
   return res.data;
 };
@@ -25,7 +33,7 @@ export const deleteMyActivity = async (activityId: number): Promise<void> => {
 
 export const getMyActivityList = async ({
   cursorId,
-  size = 5,
+  size = MY_ACTIVITIES_PAGE_SIZE,
 }: {
   cursorId?: number | null;
   size?: number;
@@ -87,4 +95,59 @@ export const getReservationDashboard = async ({
     { params: { year, month } },
   );
   return res.data;
+};
+
+export const getReservedSchedule = async ({
+  activityId,
+  date,
+}: {
+  activityId: number;
+  date: string;
+}): Promise<ReservedScheduleItem[]> => {
+  const res = await axios.get<ReservedScheduleItem[]>(
+    `/my-activities/${activityId}/reserved-schedule`,
+    { params: { date } },
+  );
+  return res.data;
+};
+
+export const getReservationsBySchedule = async ({
+  activityId,
+  scheduleId,
+  status,
+  cursorId,
+  size = MY_ACTIVITIES_PAGE_SIZE,
+}: {
+  activityId: number;
+  scheduleId: number;
+  status: ReservationStatusFilter;
+  cursorId?: number | null;
+  size?: number;
+}): Promise<ReservationListBySchedule> => {
+  const res = await axios.get<ReservationListBySchedule>(
+    `/my-activities/${activityId}/reservations`,
+    {
+      params: {
+        scheduleId,
+        status,
+        cursorId,
+        size,
+      },
+    },
+  );
+  return res.data;
+};
+
+export const updateReservationStatus = async ({
+  activityId,
+  reservationId,
+  status,
+}: {
+  activityId: number;
+  reservationId: number;
+  status: ReservationMutationStatus;
+}): Promise<void> => {
+  await axios.patch(`/my-activities/${activityId}/reservations/${reservationId}`, {
+    status,
+  });
 };
