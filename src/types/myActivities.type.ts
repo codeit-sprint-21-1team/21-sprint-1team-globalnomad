@@ -111,3 +111,41 @@ export interface ReservationDashboardItem {
   date: string; // "YYYY-MM-DD"
   reservations: ReservationCounts;
 }
+
+export interface ReservedScheduleItem {
+  scheduleId: number;
+  startTime: string;
+  endTime: string;
+  count: {
+    pending: number;
+    confirmed: number;
+    declined: number;
+  };
+}
+
+export type ReservationStatusFilter = "pending" | "confirmed" | "declined";
+export type ReservationMutationStatus = "confirmed" | "declined";
+
+export interface ReservationWithUserItem {
+  id: number;
+  nickname: string;
+  userId: number;
+  teamId: string;
+  activityId: number;
+  scheduleId: number;
+  status: ReservationStatusFilter;
+  reviewSubmitted: boolean;
+  totalPrice: number;
+  headCount: number;
+  date: string;
+  startTime: string;
+  endTime: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReservationListBySchedule {
+  reservations: ReservationWithUserItem[];
+  totalCount: number;
+  cursorId: number | null;
+}
