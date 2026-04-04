@@ -6,6 +6,7 @@ import {
   AvailableSchedule,
 } from "@/types/activities";
 import { buildQueryString } from "@/commons/utils/buildQueryString";
+import { ACTIVITY_CACHE_TAGS } from "@/commons/consts/cacheTags";
 import axios from "./axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -16,7 +17,7 @@ export const getActivityList = async (
 ): Promise<ActivityListResponse> => {
   const query = buildQueryString(params);
   const response = await fetch(`${BASE_URL}/activities${query}`, {
-    next: nextOptions ?? { revalidate: 60, tags: ["activities"] },
+    next: nextOptions ?? { revalidate: 60, tags: [ACTIVITY_CACHE_TAGS.LIST] },
   });
 
   if (!response.ok) {

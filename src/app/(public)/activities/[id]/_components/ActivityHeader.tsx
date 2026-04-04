@@ -11,6 +11,7 @@ import { useAuth } from "@/commons/contexts/AuthContext";
 import { useRequireAuth } from "@/commons/hooks/useRequireAuth";
 import { deleteMyActivity } from "@/apis/myActivities.api";
 import { handleApiError } from "@/commons/utils/handleApiError";
+import { revalidateActivityListCache } from "@/actions/activities.action";
 
 interface ActivityHeaderProps {
   activity: Activity;
@@ -24,8 +25,14 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
 
   const { mutate: deleteActivity } = useMutation({
     mutationFn: () => deleteMyActivity(activity.id),
-    onSuccess: () =>
-      showDialog({ type: "alert", content: "삭제가 완료됐습니다." }),
+    onSuccess: async () => {
+      await revalidateActivityListCache();
+      showDialog({
+        type: "alert",
+        content: "삭제가 완료됐습니다.",
+        onConfirm: () => router.push("/"),
+      });
+    },
     onError: (error) =>
       showDialog({ type: "alert", content: handleApiError(error) }),
   });

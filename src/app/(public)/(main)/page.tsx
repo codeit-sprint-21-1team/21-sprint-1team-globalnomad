@@ -1,4 +1,5 @@
 import { getActivityList } from "@/apis/activities.api";
+import { ACTIVITY_CACHE_TAGS } from "@/commons/consts/cacheTags";
 import HeroSection from "./_components/HeroSection";
 import BestItemsCarousel from "./_components/BestItemsCarousel";
 import AllActivitiesPreviewSection from "./_components/AllActivitiesPreviewSection";
@@ -13,7 +14,7 @@ export default async function Home() {
       },
       {
         revalidate: 3600,
-        tags: ["best-activities"],
+        tags: [ACTIVITY_CACHE_TAGS.BEST],
       },
     ),
     getActivityList(
@@ -24,7 +25,7 @@ export default async function Home() {
       },
       {
         revalidate: 3600,
-        tags: ["latest-activities"],
+        tags: [ACTIVITY_CACHE_TAGS.LATEST],
       },
     ),
   ]);
