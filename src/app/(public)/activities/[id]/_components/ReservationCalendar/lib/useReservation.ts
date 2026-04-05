@@ -34,18 +34,14 @@ function filterAvailableSchedules(
 ): AvailableSchedule[] {
   return data
     .map((day): AvailableSchedule | null => {
-      // 예약 수정 모드: 기존 날짜는 시간 필터 없이 그대로 유지
       if (initialData && day.date === initialData.date) return day;
-      // 과거 날짜 제거
       if (day.date < todayStr) return null;
-      // 오늘: 이미 지난 시간대 제거
       if (day.date === todayStr) {
         return {
           ...day,
           times: day.times.filter((t) => parseStartHour(t.startTime) > currentHour),
         };
       }
-      // 미래 날짜: 그대로 유지
       return day;
     })
     .filter((day): day is AvailableSchedule => day !== null && day.times.length > 0);
@@ -82,8 +78,9 @@ export function useReservation(
     queryFn: () => getAvailableSchedule(activityId, year, month),
     throwOnError: true,
     select: (data) => {
-      const currentHour = new Date().getHours();
-      return filterAvailableSchedules(data, todayStr, currentHour, initialData);
+      // select는 캐시 히트 시에도 실행되므로 날짜·시각을 항상 fresh하게 계산
+      const now = new Date();
+      return filterAvailableSchedules(data, format(now, "yyyy-MM-dd"), now.getHours(), initialData);
     },
   });
 
