@@ -53,12 +53,15 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     if (!dialog) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleCancel();
+      if (e.key === "Escape") {
+        dialog.onCancel?.();
+        onClose();
+      }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [dialog, handleCancel]);
+  }, [dialog, onClose]);
 
   return (
     <DialogContext.Provider value={{ showDialog, onClose }}>
