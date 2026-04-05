@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -66,7 +66,9 @@ export function useReservation(
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     isValidInitialDate ? new Date(initialData!.date) : undefined,
   );
-  const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
+  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(
+    isValidInitialDate ? (initialData?.scheduleId ?? null) : null,
+  );
   const [headcount, setHeadcount] = useState(initialData?.headcount ?? 1);
   const queryClient = useQueryClient();
 
@@ -84,17 +86,16 @@ export function useReservation(
     },
   });
 
-  useEffect(() => {
-    if (!isValidInitialDate || availableSchedules.length === 0) return;
+  const selectedSlot = useMemo<SelectedSlot | null>(() => {
+    if (!selectedSlotId) return null;
+    for (const schedule of availableSchedules) {
+      const slot = schedule.times.find((t) => t.id === selectedSlotId);
+      if (slot) return slot;
+    }
+    return null;
+  }, [selectedSlotId, availableSchedules]);
 
-    const daySchedule = availableSchedules.find((s) => s.date === initialData!.date);
-    if (!daySchedule) return;
-
-    const slot = daySchedule.times.find((t) => t.id === initialData!.scheduleId);
-    if (!slot) return;
-
-    setSelectedSlot((prev) => prev ?? slot);
-  }, [availableSchedules, initialData, isValidInitialDate]);
+  const setSelectedSlot = (slot: SelectedSlot | null) => setSelectedSlotId(slot?.id ?? null);
 
   const scheduleMap = Object.fromEntries(
     availableSchedules.map(({ date, times }) => [date, times]),
@@ -111,19 +112,19 @@ export function useReservation(
 
     if (selectedDate && toDateStr(day) === toDateStr(selectedDate)) {
       setSelectedDate(undefined);
-      setSelectedSlot(null);
+      setSelectedSlotId(null);
       return;
     }
 
     setSelectedDate(day);
-    setSelectedSlot(null);
+    setSelectedSlotId(null);
   };
 
   const totalPrice = price * headcount;
 
   const reset = () => {
     setSelectedDate(undefined);
-    setSelectedSlot(null);
+    setSelectedSlotId(null);
     setHeadcount(1);
   };
 
