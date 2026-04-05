@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -24,6 +24,10 @@ function getErrorMessage(error: unknown, fallback: string): string {
     return error.response?.data?.message ?? fallback;
   }
   return fallback;
+}
+
+function toDateStr(d: Date): string {
+  return format(d, "yyyy-MM-dd");
 }
 
 function filterAvailableSchedules(
@@ -66,7 +70,9 @@ export function useReservation(
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     isValidInitialDate ? new Date(initialData!.date) : undefined,
   );
-  const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
+  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(
+    isValidInitialDate ? (initialData?.scheduleId ?? null) : null,
+  );
   const [headcount, setHeadcount] = useState(initialData?.headcount ?? 1);
   const queryClient = useQueryClient();
 
@@ -84,33 +90,21 @@ export function useReservation(
     },
   });
 
-  useEffect(() => {
-    if (isValidInitialDate && availableSchedules.length > 0) {
-      const daySchedule = availableSchedules.find(
-        (s) => s.date === initialData!.date,
-      );
-      if (daySchedule) {
-        const slot = daySchedule.times.find(
-          (t) => t.id === initialData!.scheduleId,
-        );
-        if (slot) {
-          const timer = setTimeout(() => {
-            setSelectedSlot((prev) => {
-              if (!prev) return slot;
-              return prev;
-            });
-          }, 0);
-          return () => clearTimeout(timer);
-        }
-      }
+  const selectedSlot = useMemo<SelectedSlot | null>(() => {
+    if (!selectedSlotId) return null;
+    for (const schedule of availableSchedules) {
+      const slot = schedule.times.find((t) => t.id === selectedSlotId);
+      if (slot) return slot;
     }
-  }, [availableSchedules, initialData, isValidInitialDate]);
+    return null;
+  }, [selectedSlotId, availableSchedules]);
 
-  const scheduleMap = Object.fromEntries(
-    availableSchedules.map(({ date, times }) => [date, times]),
-  ) as Record<string, AvailableTime[]>;
+  const setSelectedSlot = (slot: SelectedSlot | null) => setSelectedSlotId(slot?.id ?? null);
 
-  const toDateStr = (d: Date) => format(d, "yyyy-MM-dd");
+  const scheduleMap = useMemo(
+    () => Object.fromEntries(availableSchedules.map(({ date, times }) => [date, times])) as Record<string, AvailableTime[]>,
+    [availableSchedules],
+  );
 
   const timeSlots: AvailableTime[] = selectedDate
     ? (scheduleMap[toDateStr(selectedDate)] ?? [])
@@ -121,19 +115,19 @@ export function useReservation(
 
     if (selectedDate && toDateStr(day) === toDateStr(selectedDate)) {
       setSelectedDate(undefined);
-      setSelectedSlot(null);
+      setSelectedSlotId(null);
       return;
     }
 
     setSelectedDate(day);
-    setSelectedSlot(null);
+    setSelectedSlotId(null);
   };
 
   const totalPrice = price * headcount;
 
   const reset = () => {
     setSelectedDate(undefined);
-    setSelectedSlot(null);
+    setSelectedSlotId(null);
     setHeadcount(1);
   };
 
