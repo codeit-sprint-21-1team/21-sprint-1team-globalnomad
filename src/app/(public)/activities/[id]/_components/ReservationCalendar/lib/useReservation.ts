@@ -34,7 +34,7 @@ function filterAvailableSchedules(
 ): AvailableSchedule[] {
   return data
     .map((day): AvailableSchedule | null => {
-      if (initialData && day.date === initialData.date) return day;
+      if (initialData && day.date === initialData.date && day.date >= todayStr) return day;
       if (day.date < todayStr) return null;
       if (day.date === todayStr) {
         return {
