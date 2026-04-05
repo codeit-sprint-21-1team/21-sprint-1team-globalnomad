@@ -4,6 +4,8 @@ import {
   useContext,
   useState,
   useCallback,
+  useEffect,
+  useRef,
   ReactNode,
 } from "react";
 import { AlertDialog } from "./variants/AlertDialog";
@@ -25,13 +27,16 @@ const DialogContext = createContext<DialogContextValue | null>(null);
 
 export function DialogProvider({ children }: { children: ReactNode }) {
   const [dialog, setDialog] = useState<DialogOptions | null>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   const showDialog = useCallback((options: DialogOptions) => {
+    triggerRef.current = document.activeElement as HTMLElement;
     setDialog(options);
   }, []);
 
   const onClose = useCallback(() => {
     setDialog(null);
+    triggerRef.current?.focus();
   }, []);
 
   const handleConfirm = useCallback(() => {
@@ -43,6 +48,17 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     dialog?.onCancel?.();
     onClose();
   }, [dialog, onClose]);
+
+  useEffect(() => {
+    if (!dialog) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleCancel();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [dialog, handleCancel]);
 
   return (
     <DialogContext.Provider value={{ showDialog, onClose }}>
