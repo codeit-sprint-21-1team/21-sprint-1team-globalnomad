@@ -85,25 +85,15 @@ export function useReservation(
   });
 
   useEffect(() => {
-    if (isValidInitialDate && availableSchedules.length > 0) {
-      const daySchedule = availableSchedules.find(
-        (s) => s.date === initialData!.date,
-      );
-      if (daySchedule) {
-        const slot = daySchedule.times.find(
-          (t) => t.id === initialData!.scheduleId,
-        );
-        if (slot) {
-          const timer = setTimeout(() => {
-            setSelectedSlot((prev) => {
-              if (!prev) return slot;
-              return prev;
-            });
-          }, 0);
-          return () => clearTimeout(timer);
-        }
-      }
-    }
+    if (!isValidInitialDate || availableSchedules.length === 0) return;
+
+    const daySchedule = availableSchedules.find((s) => s.date === initialData!.date);
+    if (!daySchedule) return;
+
+    const slot = daySchedule.times.find((t) => t.id === initialData!.scheduleId);
+    if (!slot) return;
+
+    setSelectedSlot((prev) => prev ?? slot);
   }, [availableSchedules, initialData, isValidInitialDate]);
 
   const scheduleMap = Object.fromEntries(
