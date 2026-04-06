@@ -30,6 +30,9 @@ interface ReservationDetailDrawerProps {
   statusLabels: Record<ReservationStatusFilter, string>;
   onScheduleSelect: (scheduleId: number) => void;
   onStatusSelect: (status: ReservationStatusFilter) => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
   onReservationAction: (
     reservationId: number,
     status: ReservationMutationStatus,

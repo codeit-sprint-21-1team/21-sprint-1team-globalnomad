@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useReducer } from "react";
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -150,20 +151,28 @@ export function useReservationCalendarState(activityId: number | undefined) {
     staleTime: 60 * 1000,
   });
 
-  const { data: reservationData } = useQuery({
+  const {
+    data: reservationInfiniteData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: [
       "reservationsBySchedule",
       activityId,
       state.selectedSchedule?.scheduleId,
       state.selectedStatus,
     ],
-    queryFn: () =>
+    queryFn: ({ pageParam }) =>
       getReservationsBySchedule({
         activityId: activityId!,
         scheduleId: state.selectedSchedule!.scheduleId,
         status: state.selectedStatus!,
+        cursorId: pageParam,
       }),
+    initialPageParam: null as number | null,
     enabled: !!activityId && !!state.selectedSchedule && !!state.selectedStatus,
+    getNextPageParam: (lastPage) => lastPage.cursorId ?? null,
     staleTime: 60 * 1000,
   });
 
@@ -242,8 +251,11 @@ export function useReservationCalendarState(activityId: number | undefined) {
     });
   }, [state.selectedSchedule, state.selectedStatus]);
 
-  const reservations: ReservationWithUserItem[] =
-    reservationData?.reservations ?? [];
+  const reservations: ReservationWithUserItem[] = useMemo(
+    () =>
+      reservationInfiniteData?.pages.flatMap((page) => page.reservations) ?? [],
+    [reservationInfiniteData],
+  );
 
   const handleDateSelect = (date: Date | undefined) => {
     if (!activityId || !date) {
@@ -317,6 +329,9 @@ export function useReservationCalendarState(activityId: number | undefined) {
     selectedStatus: state.selectedStatus,
     statusLabels: STATUS_LABELS,
     isMutating: updateReservationMutation.isPending,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
     onDateSelect: handleDateSelect,
     onMonthChange: (month: Date) =>
       dispatch({ type: "monthChanged", payload: month }),

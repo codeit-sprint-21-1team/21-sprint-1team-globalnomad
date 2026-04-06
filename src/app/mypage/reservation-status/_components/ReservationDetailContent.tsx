@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/commons/utils/cn";
-import { Button } from "@/components/ui/Buttons/Button";
+import useInfiniteScroll from "@/commons/hooks/useInfiniteScroll";
 import { LabeledSelect } from "@/components/ui/Select/Select";
 import type {
   ReservationMutationStatus,
@@ -24,6 +24,9 @@ interface ReservationDetailContentProps {
     reservationId: number,
     status: ReservationMutationStatus,
   ) => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
 }
 
 export default function ReservationDetailContent({
@@ -37,7 +40,15 @@ export default function ReservationDetailContent({
   onScheduleSelect,
   onStatusSelect,
   onReservationAction,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
 }: ReservationDetailContentProps) {
+  const sentinelRef = useInfiniteScroll({
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
+    loading: isFetchingNextPage,
+  });
   const STATUSES: ReservationStatusFilter[] = [
     "pending",
     "confirmed",
@@ -125,9 +136,9 @@ export default function ReservationDetailContent({
               reservations.map((reservation) => (
                 <div
                   key={reservation.id}
-                  className="flex flex-row justify-between rounded-[16px] border border-[#E0E0E5] bg-white px-[16px] py-[14px] items-center"
+                  className="flex flex-row justify-between rounded-[16px] border border-[#E0E0E5] bg-white px-[16px] py-[14px] items-center h-[94px]"
                 >
-                  <div className="flex flex-col gap-[10px] text-[#1B1B1B] tracking-[-0.025em]">
+                  <div className="flex flex-col gap-[10px] text-[#1B1B1B] tracking-[-0.025em] shrink-0">
                     <div className="flex flex-row items-center gap-[8px]">
                       <span className="text-[16px] font-bold text-[#84858C] w-[45px] leading-[19px]">
                         닉네임
@@ -155,34 +166,34 @@ export default function ReservationDetailContent({
                   </div>
 
                   {/* Actions / Badges right side */}
-                  <div className="flex flex-col gap-[8px] shrink-0 justify-start">
+                  <div className="flex flex-col gap-[8px] shrink-0 justify-center items-end h-full">
                     {selectedStatus === "pending" && (
                       <>
-                        <Button
-                          size="md"
+                        <button
+                          type="button"
                           disabled={isMutating}
                           onClick={() =>
                             onReservationAction(reservation.id, "confirmed")
                           }
+                          className="flex h-[29px] w-[68px] items-center justify-center rounded-[8px] border border-[#EDEEF2] bg-white text-[14px] font-medium tracking-[-0.025em] text-[#707177] transition-colors hover:bg-gray-50 disabled:opacity-50"
                         >
                           승인하기
-                        </Button>
-                        <Button
-                          size="md"
-                          variant="secondary"
-                          className="bg-white border-[1px] border-[#E0E0E5] text-[#1B1B1B]"
+                        </button>
+                        <button
+                          type="button"
                           disabled={isMutating}
                           onClick={() =>
                             onReservationAction(reservation.id, "declined")
                           }
+                          className="flex h-[29px] w-[68px] items-center justify-center rounded-[8px] bg-[#EDEEF2] text-[14px] font-medium tracking-[-0.025em] text-[#707177] transition-colors hover:bg-[#E0E0E5] disabled:opacity-50"
                         >
                           거절하기
-                        </Button>
+                        </button>
                       </>
                     )}
                     {selectedStatus === "confirmed" && (
-                      <div className="flex flex-row justify-center items-center px-[8px] py-[4px] bg-[#FFF7DB] rounded-[100px]">
-                        <span className="text-[13px] font-bold text-[#D39A00] leading-[16px] tracking-[-0.025em]">
+                      <div className="flex flex-row justify-center items-center px-[8px] py-[4px] bg-[#DDF9F9] rounded-[100px]">
+                        <span className="text-[13px] font-bold text-[#3D9EF2] leading-[16px] tracking-[-0.025em]">
                           예약 승인
                         </span>
                       </div>
@@ -197,6 +208,12 @@ export default function ReservationDetailContent({
                   </div>
                 </div>
               ))
+            )}
+            {hasNextPage && <div ref={sentinelRef} className="h-4 w-full" />}
+            {isFetchingNextPage && (
+              <p className="text-center text-sm text-gray-500 py-2">
+                불러오는 중...
+              </p>
             )}
           </div>
         </div>
