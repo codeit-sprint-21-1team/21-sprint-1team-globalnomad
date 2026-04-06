@@ -9,7 +9,8 @@ import { buildQueryString } from "@/commons/utils/buildQueryString";
 import { ACTIVITY_CACHE_TAGS } from "@/commons/consts/cacheTags";
 import axios from "./axios";
 
-const BASE_URL = process.env.API_BASE_URL;
+const BASE_URL =
+  typeof window !== "undefined" ? "/api" : process.env.API_BASE_URL;
 
 export const getActivityList = async (
   params: GetActivityListParams,
