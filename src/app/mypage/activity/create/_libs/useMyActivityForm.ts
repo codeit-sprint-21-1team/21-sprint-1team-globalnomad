@@ -23,6 +23,9 @@ import {
   CreateActivityResponse,
   UpdateActivityRequest,
 } from "@/types/myActivities.type";
+import {
+  revalidateActivityListCache,
+} from "@/actions/activities.action";
 import axios from "axios";
 import { useEffect } from "react";
 import { PostcodeData } from "@/types/window";
@@ -122,9 +125,15 @@ export const useMyActivityForm = ({
       }
       return createMyActivity(finalData as CreateActivityRequest);
     },
-    onSuccess: (data: CreateActivityResponse) => {
+    onSuccess: async (data: CreateActivityResponse) => {
       queryClient.invalidateQueries({ queryKey: ["myActivities"] });
-      queryClient.invalidateQueries({ queryKey: ["activity", data.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["activity", data.id || activityId],
+      });
+
+      // 서버 사이드 온디맨드 캐시 갱신
+      await revalidateActivityListCache();
+
       const successMessage =
         mode === "edit"
           ? "수정이 완료되었습니다!"

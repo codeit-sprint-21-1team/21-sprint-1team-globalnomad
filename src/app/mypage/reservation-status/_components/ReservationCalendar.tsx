@@ -29,6 +29,9 @@ export default function ReservationCalendar({
     onReservationAction,
     onScheduleSelect,
     onStatusSelect,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
   } = useReservationCalendarState(activityId);
 
   const DayButton = (props: DayButtonProps) => (
@@ -87,6 +90,9 @@ export default function ReservationCalendar({
         statusLabels={statusLabels}
         onScheduleSelect={onScheduleSelect}
         onStatusSelect={onStatusSelect}
+        hasNextPage={hasNextPage ?? false}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
         onReservationAction={onReservationAction}
       />
     </div>

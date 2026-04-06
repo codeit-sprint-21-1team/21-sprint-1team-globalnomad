@@ -18,10 +18,10 @@ interface ActivityDropdownMenuProps {
   shouldShowSearch: boolean;
 }
 
-const SEARCH_PLACEHOLDER = "Search activities";
-const LOADING_TEXT = "Loading activities...";
-const EMPTY_TEXT = "No activities found.";
-const NO_SEARCH_RESULT_TEXT = "No matching activities.";
+const SEARCH_PLACEHOLDER = "체험을 검색해 보세요";
+const LOADING_TEXT = "체험 목록을 불러오는 중입니다...";
+const EMPTY_TEXT = "아직 등록한 체험이 없어요";
+const NO_SEARCH_RESULT_TEXT = "검색 결과와 일치하는 체험이 없어요";
 
 export default function ActivityDropdownMenu({
   items,
