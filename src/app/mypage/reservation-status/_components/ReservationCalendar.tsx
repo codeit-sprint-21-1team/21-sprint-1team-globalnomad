@@ -4,8 +4,7 @@ import { DayPicker, type DayButtonProps } from "react-day-picker";
 import { ko } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ReservationDayButton } from "./ReservationDayButton";
-import ReservationListPanel from "./ReservationListPanel";
-import ReservationSchedulePanel from "./ReservationSchedulePanel";
+import ReservationDetailDrawer from "./ReservationDetailDrawer";
 import { useReservationCalendarState } from "../_libs/useReservationCalendarState";
 
 interface ReservationCalendarProps {
@@ -77,20 +76,17 @@ export default function ReservationCalendar({
         }}
       />
 
-      <ReservationSchedulePanel
+      <ReservationDetailDrawer
         selectedDate={selectedDate}
+        onClose={() => onDateSelect(undefined)}
+        isMutating={isMutating}
+        reservations={reservations}
         schedules={schedules}
         selectedScheduleId={selectedScheduleId}
         selectedStatus={selectedStatus}
+        statusLabels={statusLabels}
         onScheduleSelect={onScheduleSelect}
         onStatusSelect={onStatusSelect}
-      />
-
-      <ReservationListPanel
-        isMutating={isMutating}
-        reservations={reservations}
-        selectedStatus={selectedStatus}
-        statusLabels={statusLabels}
         onReservationAction={onReservationAction}
       />
     </div>
