@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import type { AvailableTime } from "@/types/activities";
+import type { AvailableTime, AvailableSchedule } from "@/types/activities";
 import { getAvailableSchedule, createReservation } from "@/apis/activities.api";
 import { useDialog } from "@/components/ui/Dialog";
 import { patchUpdateMyReservation } from "@/apis/myReservations.api";
@@ -13,6 +13,42 @@ export interface SelectedSlot {
   id: number;
   startTime: string;
   endTime: string;
+}
+
+function parseStartHour(timeStr: string): number {
+  return parseInt(timeStr.split(":")[0], 10);
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    return error.response?.data?.message ?? fallback;
+  }
+  return fallback;
+}
+
+function toDateStr(d: Date): string {
+  return format(d, "yyyy-MM-dd");
+}
+
+function filterAvailableSchedules(
+  data: AvailableSchedule[],
+  todayStr: string,
+  currentHour: number,
+  initialData?: { date: string },
+): AvailableSchedule[] {
+  return data
+    .map((day): AvailableSchedule | null => {
+      if (initialData && day.date === initialData.date && day.date >= todayStr) return day;
+      if (day.date < todayStr) return null;
+      if (day.date === todayStr) {
+        return {
+          ...day,
+          times: day.times.filter((t) => parseStartHour(t.startTime) > currentHour),
+        };
+      }
+      return day;
+    })
+    .filter((day): day is AvailableSchedule => day !== null && day.times.length > 0);
 }
 
 export function useReservation(
@@ -34,7 +70,9 @@ export function useReservation(
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     isValidInitialDate ? new Date(initialData!.date) : undefined,
   );
-  const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
+  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(
+    isValidInitialDate ? (initialData?.scheduleId ?? null) : null,
+  );
   const [headcount, setHeadcount] = useState(initialData?.headcount ?? 1);
   const queryClient = useQueryClient();
 
@@ -46,63 +84,27 @@ export function useReservation(
     queryFn: () => getAvailableSchedule(activityId, year, month),
     throwOnError: true,
     select: (data) => {
+      // select는 캐시 히트 시에도 실행되므로 날짜·시각을 항상 fresh하게 계산
       const now = new Date();
-      const todayStr = format(now, "yyyy-MM-dd");
-      const currentHour = now.getHours();
-
-      return data
-        .map((day) => {
-          if (initialData && day.date === initialData.date) {
-            return day;
-          }
-
-          if (day.date < todayStr) return null;
-
-          if (day.date === todayStr) {
-            return {
-              ...day,
-              times: day.times.filter((t) => {
-                const startHour = parseInt(t.startTime.split(":")[0], 10);
-                return startHour > currentHour;
-              }),
-            };
-          }
-          return day;
-        })
-        .filter(
-          (day): day is NonNullable<typeof day> =>
-            day !== null && day.times.length > 0,
-        );
+      return filterAvailableSchedules(data, format(now, "yyyy-MM-dd"), now.getHours(), initialData);
     },
   });
 
-  useEffect(() => {
-    if (isValidInitialDate && availableSchedules.length > 0) {
-      const daySchedule = availableSchedules.find(
-        (s) => s.date === initialData!.date,
-      );
-      if (daySchedule) {
-        const slot = daySchedule.times.find(
-          (t) => t.id === initialData!.scheduleId,
-        );
-        if (slot) {
-          const timer = setTimeout(() => {
-            setSelectedSlot((prev) => {
-              if (!prev) return slot;
-              return prev;
-            });
-          }, 0);
-          return () => clearTimeout(timer);
-        }
-      }
+  const selectedSlot = useMemo<SelectedSlot | null>(() => {
+    if (!selectedSlotId) return null;
+    for (const schedule of availableSchedules) {
+      const slot = schedule.times.find((t) => t.id === selectedSlotId);
+      if (slot) return slot;
     }
-  }, [availableSchedules, initialData, isValidInitialDate]);
+    return null;
+  }, [selectedSlotId, availableSchedules]);
 
-  const scheduleMap = Object.fromEntries(
-    availableSchedules.map(({ date, times }) => [date, times]),
-  ) as Record<string, AvailableTime[]>;
+  const setSelectedSlot = (slot: SelectedSlot | null) => setSelectedSlotId(slot?.id ?? null);
 
-  const toDateStr = (d: Date) => format(d, "yyyy-MM-dd");
+  const scheduleMap = useMemo(
+    () => Object.fromEntries(availableSchedules.map(({ date, times }) => [date, times])) as Record<string, AvailableTime[]>,
+    [availableSchedules],
+  );
 
   const timeSlots: AvailableTime[] = selectedDate
     ? (scheduleMap[toDateStr(selectedDate)] ?? [])
@@ -113,19 +115,19 @@ export function useReservation(
 
     if (selectedDate && toDateStr(day) === toDateStr(selectedDate)) {
       setSelectedDate(undefined);
-      setSelectedSlot(null);
+      setSelectedSlotId(null);
       return;
     }
 
     setSelectedDate(day);
-    setSelectedSlot(null);
+    setSelectedSlotId(null);
   };
 
   const totalPrice = price * headcount;
 
   const reset = () => {
     setSelectedDate(undefined);
-    setSelectedSlot(null);
+    setSelectedSlotId(null);
     setHeadcount(1);
   };
 
@@ -140,10 +142,7 @@ export function useReservation(
       showDialog({ type: "alert", content: "예약이 완료되었습니다." });
     },
     onError: (error) => {
-      const message = axios.isAxiosError(error)
-        ? (error.response?.data?.message ?? "예약에 실패했습니다.")
-        : "예약에 실패했습니다.";
-      showDialog({ type: "alert", content: message });
+      showDialog({ type: "alert", content: getErrorMessage(error, "예약에 실패했습니다.") });
     },
   });
 
@@ -163,10 +162,7 @@ export function useReservation(
       showDialog({ type: "alert", content: "예약이 변경되었습니다." });
     },
     onError: (error) => {
-      const message = axios.isAxiosError(error)
-        ? (error.response?.data?.message ?? "예약 변경에 실패했습니다.")
-        : "예약 변경에 실패했습니다.";
-      showDialog({ type: "alert", content: message });
+      showDialog({ type: "alert", content: getErrorMessage(error, "예약 변경에 실패했습니다.") });
     },
   });
 

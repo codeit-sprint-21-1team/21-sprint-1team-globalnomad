@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/commons/utils/cn";
-import { ReactNode } from "react";
+import { useId, ReactNode } from "react";
 
 interface DialogRendererProps {
   icon?: ReactNode;
@@ -15,10 +15,13 @@ export function DialogRenderer({
   actions,
   containerClass,
 }: DialogRendererProps) {
+  const contentId = useId();
+
   return (
     <div
       role="dialog"
       aria-modal="true"
+      aria-labelledby={contentId}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
     >
       <div
@@ -28,7 +31,10 @@ export function DialogRenderer({
         )}
       >
         {icon}
-        <p className="whitespace-pre-line text-center text-base font-bold text-gray-800 mb-3 md:mb-5 break-keep">
+        <p
+          id={contentId}
+          className="whitespace-pre-line text-center text-base font-bold text-gray-800 mb-3 md:mb-5 break-keep"
+        >
           {content}
         </p>
         {actions}
