@@ -30,7 +30,7 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
         run: npm run build
 
       # 성공 시 Discord 알림
