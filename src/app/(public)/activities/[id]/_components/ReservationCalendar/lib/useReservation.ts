@@ -9,6 +9,8 @@ import { getAvailableSchedule, createReservation } from "@/apis/activities.api";
 import { useDialog } from "@/components/ui/Dialog";
 import { patchUpdateMyReservation } from "@/apis/myReservations.api";
 
+import { approveReservation } from "@/actions/reservation.action";
+
 export interface SelectedSlot {
   id: number;
   startTime: string;
@@ -38,17 +40,22 @@ function filterAvailableSchedules(
 ): AvailableSchedule[] {
   return data
     .map((day): AvailableSchedule | null => {
-      if (initialData && day.date === initialData.date && day.date >= todayStr) return day;
+      if (initialData && day.date === initialData.date && day.date >= todayStr)
+        return day;
       if (day.date < todayStr) return null;
       if (day.date === todayStr) {
         return {
           ...day,
-          times: day.times.filter((t) => parseStartHour(t.startTime) > currentHour),
+          times: day.times.filter(
+            (t) => parseStartHour(t.startTime) > currentHour,
+          ),
         };
       }
       return day;
     })
-    .filter((day): day is AvailableSchedule => day !== null && day.times.length > 0);
+    .filter(
+      (day): day is AvailableSchedule => day !== null && day.times.length > 0,
+    );
 }
 
 export function useReservation(
@@ -86,7 +93,12 @@ export function useReservation(
     select: (data) => {
       // select는 캐시 히트 시에도 실행되므로 날짜·시각을 항상 fresh하게 계산
       const now = new Date();
-      return filterAvailableSchedules(data, format(now, "yyyy-MM-dd"), now.getHours(), initialData);
+      return filterAvailableSchedules(
+        data,
+        format(now, "yyyy-MM-dd"),
+        now.getHours(),
+        initialData,
+      );
     },
   });
 
@@ -99,10 +111,14 @@ export function useReservation(
     return null;
   }, [selectedSlotId, availableSchedules]);
 
-  const setSelectedSlot = (slot: SelectedSlot | null) => setSelectedSlotId(slot?.id ?? null);
+  const setSelectedSlot = (slot: SelectedSlot | null) =>
+    setSelectedSlotId(slot?.id ?? null);
 
   const scheduleMap = useMemo(
-    () => Object.fromEntries(availableSchedules.map(({ date, times }) => [date, times])) as Record<string, AvailableTime[]>,
+    () =>
+      Object.fromEntries(
+        availableSchedules.map(({ date, times }) => [date, times]),
+      ) as Record<string, AvailableTime[]>,
     [availableSchedules],
   );
 
@@ -136,13 +152,17 @@ export function useReservation(
   const { mutate: submitReservation, isPending } = useMutation({
     mutationFn: () =>
       createReservation(activityId, selectedSlot!.id, headcount),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["myReservations"] });
       reset();
       showDialog({ type: "alert", content: "예약이 완료되었습니다." });
+      approveReservation({ activityId, reservationId: data.id });
     },
     onError: (error) => {
-      showDialog({ type: "alert", content: getErrorMessage(error, "예약에 실패했습니다.") });
+      showDialog({
+        type: "alert",
+        content: getErrorMessage(error, "예약에 실패했습니다."),
+      });
     },
   });
 
@@ -162,7 +182,10 @@ export function useReservation(
       showDialog({ type: "alert", content: "예약이 변경되었습니다." });
     },
     onError: (error) => {
-      showDialog({ type: "alert", content: getErrorMessage(error, "예약 변경에 실패했습니다.") });
+      showDialog({
+        type: "alert",
+        content: getErrorMessage(error, "예약 변경에 실패했습니다."),
+      });
     },
   });
 
