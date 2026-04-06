@@ -35,8 +35,8 @@ export default function AuthButton() {
           className="z-50 min-w-[120px] rounded-lg border border-gray-200 bg-white p-0 shadow-md"
         >
           <DropdownMenuGroup>
-            <DropdownMenuItem className="cursor-pointer px-4 py-3 rounded-lg justify-center text-sm font-medium text-gray-800 outline-none hover:bg-gray-50 focus:bg-[#E5F3FF]">
-              <Link href="/mypage" className="w-full text-center">
+            <DropdownMenuItem className="cursor-pointer  rounded-lg justify-center text-sm font-medium text-gray-800 outline-none hover:bg-gray-50 focus:bg-[#E5F3FF]">
+              <Link href="/mypage" className="w-full px-4 py-3 text-center">
                 마이페이지
               </Link>
             </DropdownMenuItem>
