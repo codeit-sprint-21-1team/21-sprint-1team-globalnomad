@@ -33,7 +33,10 @@ export default function ReservationStatusContent({
         selectedActivity={selectedActivity}
         onSelect={setSelectedActivity}
       />
-      <ReservationCalendar activityId={selectedActivity?.id} />
+      <ReservationCalendar
+        activityId={selectedActivity?.id}
+        key={selectedActivity?.id ?? "EMPTY"}
+      />
     </section>
   );
 }
