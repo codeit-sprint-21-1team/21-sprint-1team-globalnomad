@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDialog } from "@/components/ui/Dialog";
@@ -12,6 +12,7 @@ export function useLogin() {
   const queryClient = useQueryClient();
   const { showDialog } = useDialog();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const {
     register,
     control,
@@ -33,7 +34,8 @@ export function useLogin() {
     onSuccess: (userData) => {
       const user = userData?.data?.data?.user;
       queryClient.setQueryData(["user"], user);
-      router.replace("/");
+      const destination = searchParams.get("redirect") || "/";
+      router.push(destination);
       router.refresh();
     },
     onError: (error) => {
