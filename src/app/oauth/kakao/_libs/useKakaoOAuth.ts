@@ -57,11 +57,8 @@ export function useKakaoOAuth() {
       router.replace("/");
     },
     onError: (error) => {
-      const errorMessage = handleApiError(error);
-      showDialog({
-        type: "alert",
-        content: errorMessage,
-      });
+      showErrorAndRedirect(error);
+      isProcessing.current = false;
     },
   });
 
