@@ -17,15 +17,28 @@ export const getActivityList = async (
   nextOptions?: NextFetchRequestConfig,
 ): Promise<ActivityListResponse> => {
   const query = buildQueryString(params);
-  const response = await fetch(`${BASE_URL}/activities${query}`, {
-    next: nextOptions ?? { revalidate: 60, tags: [ACTIVITY_CACHE_TAGS.LIST] },
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch activitys");
+  try {
+    const response = await fetch(`${BASE_URL}/activities${query}`, {
+      next: nextOptions ?? { revalidate: 60, tags: [ACTIVITY_CACHE_TAGS.LIST] },
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch activitys");
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error("getActivityList request timed out after 5000ms");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  return response.json();
 };
 
 export const getActivityDetail = async (
