@@ -8,7 +8,7 @@ import {
   useRef,
   ReactNode,
 } from "react";
-import { flushSync } from "react-dom";
+import { flushSync, createPortal } from "react-dom";
 import { AlertDialog } from "./variants/AlertDialog";
 import { ConfirmDialog } from "./variants/ConfirmDialog";
 
@@ -65,19 +65,26 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [dialog, onClose]);
 
+  function renderDialog(): ReactNode {
+    if (!dialog) return null;
+    if (dialog.type === "alert") {
+      return <AlertDialog content={dialog.content} onClose={handleConfirm} />;
+    }
+    return (
+      <ConfirmDialog
+        content={dialog.content}
+        onClose={handleCancel}
+        onConfirm={handleConfirm}
+      />
+    );
+  }
+
+  const dialogElement = renderDialog();
+
   return (
     <DialogContext.Provider value={{ showDialog, onClose }}>
       <div inert={dialog ? true : undefined}>{children}</div>
-      {dialog?.type === "alert" && (
-        <AlertDialog content={dialog.content} onClose={handleConfirm} />
-      )}
-      {dialog?.type === "confirm" && (
-        <ConfirmDialog
-          content={dialog.content}
-          onClose={handleCancel}
-          onConfirm={handleConfirm}
-        />
-      )}
+      {dialogElement && createPortal(dialogElement, document.body)}
     </DialogContext.Provider>
   );
 }
