@@ -5,13 +5,6 @@ import { useRef, useState } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MapPin } from "lucide-react";
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    kakao: any;
-  }
-}
-
 interface KakaoMapProps {
   address: string;
   title: string;
@@ -29,10 +22,12 @@ export default function KakaoMap({ address, title }: KakaoMapProps) {
       if (!container || container.childElementCount > 0) return;
 
       const geocoder = new window.kakao.maps.services.Geocoder();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      geocoder.addressSearch(address, (result: any[], status: string) => {
+      geocoder.addressSearch(address, (result: KakaoAddressSearchResult[], status: string) => {
         if (status === window.kakao.maps.services.Status.OK) {
-          const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+          const coords = new window.kakao.maps.LatLng(
+            parseFloat(result[0].y),
+            parseFloat(result[0].x),
+          );
           const map = new window.kakao.maps.Map(container, {
             center: coords,
             level: 3,
@@ -69,11 +64,10 @@ export default function KakaoMap({ address, title }: KakaoMapProps) {
 
           anchor.append(iconDiv, span);
           wrapper.append(anchor, tail);
-          const overlayContent = wrapper;
 
           const overlay = new window.kakao.maps.CustomOverlay({
             position: coords,
-            content: overlayContent,
+            content: wrapper,
             yAnchor: 1.0,
           });
           overlay.setMap(map);
