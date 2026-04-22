@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useId } from "react";
 import { createPortal } from "react-dom";
 import { useFocusTrap } from "@/commons/hooks/useFocusTrap";
 
@@ -10,11 +10,13 @@ interface ModalRendererProps {
 
 export function ModalRenderer({ content, onClose }: ModalRendererProps) {
   const panelRef = useFocusTrap<HTMLDivElement>(true);
+  const contentId = useId();
 
   return createPortal(
     <div
       role="dialog"
       aria-modal="true"
+      aria-labelledby={contentId}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
@@ -33,7 +35,7 @@ export function ModalRenderer({ content, onClose }: ModalRendererProps) {
           </button>
         </div>
 
-        {content}
+        <div id={contentId}>{content}</div>
       </div>
     </div>,
     document.body,
